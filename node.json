@@ -1,0 +1,6 @@
+{
+  "developer-setup" : {
+    "repositories" : []
+  },
+  "run_list": [ "recipe[developer-setup]" ]
+}
