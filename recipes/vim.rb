@@ -30,13 +30,7 @@ execute "mkdir -p #{homedir}/.vim/autoload #{dir} && curl -LSso #{homedir}/.vim/
 
 end
 
-git "#{node['developer-setup']['homedir']}/etc" do
-  repository 'git@github.com:brad1/etc.git'
-  revision 'master'
-  action :sync
-  ignore_failure true
-end
-
 link "#{node['developer-setup']['homedir']}/.vimrc" do
   to "#{node['developer-setup']['homedir']}/etc/vimrc"
+  only_if { File.exists?("#{node['developer-setup']['homedir']}/etc/vimrc") }
 end
