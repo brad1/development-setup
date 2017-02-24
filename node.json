@@ -1,6 +1,11 @@
 {
   "developer-setup" : {
-    "repositories" : []
+    "build_system" : {
+      "enabled" : false
+    },
+    "clients": {
+      "enabled": false
+    }
   },
   "run_list": [ "recipe[developer-setup]" ]
 }
