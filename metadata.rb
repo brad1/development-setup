@@ -1,1 +1,1 @@
-name "developer-setup"
+name "development-setup"
