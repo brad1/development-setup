@@ -1,5 +1,5 @@
 {
-  "developer-setup" : {
+  "development-setup" : {
     "build_system" : {
       "enabled" : false
     },
