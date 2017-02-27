@@ -1,11 +1,11 @@
-include_recipe 'developer-setup::vim'
+include_recipe 'development-setup::vim'
 
-user node['developer-setup']['user'] do
+user node['development-setup']['user'] do
   action :create
   password `openssl passwd -1 #{node['developer-setup']['password']}`.strip 
 end
 
-homedir = "/home/#{node['developer-setup']['user']}"
+homedir = "/home/#{node['development-setup']['user']}"
 
 directory homedir do
   action :create
@@ -20,24 +20,24 @@ package 'openconnect' do
   only_if { File.exists? "#{homedir}/etc/vpnc.conf" }
 end
 
-execute "chown -R #{node['developer-setup']['user']}:#{node['developer-setup']['user']} #{homedir}"
+execute "chown -R #{node['development-setup']['user']}:#{node['development-setup']['user']} #{homedir}"
 
 link "/etc/vpnc.conf" do
   to "#{homedir}/etc/vpnc.conf"
   only_if { File.exists? "#{homedir}/etc/vpnc.conf" }
 end
 
-link "/home/#{node['developer-setup']['user']}/.vimrc" do
+link "/home/#{node['development-setup']['user']}/.vimrc" do
   to "#{homedir}/etc/vimrc"
   only_if { File.exists? "#{homedir}/etc/vimrc" }
 end
 
-link "/home/#{node['developer-setup']['user']}/.oh-my-zsh/custom/variables.zsh" do
+link "/home/#{node['development-setup']['user']}/.oh-my-zsh/custom/variables.zsh" do
   to "#{homedir}/etc/variables.zsh"
   only_if { File.exists? "#{homedir}/etc/variables.zsh" }
 end
 
-link "/home/#{node['developer-setup']['user']}/.oh-my-zsh/custom/functions.zsh" do
+link "/home/#{node['development-setup']['user']}/.oh-my-zsh/custom/functions.zsh" do
   to "#{homedir}/etc/functionss.zsh"
   only_if { File.exists? "#{homedir}/etc/functions.zsh" }
 end
