@@ -20,24 +20,24 @@ package 'openconnect' do
   only_if { File.exists? "#{homedir}/etc/vpnc.conf" }
 end
 
-execute "chown -R #{node['development-setup']['user']}:#{node['development-setup']['user']} #{homedir}"
+execute "chown -R #{node['development-setup']['user']['name']}:#{node['development-setup']['user']['name']} #{homedir}"
 
 link "/etc/vpnc.conf" do
   to "#{homedir}/etc/vpnc.conf"
   only_if { File.exists? "#{homedir}/etc/vpnc.conf" }
 end
 
-link "/home/#{node['development-setup']['user']}/.vimrc" do
+link "#{homedir}/.vimrc" do
   to "#{homedir}/etc/vimrc"
   only_if { File.exists? "#{homedir}/etc/vimrc" }
 end
 
-link "/home/#{node['development-setup']['user']}/.oh-my-zsh/custom/variables.zsh" do
+link "#{homedir}/.oh-my-zsh/custom/variables.zsh" do
   to "#{homedir}/etc/variables.zsh"
   only_if { File.exists? "#{homedir}/etc/variables.zsh" }
 end
 
-link "/home/#{node['development-setup']['user']}/.oh-my-zsh/custom/functions.zsh" do
+link "#{homedir}/.oh-my-zsh/custom/functions.zsh" do
   to "#{homedir}/etc/functionss.zsh"
   only_if { File.exists? "#{homedir}/etc/functions.zsh" }
 end
