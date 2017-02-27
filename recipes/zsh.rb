@@ -1,6 +1,6 @@
 package "zsh"
 
-homedir = "/home/#{node['developer-setup']['user']}"
+homedir = "/home/#{node['development-setup']['user']}"
 
 git "#{homedir}/.oh-my-zsh" do
   repository 'https://github.com/robbyrussell/oh-my-zsh.git'
@@ -22,7 +22,7 @@ template "#{homedir}/.zshrc" do
   })
 end
 
-user node['developer-setup']['user'] do
+user node['development-setup']['user'] do
   action :modify
   shell '/bin/zsh'
 end
