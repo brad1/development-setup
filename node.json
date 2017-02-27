@@ -10,5 +10,5 @@
       "password" : "changeme"
     }
   },
-  "run_list": [ "recipe[developer-setup]" ]
+  "run_list": [ "recipe[development-setup]" ]
 }
