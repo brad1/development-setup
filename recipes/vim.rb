@@ -6,7 +6,7 @@ package_list.each do |pkgname|
   end
 end
 
-homedir = node['developer-setup']['homedir']
+homedir = node['development-setup']['homedir']
 dir = "#{homedir}/.vim/bundle"
 
 execute "mkdir -p #{homedir}/.vim/autoload #{dir} && curl -LSso #{homedir}/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim"
@@ -30,7 +30,7 @@ execute "mkdir -p #{homedir}/.vim/autoload #{dir} && curl -LSso #{homedir}/.vim/
 
 end
 
-link "#{node['developer-setup']['homedir']}/.vimrc" do
-  to "#{node['developer-setup']['homedir']}/etc/vimrc"
-  only_if { File.exists?("#{node['developer-setup']['homedir']}/etc/vimrc") }
+link "#{node['development-setup']['homedir']}/.vimrc" do
+  to "#{node['development-setup']['homedir']}/etc/vimrc"
+  only_if { File.exists?("#{node['development-setup']['homedir']}/etc/vimrc") }
 end
