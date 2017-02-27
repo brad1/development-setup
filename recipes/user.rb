@@ -38,6 +38,6 @@ link "#{homedir}/.oh-my-zsh/custom/variables.zsh" do
 end
 
 link "#{homedir}/.oh-my-zsh/custom/functions.zsh" do
-  to "#{homedir}/etc/functionss.zsh"
+  to "#{homedir}/etc/functions.zsh"
   only_if { File.exists? "#{homedir}/etc/functions.zsh" }
 end
