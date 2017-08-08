@@ -2,7 +2,8 @@ include_recipe 'development-setup::vim'
 
 user node['development-setup']['user']['name'] do
   action :create
-  password `openssl passwd -1 #{node['development-setup']['user']['password']}`.strip 
+  # requires ruby-shadow, openssl and is generally a bad idea
+  # password `openssl passwd -1 #{node['development-setup']['user']['password']}`.strip 
 end
 
 homedir = "/home/#{node['development-setup']['user']['name']}"

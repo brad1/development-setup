@@ -1,7 +1,3 @@
 include_recipe 'development-setup::virtualbox_guest'
 include_recipe 'development-setup::lxde'
-include_recipe 'development-setup::user'
-include_recipe 'development-setup::zsh'
-include_recipe 'development-setup::clients'
-include_recipe 'development-setup::build_system'
 include_recipe 'development-setup::ssh'
