@@ -8,6 +8,7 @@
     },
     "user" : {
       "enabled" : false,
+      "name" : "byohe",
       "password" : "changeme"
     }
   },
