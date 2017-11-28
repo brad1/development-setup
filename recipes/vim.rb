@@ -6,7 +6,10 @@ package_list.each do |pkgname|
   end
 end
 
-homedir = "/home/#{node['development-setup']['user']['name']}"
+users = 'home'
+users = 'Users' if node['platform_family'].eql? 'mac_os_x'
+
+homedir = "/#{users}/#{node['development-setup']['user']['name']}"
 dir = "#{homedir}/.vim/bundle"
 
 execute "mkdir -p #{homedir}/.vim/autoload #{dir} && curl -LSso #{homedir}/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim"
