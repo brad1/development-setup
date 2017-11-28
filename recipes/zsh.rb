@@ -3,7 +3,7 @@ package "zsh"
 users = 'home'
 users = 'Users' if node['platform_family'].eql? 'mac_os_x'
 
-homedir = "/home/#{node['development-setup']['user']['name']}"
+homedir = "/#{users}/#{node['development-setup']['user']['name']}"
 
 git "#{homedir}/.oh-my-zsh" do
   repository 'https://github.com/robbyrussell/oh-my-zsh.git'
