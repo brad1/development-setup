@@ -1,0 +1,16 @@
+HISTFILE=~/.zsh_history
+HISTSIZE=1000
+SAVEHIST=100000
+setopt appendhistory autocd beep extendedglob nomatch notify
+bindkey -v
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+# Use ctrl-r for search with vi bindings
+bindkey -v
+bindkey '\e[3~' delete-char
+bindkey '^R' history-incremental-search-backward

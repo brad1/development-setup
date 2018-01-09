@@ -1,0 +1,7 @@
+log_level                :info
+log_location             STDOUT
+node_name                'pivotal'
+client_key               '/etc/opscode/pivotal.pem'
+chef_server_url          'https://localhost/organizations/guid'
+syntax_check_cache_path  '/root/.chef/syntax_check_cache'
+ssl_verify_mode :verify_none
