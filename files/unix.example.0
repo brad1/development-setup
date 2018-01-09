@@ -1,0 +1,8 @@
+find . -type f | sed 's/.*\.//' | sort | uniq -c                  # filetype breakdown?
+find . -type f | grep -E 'js|css|java|php' | wc -l              # count files
+cat $(find . -type f | grep -E 'js|css|java|php') | wc -l       # count lines
+find . -type f | grep -E 'js|css|java|php' | xargs wc -l | sort # find biggest files and their loc!
+sloccount .                                                       # counts lines, but doesnt seem to work on js for some reason
+
+grep ... | cut -d' ' -f<number> # essential
+or cut -d'/' -f0- # split up filepaths

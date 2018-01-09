@@ -1,0 +1,22 @@
+  0 Lets get a birds eye view of the project:
+  1
+  2 # list all ruby files and their full paths (see vecap-1-find)
+  3   find . -iname \*.rb
+  4 # remove token separators (see vecap-1-find-1)
+  5   str = File.read('vecap-1-find').gsub('/', ' ').gsub('_', ' ').gsub('.rb', '')
+  6 # put on separate lines and go unix on them (see vecap-1-find-2)
+  7   cat vecap-1-find-1| tr '[:space:]' '\n' | sort | uniq -c | sort
+  8 # manually pair it down (see vecap-1-find-3)
+  9
+ 10 not so useful except maybe as an autocomplete dictionary
+ 11
+ 12 Search for dependencies to see where they are being consumed:
+ 13 # list of all require statements we need to look for:
+ 14   grep -o "gem '[^']*'" Gemfile | awk '{print "require " $2}'
+ 15   - automate the last mile if you can
+ 16   # dirty solution to copy paste:
+ 17   grep -o "gem '[^']*'" Gemfile | awk '{print "grep -lr " $2 " ."}' > /tmp/grep
+ 18
+ 19 # count of ruby files in application code:
+ 20   [Fri Dec 29 11:35:46 2017]: find lib app -type f -iname \*.rb | wc -l
+ 21   > 156

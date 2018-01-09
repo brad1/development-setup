@@ -6,9 +6,10 @@ export ZSH=$HOME/.oh-my-zsh
 
 INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
 
+source $INCLUDE/aliases
 source $INCLUDE/oh-my-zsh
-source $INCLUDE/variables
 source $INCLUDE/ruby
+source $INCLUDE/variables
 # source $INCLUDE/moveme # left over from before
 # source $INCLUDE/numpad
 
