@@ -14,3 +14,24 @@ compinit
 bindkey -v
 bindkey '\e[3~' delete-char
 bindkey '^R' history-incremental-search-backward
+
+
+# timestamp, working directory, newline to prompt.
+# move me to dev-setup/../custom.zsh
+NEWLINE=$'\n'
+export PS1="[%* - %D] %d %% ${NEWLINE}> "
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+if [ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ]; then
+#	source /usr/local/share/chruby/chruby.sh
+#	source /usr/local/share/chruby/auto.sh
+  source "/usr/local/Cellar/chruby/0.3.9/share/chruby/auto.sh"
+  source "/usr/local/Cellar/chruby/0.3.9/share/chruby/chruby.sh"
+  RUBIES+=(~/.rvm/rubies/*)
+fi
+
+function cls() {
+  clear; ls -lh
+}
