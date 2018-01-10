@@ -3,7 +3,13 @@ alias examples='open -a Finder ~/Examples'
 alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 alias install_rvm='\curl -sSL https://get.rvm.io | bash -s stable --ruby'
 
-alias vbox_boot_basebox='VBoxManage startvm Centos6.9-basebox'
+alias cd_devsetup='cd /opt/chef/cookbooks/development-setup'
+
+alias vbox_basebox='VBoxManage startvm Centos6.9-basebox'
+alias vbox_dev='VBoxManage startvm Centos6-2'
+alias vbox_target_vecap='VBoxManage startvm Centos6-target-vecap'
+alias vbox_target_vip='VBoxManage startvm Centos6-target'
+alias vbox_target_tps='VBoxManage startvm Centos6-target-tps'
 
 alias vim_cheatsheet='cat ~/Examples/vim_cheatsheet'
 

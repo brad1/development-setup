@@ -1,0 +1,45 @@
+" dictionary
+"Fri Jan  5 09:05:03 2018] 
+"im autocomplete research: (dictionary files)
+" http://vim.wikia.com/wiki/Dictionary_completions
+" https://superuser.com/questions/102343/can-i-add-a-set-of-words-to-the-vim-autocomplete-vocabulary
+" - abbreviations! what is this magic?
+" still need a way to toggle dictionaries, use multiple/dynamic dictionary files.
+
+:nmap <C-S-F2> ggdG  example of control sequence from vim wiki
+:map <C-W> :bd<CR>
+:map <C-q> :w<CR>
+
+" colon commands no shift, rarely use f repeater
+" cool idea, broken nerdtree
+nnoremap ; :
+nnoremap : ;
+
+" try with word-wrap
+:map <Up> gk
+:imap <Up> <C-o>gk
+:map <Down> gj
+:imap <Down> <C-o>gj
+:noremap j gj
+:noremap k gk
+
+" Format visually selected JSON
+:vnoremap <F8> :!python -m json.tool<CR>
+:vnoremap <F2> :!format<CR>
+" extra
+" remove white spaces at end of line
+:nnoremap <silent> <F4> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+" Press Space to turn off highlighting and clear any message already displayed.
+"   From vim.wikia.com, doesn't work
+:nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+:nnoremap <CR> :nohlsearch<CR><CR>
+
+"File ops
+" hack, alt f4 would work here but so would f4
+map <F4>  :bd<CR>
+map <Leader><F4>  :bd<CR>
+" open file in another editor
+
+
+

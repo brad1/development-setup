@@ -1,0 +1,26 @@
+" [Wed Jan 10 15:56:14 2018] 
+" extracted into development-setup
+" Used with Kinesis advantage keyboard on osx 
+
+" 0 . Enter
+:inoremap Op 0
+:inoremap ^[Ol .
+:inoremap ^[OM ^M
+
+" 1 2 3
+:inoremap ^[Oq 1
+:inoremap ^[Or 2
+:inoremap ^[Os 3
+" 4 5 6
+:inoremap ^[Ot 4
+:inoremap ^[Ou 5
+:inoremap ^[Ov 6
+" 7 8 9
+:inoremap ^[Ow 7
+:inoremap ^[Ox 8
+:inoremap ^[Oy 9
+" + -  * /
+:inoremap ^[Ok +
+:inoremap ^[Om -
+:inoremap ^[Oj *
+:inoremap ^[Oo /
