@@ -1,2 +1,14 @@
+alias examples='open -a Finder ~/Examples'
+
 alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 alias install_rvm='\curl -sSL https://get.rvm.io | bash -s stable --ruby'
+
+alias vbox_boot_basebox='VBoxManage startvm Centos6.9-basebox'
+
+alias vim_cheatsheet='cat ~/Examples/vim_cheatsheet'
+
+alias vmass_clone='git clone git@gitlab.valcom.com:servers/vmass.git'
+
+alias readme='vim ~/readme'
+
+alias zsh_aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases'
