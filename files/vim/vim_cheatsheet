@@ -1,7 +1,0 @@
-HML - allign cursor to top,middle,bottom of screen
-zz,zt - align screen at top,middle to cursor
-:x or ZZ save and quit
-
-ctags - Ctrl-]    after /usr/local/Cellar/ctags/5.8_1/bin/ctags -R
-        Ctrl-w ] to open target in new window  
-
