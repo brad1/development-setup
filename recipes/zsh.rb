@@ -12,20 +12,16 @@ git "#{homedir}/.oh-my-zsh" do
   action :sync
 end
 
-template "#{homedir}/.zshrc" do
-  source "zshrc.erb"
-  owner node['development-setup']['user']['name']
-  mode "644"
-  action :create_if_missing
-  variables({
-    :user           => node['development-setup']['user']['name'],
-    :theme          => 'robbyrussell',
-    :case_sensitive => false,
-    :plugins        => %w{git}
-  })
+link "#{homedir}/.zsh" do
+  to "/opt/chef/cookbooks/development-setup/files/zsh/zshrc"
 end
 
-user node['development-setup']['user']['name'] do
-  action :modify
-  shell '/bin/zsh'
+case node['platform_family']
+when 'arch'
+  user node['development-setup']['user']['name'] do
+    action :modify
+    shell '/bin/zsh'
+  end
+else
 end
+

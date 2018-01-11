@@ -1,8 +1,9 @@
-#	source /usr/local/share/chruby/chruby.sh
-#	source /usr/local/share/chruby/auto.sh
-source "/usr/local/Cellar/chruby/0.3.9/share/chruby/auto.sh"
-source "/usr/local/Cellar/chruby/0.3.9/share/chruby/chruby.sh"
-RUBIES+=(~/.rvm/rubies/*)
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
+# source "/usr/local/Cellar/chruby/0.3.9/share/chruby/auto.sh"
+# source "/usr/local/Cellar/chruby/0.3.9/share/chruby/chruby.sh"
+#RUBIES+=(~/.rvm/rubies/*)
+RUBIES+=(~/.gem/ruby/*)
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # export PATH="$PATH:$HOME/.rvm/bin"
