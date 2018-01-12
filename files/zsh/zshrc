@@ -6,6 +6,6 @@ export ZSH=$HOME/.oh-my-zsh
 
 INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
 
-source $INCLUDE/oh-my-zsh
-source $INCLUDE/sources
+source $INCLUDE/oh-my-zsh.zsh
+source $INCLUDE/sources.zsh
 
