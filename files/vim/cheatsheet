@@ -1,5 +1,13 @@
 :StripWhitespace
 
+use F8 and F9 for recent jumps and files
+
+=-p #reformat inside paragraph
+
+di( #delete inside parens
+
+Ctrl-w-<h|j|k|l> #navigate splits up-down-left-right
+
 Ctrl-(N/P)
 - autocomplete from current buffer while inserting
 Ctrl-X Ctrl-f
@@ -13,15 +21,15 @@ zb =                       bottom of screen
 :x or ZZ save and quit
 
 ctags - Ctrl-]    after /usr/local/Cellar/ctags/5.8_1/bin/ctags -R
-        Ctrl-w ] to open target in new window  
+        Ctrl-w ] to open target in new window
 
 [Control][b] - Move back one full screen
-[Control][f] - Move forward 
+[Control][f] - Move forward
 (use d and u to go 1/2 screen)
 
 :set foldmethod=syntax
-zr to zoom in all folds, zR goes all the way 
+zr to zoom in all folds, zR goes all the way
 zm to zoom out all folds, zM foes all the way
 zo - zoom in at cursor, zO goes all the way
-zc zoom out at cursor, zC goes all the way 
+zc zoom out at cursor, zC goes all the way
 

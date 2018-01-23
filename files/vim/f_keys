@@ -2,10 +2,10 @@ nmap <F2> :bprev<CR>
 nmap <F3> :bnext<CR>
 nmap <F4> :tabp<CR>
 nmap <F5> :tabn<CR>
-nmap <F6> :!open -a TextEdit %:p<CR>  
-nmap <F7> :buffers<CR>
+nmap <F6> :!open -a TextEdit %:p<CR>
+
+"nmap <F7> :buffers<CR>
+" use :ls instead
+
 nmap <F8> :jumps<CR>
 nmap <F9> :browse old<CR>
-"nmap <F9> :oldfiles<CR>
-"nmap <F9> :browse oldfiles<CR>
-nmap <F10> /TODO<CR>
