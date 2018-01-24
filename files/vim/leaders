@@ -7,7 +7,9 @@ nmap <Leader>i :set mouse=i<CR>
 nmap <leader>s :w!<CR>
 nmap <leader><F4> :qa!<CR>
 
-inoremap <Leader>a {"":"","":[]} 
-inoremap <Leader>s TODO: 
-inoremap <Leader>d [<C-R>=strftime("%c")<CR>] 
-inoremap <Leader>f ------------------------------------------------------------------------------ 
+inoremap <Leader>a {"":"","":[]}
+
+"inoremap <Leader>s TODO:
+
+inoremap <Leader>d [<C-R>=strftime("%c")<CR>]
+inoremap <Leader>f ------------------------------------------------------------------------------

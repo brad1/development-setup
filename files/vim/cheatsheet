@@ -1,5 +1,7 @@
 :StripWhitespace
 
+Ctrl-R " to paste into the vim commmand line
+
 use F8 and F9 for recent jumps and files
 
 =-p #reformat inside paragraph

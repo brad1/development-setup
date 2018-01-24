@@ -11,6 +11,8 @@ alias cd_ib='cd ~/Projects/image_builder'
 alias cd_projects='cd ~/Projects'
 alias cd_vmass='cd ~/Projects/vmass'
 
+alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
+
 alias l='ls -lh'
 
 alias readme='vim ~/readme'

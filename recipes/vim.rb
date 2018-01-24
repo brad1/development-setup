@@ -25,6 +25,7 @@ end
  "https://github.com/MarcWeber/vim-addon-mw-utils.git",
  "https://github.com/garbas/vim-snipmate.git",
  "https://github.com/ntpeters/vim-better-whitespace.git",
+ "https://github.com/Raimondi/delimitMate.git",
  "https://github.com/honza/vim-snippets.git"].each do |repo_url|
 
   repo_name = repo_url.split('/').last.split('.')
