@@ -15,7 +15,7 @@ alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 
 alias l='ls -lh'
 
-alias readme='vim ~/readme'
+alias readme='cd ~/Documents/vim; vim readme; cd -'
 
 alias vbox_basebox='VBoxManage startvm Centos6.9-basebox'
 alias vbox_dev='VBoxManage startvm Centos6-2'
@@ -29,3 +29,4 @@ alias vmass_clone='git clone git@gitlab.valcom.com:servers/vmass.git'
 
 
 alias zsh_aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
+alias zsh_rc='vim /opt/chef/cookbooks/development-setup/files/zsh/zshrc'
