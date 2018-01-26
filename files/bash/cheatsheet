@@ -1,0 +1,6 @@
+(list)   # run in subshell, exit 1 does not kill the script
+{list; } # run in current shell
+
+for i in /etc/*.conf; do cp $i /backup; done
+
+

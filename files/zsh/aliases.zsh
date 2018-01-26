@@ -24,6 +24,7 @@ alias vbox_target_vip='VBoxManage startvm Centos6-target'
 alias vbox_target_tps='VBoxManage startvm Centos6-target-tps'
 
 alias vim_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/vim/cheatsheet'
+alias bash_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
 
 alias vmass_clone='git clone git@gitlab.valcom.com:servers/vmass.git'
 
