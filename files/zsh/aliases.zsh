@@ -18,6 +18,7 @@ alias l='ls -lh'
 alias readme='cd ~/Documents/vim; vim readme; cd -'
 
 alias vbox_basebox='VBoxManage startvm Centos6.9-basebox'
+alias vbox_screenshot='echo VBoxManage controlvm <name> screenshotpng screenshot.jpg'
 alias vbox_dev='VBoxManage startvm Centos6-2'
 alias vbox_target_vecap='VBoxManage startvm Centos6-target-vecap'
 alias vbox_target_vip='VBoxManage startvm Centos6-target'
