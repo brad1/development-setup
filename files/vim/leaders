@@ -13,3 +13,9 @@ inoremap <Leader>a {"":"","":[]}
 
 inoremap <Leader>d [<C-R>=strftime("%c")<CR>]
 inoremap <Leader>f ------------------------------------------------------------------------------
+
+:nmap <Leader>l :setlocal number!<CR>
+:nmap <Leader>e :NERDTreeToggle<CR>
+:nmap <Leader>w :set wrap!<CR>
+:nmap <Leader>q :nohlsearch<CR>
+:map <Leader>g :echo expand('%:p')<CR>

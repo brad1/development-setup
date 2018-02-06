@@ -17,10 +17,18 @@ alias cd_vmass='cd ~/Projects/vmass'
 
 alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 
+alias ip='ifconfig|grep -i -m1 "inet addr" | cut -d' ' -f12 | cut -d: -f2'
+
 alias l='ls -lh'
+
+alias open_80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT'
 
 # This bugs out when using Ctrl-z
 alias readme='cd ~/Documents/vim; vim readme; cd -'
+
+alias selinux_permissive='setenforce 0'
+
+alias vagrant_deathstar='vagrant halt && vagrant destroy --force'
 
 alias vbox_basebox='VBoxManage startvm Centos6.9-basebox'
 alias vbox_screenshot='echo VBoxManage controlvm <name> screenshotpng screenshot.jpg'

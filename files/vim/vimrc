@@ -12,67 +12,30 @@ set complete+=k
 " then manually edit
 
 
-" source /opt/chef/cookbooks/development-setup/files/vim/numpad
-" source /opt/chef/cookbooks/development-setup/files/vim/misc
 source /opt/chef/cookbooks/development-setup/files/vim/f_keys
 source /opt/chef/cookbooks/development-setup/files/vim/leaders
+source /opt/chef/cookbooks/development-setup/files/vim/sets
+" source /opt/chef/cookbooks/development-setup/files/vim/numpad
+" source /opt/chef/cookbooks/development-setup/files/vim/misc
 
-" Pathogen
 execute pathogen#infect()
 
-" NERDtree " autocmd vimenter * NERDTree
-:nmap <Leader>e :NERDTreeToggle<CR>
+syntax on
 
-"fix ctrlp being stupid
-let g:ctrlp_working_path_mode = ''
 
 
 " Paste mode automatically
 let &t_SI .= "\<Esc>[?2004h"
 let &t_EI .= "\<Esc>[?2004l"
-
-
-
-"line numbering
-:set nonumber
-:nmap <Leader>l :setlocal number!<CR>
-
-:set mouse=
-
-syntax on
-
-"indentation
-set smartindent
-set tabstop=2
-set shiftwidth=2
-set expandtab
-
-" word wrap
-set nowrap
-:nmap <Leader>w :set wrap!<CR>
-
-:set incsearch
-:set ignorecase
-:set smartcase
-:set hlsearch
-:nmap <Leader>q :nohlsearch<CR>
-
-:map <Leader>g :echo expand('%:p')<CR>
-
-" If you don't have this set already, then do so. It makes vim work like every other multiple-file editor on the planet. You can have edited buffers that aren't visible in a window somewhere.
-:set hidden
-
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
-
 function! XTermPasteBegin()
    set pastetoggle=<Esc>[201~
    set paste
 return ""
 endfunction
 
-
 " disable ex mode unless using
 nnoremap Q <nop>
 
-" relative line numbers
-set rnu
+"fix ctrlp being stupid
+let g:ctrlp_working_path_mode = ''
