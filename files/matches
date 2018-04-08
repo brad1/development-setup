@@ -1,0 +1,27 @@
+# Watchers
+
+# every 5 mins, parse and alert at a threshold
+df -h
+
+# 5 mins, log any loss of connectivty
+ping 8.8.8.8
+ping 1.1.1.1
+
+> ping.0.0.0.0  # store just the lastest, clobber old stuff
+date, matching line, filename >> matches.log
+
+# Projects
+# master copies of github/gitlab repos
+# alert on change, or change that matches a pattern.
+
+# Download a webpage
+# alert when a pattern is matched.
+wget ...
+curl -L ...
+curl -L http://google.com > webpage.google.com.0
+
+~/.state/filename
+...
+~/.state/matches.log
+
+
