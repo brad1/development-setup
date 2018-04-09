@@ -2,7 +2,7 @@
 # Preferences->Profiles->Keys and load preset xterm with numeric keypad.
 # Keypad
 # Original used with a Kinesis Advantage keyboard on OSX.
-# imported on [Tue Jan  9 16:11:00 2018] 
+# imported on [Tue Jan  9 16:11:00 2018]
 
 # 0 . Enter
 bindkey -s "^[Op" "0"

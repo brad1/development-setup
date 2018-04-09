@@ -1,10 +1,16 @@
+" reload vimrc
 nmap <Leader>a :source ~/.vimrc<CR>
+
+" save
+nmap <leader>s :w!<CR>
+
+" Go to bottom and center the cursoer
+nmap <leader>d Gzz
 nmap <Leader>f :%s///g<Left><Left><Left>
 nmap <Leader>r :reg<CR>
 nmap <Leader>o :set paste!<CR>
 nmap <Leader>p :set mouse=a<CR>
 nmap <Leader>i :set mouse=i<CR>
-nmap <leader>s :w!<CR>
 nmap <leader><F4> :qa!<CR>
 
 inoremap <Leader>a {"":"","":[]}
@@ -19,3 +25,5 @@ inoremap <Leader>f -------------------------------------------------------------
 :nmap <Leader>w :set wrap!<CR>
 :nmap <Leader>q :nohlsearch<CR>
 :map <Leader>g :echo expand('%:p')<CR>
+
+

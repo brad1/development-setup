@@ -1,19 +1,13 @@
-# Centos 6.9 vm
-# source /usr/local/share/chruby/chruby.sh
-# source /usr/local/share/chruby/auto.sh
-# RUBIES+=(~/.gem/ruby/*)
+RHEL_CHRUBY=/usr/local/share/chruby/
+MAC_CHRUBY=/usr/local/Cellar/chruby/0.3.9/share/chruby/
 
-# Mac
-source "/usr/local/Cellar/chruby/0.3.9/share/chruby/chruby.sh"
-source "/usr/local/Cellar/chruby/0.3.9/share/chruby/auto.sh"
-RUBIES+=(~/.rvm/rubies/*)
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-# export PATH="$PATH:$HOME/.rvm/bin"
+# if it exists, source it
+[ -f $MAC_CHRUBY/chruby.sh ]  && source $MAC_CHRUBY/chruby.sh
+[ -f $MAC_CHRUBY/auto.sh ]    && source $MAC_CHRUBY/auto.sh
+[ -f $RHEL_CHRUBY/chruby.sh ] && source $RHEL_CHRUBY/chruby.sh
+[ -f $RHEL_CHRUBY/auto.sh ]   && source $RHEL_CHRUBY/auto.sh
 
-#if [ -f /usr/local/share/chruby/chruby.sh ] ; then
-#  source /usr/local/share/chruby/chruby.sh
-#fi
-#
-#if [ -f /usr/local/share/chruby/auto.sh ] ; then
-#  source /usr/local/share/chruby/auto.sh
-#fi
+[ -d ~/.rvm/rubies ] && RUBIES+=(~/.rvm/rubies/*)
+[ -d ~/.gem/ruby ]   && RUBIES+=(~/.gem/ruby/*)
+
+[ -d ~/.rvm/bin ] && export PATH="$PATH:$HOME/.rvm/bin"

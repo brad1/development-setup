@@ -1,6 +1,6 @@
-" [Wed Jan 10 15:56:14 2018] 
+" [Wed Jan 10 15:56:14 2018]
 " extracted into development-setup
-" Used with Kinesis advantage keyboard on osx 
+" Used with Kinesis advantage keyboard on osx
 
 " 0 . Enter
 :inoremap Op 0
