@@ -1,0 +1,16 @@
+# shell
+mysql db_name < script.sql > output.tab
+
+# mysqlRCHAR(20)
+
+CREATE TABLE my_table ( 
+  comment VARCHAR(20)
+);
+
+insert into my_table values ('I am a row')
+
+select * from my_table;
+
+SELECT * FROM a1 LEFT JOIN (a2) ON (a1.comment = a2.comment);
+
+

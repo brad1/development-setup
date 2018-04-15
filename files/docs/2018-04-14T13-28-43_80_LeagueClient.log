@@ -1,0 +1,483 @@
+000000.000| ALWAYS| Logging started at 2018-04-14T13:28:43.950
+000000.000|   OKAY| Running in Standard Mode from cwd 'C:\Riot Games\League of Legends\RADS\projects\league_client\releases\installer\deploy'.
+000000.000| ALWAYS| Application Version:8.7.223.9193 - CL:2239193 - Build Date:Mar 29 2018 - Build Time:18:32:32
+000000.000|   OKAY| Initial working directory: "C:\Riot Games\League of Legends\RADS\projects\league_client\releases\installer\deploy"
+000000.001|   OKAY| Current process: "C:\Riot Games\League of Legends\RADS\projects\league_client\releases\installer\deploy\LeagueClient.exe"
+000000.001|   OKAY| Command line arguments:
+	--release=installer
+000000.004| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__settings__event
+common.os_platform: Windows
+common.application_name: LeagueClient
+event_name: load_user_settings_succeeded
+common.application_version: 8.7.223.9193
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_version_minor: Service Pack 1
+common.os_edition: Ultimate N, x64
+000000.006| ALWAYS| Queued Dradis event to be sent.
+000000.007| ALWAYS| Running LeagueClient version 8.7.223.9193
+000000.067| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__event
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+common.region: NA
+event_name: app_start
+000000.067| ALWAYS| Queued Dradis event to be sent.
+000000.080| ALWAYS|             Plugin Manager| Loaded plugin manifest file plugin-manifest.json.
+000000.088|   OKAY| Creating 9 dispatchers for parallel queue 1
+000000.110|   OKAY| Creating 5 dispatchers for concurrent queue 2
+000000.126|   OKAY| System Info Module: Waiting for system information to be ready.
+000000.127| ALWAYS| Begin Launch Ux Process
+000000.127|   OKAY| Looking for CEF dll at C:/Riot Games/League of Legends/RADS/projects/league_client/releases/installer/deploy/libcef.dll
+000000.270| ALWAYS| Warmed C:/Riot Games/League of Legends/RADS/projects/league_client/releases/installer/deploy/libcef.dll - 45.087 MiB in 142.984 milliseconds == 315.329 MiB/s
+000000.270|   OKAY| Looking for ux process at C:/Riot Games/League of Legends/RADS/projects/league_client/releases/installer/deploy/LeagueClientUx.exe
+000000.270|   OKAY| Starting UX process C:/Riot Games/League of Legends/RADS/projects/league_client/releases/installer/deploy/LeagueClientUx.exe.
+000000.282| ALWAYS| End Launch Ux Process
+000000.292| ALWAYS|             Plugin Manager| Mounted all WAD files in 10.120 milliseconds.
+000000.313| ALWAYS|             Plugin Manager| Loaded all plugins in 20.205 milliseconds. All warming in 0.000 milliseconds. All loading in 11.166 milliseconds.
+000000.313| ALWAYS|             Plugin Manager| Initializing plugin rcp-be-patcher: 1.20.17
+000000.321|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_sln)
+000000.321|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000000.321|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_sln)
+000000.322|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000000.322|   OKAY|                    patcher| No installed releases found for product deploy path.
+000000.628|   OKAY| System Info Module: Waiting for system information to be ready.
+000000.789| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__grid_load_init
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+common.region: NA
+gridload_enabled: 0
+p2p_enabled: 0
+trying_to_use_gridload: 0
+000000.792| ALWAYS| Queued Dradis event to be sent.
+000000.793|   OKAY|                    patcher| FinalizeInstall for league_client_sln
+000000.793|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_sln)
+000000.795|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000000.795|   OKAY|                    patcher| Release does not exist (maybe because migrating from project to solution). Executables will not be copied to root.
+000000.797| ALWAYS|             Plugin Manager| Initializing plugin rcp-be-lol-bootstrap: 1.0.16
+000000.804| ALWAYS|                    patcher| Background Patcher set enable check for updates to 1.
+000000.804| ALWAYS|                    patcher| Background Patcher set enable check for updates to 1.
+000000.809| ALWAYS| Client is now running.
+000000.908|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_sln)
+000000.908|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000000.984| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__rads__patcher_operation
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+product_type: solution
+common.os_version_minor: Service Pack 1
+queue_to_finish_duration_secs: 0.097045
+common.region: NA
+is_using_gridload: 0
+operation_type: check_for_update
+last_host_ip: 
+success: success
+product_name: league_client_sln
+reason_for_available_updates.type: no_installed_releases
+result: available_update
+start_to_finish_duration_secs: 0.075731
+status: completed
+000000.984| ALWAYS| Queued Dradis event to be sent.
+000000.985|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (lol_game_client_sln)
+000000.985|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: No directory found at "C:/Riot Games/League of Legends/RADS/solutions/lol_game_client_sln/releases/".
+000000.986| ALWAYS|                    patcher| Background Patcher set enable update product to 1.
+000000.986| ALWAYS|                    patcher| Background Patcher set enable update product to 1.
+000001.104| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__rads__patcher_operation
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+product_type: solution
+common.os_version_minor: Service Pack 1
+queue_to_finish_duration_secs: 0.173559
+common.region: NA
+is_using_gridload: 0
+operation_type: check_for_update
+last_host_ip: 
+success: success
+product_name: lol_game_client_sln
+reason_for_available_updates.type: no_installed_releases
+result: available_update
+start_to_finish_duration_secs: 0.096350
+status: completed
+000001.104| ALWAYS| Queued Dradis event to be sent.
+000001.106|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::HTTPConnection: (https://l3cdn.riotgames.com)
+000001.106|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::Connect: (https://l3cdn.riotgames.com)
+000001.107|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallSolutionReleaseImpl::Discover::Discover: 
+000001.107|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::RemoteFileServerHTTP::EnumerateAvailableReleases: ("league_client_sln", "NA")
+000001.107|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::RetrieveReleaseListing: ("league_client_sln", "NA")
+000001.107|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFile: ("/releases/live/solutions/league_client_sln/releases/releaselisting_NA", "C:/Riot Games/League of Legends/RADS/temp/release_listing/TMP0.tmp", 0x02C3F470)
+000001.162|   OKAY| System Info Module: Waiting for system information to be ready.
+000001.251|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_sln)
+000001.251|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000001.251|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallSolutionShared::PrepareSolutionReleaseStep: Downloading tag for league_client_sln release we are installing.
+000001.251|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::FileExists: ("/releases/live/solutions/league_client_sln/releases/0.0.0.109/tag")
+000001.281|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallSolutionShared::PrepareSolutionReleaseStep: Downloading manifest for league_client_sln release we are installing.
+000001.281|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFile: ("/releases/live/solutions/league_client_sln/releases/0.0.0.109/solutionmanifest", "C:/Riot Games/League of Legends/RADS/solutions/league_client_sln/releases/0.0.0.109/solutionmanifest", 0x00000000)
+000001.291|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: (lol_game_client_sln)
+000001.291|   OKAY|                    patcher| Riot::RADS::Patching::EnumerateInstalledReleases: No directory found at "C:/Riot Games/League of Legends/RADS/solutions/lol_game_client_sln/releases/".
+000001.308|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallSolutionShared::GatherSolutionProjects: Loading manifest.
+000001.308|   OKAY|           <unknown-plugin>| Riot::RADS::Common::SolutionManifest::Load: ("C:/Riot Games/League of Legends/RADS/solutions/league_client_sln/releases/0.0.0.109/solutionmanifest")
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Common::SolutionManifest::Load: Succeeded
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client)
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: 
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::LoadManifestsForInstalledReleases: (league_client)
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client)
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000001.309|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Creating folders.
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::FindBestPatchForRelease: (league_client, 0x0000008b)
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client)
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Found candidate "0.0.0.139" (0x0000008b).
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Failed to find OK-file, candidate is not valid
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::FindBestPatchForRelease: No installed releases to patch from.
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Downloading tag file.
+000001.310|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::FileExists: ("/releases/live/projects/league_client/releases/0.0.0.139/tag")
+000001.338|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Downloading manifest for release we are installing.
+000001.338|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFile: ("/releases/live/projects/league_client/releases/0.0.0.139/releasemanifest", "C:/Riot Games/League of Legends/RADS/projects/league_client/releases/0.0.0.139/releasemanifest", 0x00000000)
+000001.391|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Loading release manifest.
+000001.392|   OKAY|           <unknown-plugin>| Riot::RADS::Common::ReleaseManifest::LoadNoFix: ("C:/Riot Games/League of Legends/RADS/projects/league_client/releases/0.0.0.139/releasemanifest")
+000001.393|   OKAY|           <unknown-plugin>| Riot::RADS::Common::ReleaseManifest::LoadFromFileHandle: Succeeded
+000001.399|   OKAY|           <unknown-plugin>| Riot::RADS::Common::DeleteEmptySubdirectories: Processing path: C:/Riot Games/League of Legends/RADS/projects/league_client/releases/0.0.0.139/deploy
+000001.399| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::CalculateWorkStep: Starting timing
+000001.611| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::CalculateWorkStep: Completed timing in 0.2 sec
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_en_us)
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: No directory found at "C:/Riot Games/League of Legends/RADS/projects/league_client_en_us/releases/".
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: 
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::LoadManifestsForInstalledReleases: (league_client_en_us)
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_en_us)
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: No directory found at "C:/Riot Games/League of Legends/RADS/projects/league_client_en_us/releases/".
+000001.611|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Creating folders.
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::FindBestPatchForRelease: (league_client_en_us, 0x0000006d)
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_en_us)
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Found candidate "0.0.0.109" (0x0000006d).
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Failed to find OK-file, candidate is not valid
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::FindBestPatchForRelease: No installed releases to patch from.
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Downloading tag file.
+000001.613|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::FileExists: ("/releases/live/projects/league_client_en_us/releases/0.0.0.109/tag")
+000001.639|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Downloading manifest for release we are installing.
+000001.639|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFile: ("/releases/live/projects/league_client_en_us/releases/0.0.0.109/releasemanifest", "C:/Riot Games/League of Legends/RADS/projects/league_client_en_us/releases/0.0.0.109/releasemanifest", 0x00000000)
+000001.663|   OKAY| System Info Module: Waiting for system information to be ready.
+000001.674|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseImpl::Discover::Discover: Loading release manifest.
+000001.674|   OKAY|           <unknown-plugin>| Riot::RADS::Common::ReleaseManifest::LoadNoFix: ("C:/Riot Games/League of Legends/RADS/projects/league_client_en_us/releases/0.0.0.109/releasemanifest")
+000001.674|   OKAY|           <unknown-plugin>| Riot::RADS::Common::ReleaseManifest::LoadFromFileHandle: Succeeded
+000001.674|   OKAY|           <unknown-plugin>| Riot::RADS::Common::DeleteEmptySubdirectories: Processing path: C:/Riot Games/League of Legends/RADS/projects/league_client_en_us/releases/0.0.0.109/deploy
+000001.674| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::CalculateWorkStep: Starting timing
+000001.674| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::CalculateWorkStep: Completed timing in 0.0 sec
+000001.674|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallSolutionReleaseImpl::Discover::Discover: Discover succeeded
+000001.674|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallSolutionReleaseImpl::Execute::Execute: 
+000001.675|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseOperation::InternalExecute: 
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::CopyFilesStep: Starting timing
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::CopyFilesStep: Completed timing in 0.0 sec
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::DeleteFilesFromArchivesStep: Starting timing
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::DeleteFilesFromArchivesStep: Completed timing in 0.0 sec
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::ArchiveFilesStep: Starting timing
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::DeleteFiles: Starting timing
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::DeleteFiles: Completed timing in 0.0 sec
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::ArchiveFilesStep: Completed timing in 0.0 sec
+000001.675| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::DownloadFilesStep: Starting timing
+000001.677|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFileSize: ("/releases/live/projects/league_client/releases/0.0.0.139/packages/files/packagemanifest")
+000001.703|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFileSize: file size: 59611
+000001.703|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFile: ("/releases/live/projects/league_client/releases/0.0.0.139/packages/files/packagemanifest", "C:/Riot Games/League of Legends/RADS/temp/patching/TMP1.tmp", 0x02C3F664)
+000001.757|   OKAY|           <unknown-plugin>| Riot::RADS::Common::PackageManifest::Load: ("C:/Riot Games/League of Legends/RADS/temp/patching/TMP1.tmp")
+000001.773|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::DownloadManager<struct Riot::RADS::Patching::FileToDownload>::DownloadThread: ()
+000001.773|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000000" marked for download with GridLoad.
+000001.774|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000001" marked for download with GridLoad.
+000001.774|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000002" marked for download with GridLoad.
+000001.774|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000003" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000004" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000005" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000006" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000007" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000008" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000009" marked for download with GridLoad.
+000001.775|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x0000000a" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x0000000b" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x0000000c" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x0000000d" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x0000000e" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x0000000f" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::WeIntendToDownloadThisFile: Package "BIN_0x00000010" marked for download with GridLoad.
+000001.776|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::GetFile: ("/releases/live/projects/league_client/releases/0.0.0.139/packages/files/BIN_0x00000000", "C:/Riot Games/League of Legends/RADS/temp/patching/TMP2.tmp", 0x031AF8D4)
+000002.120| ALWAYS| OS Version String: 7 Service Pack 1 Ultimate N, x64
+000002.121| ALWAYS| CPU: GenuineIntel, Intel(R) Pentium(R) 4 CPU 2.40GHz, x86 Family 6 Model 69 Stepping 1, 3300 (0 core)
+000002.121| ALWAYS| Measured processor speed: 2727
+000002.121| ALWAYS| Display info: NVIDIA GeForce 8800 GTX 4294967295 1.0
+000002.121| ALWAYS| Physical memory: 12274814976
+000002.121| ALWAYS| {"messageType":"hardware_information","message_body":"Hardware Info","operating_system":"7 Service Pack 1 Ultimate N, x64","cpu":"GenuineIntel","cpu_processor":"Intel(R) Pentium(R) 4 CPU 2.40GHz","cpu_identifier":"x86 Family 6 Model 69 Stepping 1","cpu_topology":4,"gpu":"NVIDIA GeForce 8800 GTX","video_memory":"4294967295","driver_version":"1.0","physical_memory":12274814976,"wine":true}
+000002.121| ALWAYS| -----HARDWARE INFORMATION START-----
+000002.121| ALWAYS| Operating System: 7 Service Pack 1 Ultimate N, x64
+000002.121| ALWAYS| GPU Manufacturer: NVIDIA GeForce 8800 GTX
+000002.121| ALWAYS| GPU Memory: 4294967295
+000002.121| ALWAYS| GPU Driver Version: 1.0
+000002.121| ALWAYS| CPU Brand: GenuineIntel
+000002.121| ALWAYS| CPU Processor Name: Intel(R) Pentium(R) 4 CPU 2.40GHz
+000002.121| ALWAYS| CPU Identifier: x86 Family 6 Model 69 Stepping 1
+000002.121| ALWAYS| CPU Speed: 3300
+000002.121| ALWAYS| CPU Topology: 4 Core
+000002.121| ALWAYS| Physical memory: 12274814976
+000002.121| ALWAYS| -----HARDWARE INFORMATION END-----
+000002.211|   OKAY| System Info Module: System information is ready, notifying.
+000002.212| ALWAYS| -----HARDWARE SUMMARY START-----
+000002.212| ALWAYS| hw.cpu.description: 
+000002.212| ALWAYS| hw.cpu.speed: 2727
+000002.212| ALWAYS| hw.cpu.sseversion: 7
+000002.212| ALWAYS| hw.graphics.directx: 
+000002.212| ALWAYS| hw.graphics.displayheight1: 900
+000002.212| ALWAYS| hw.graphics.displayheight2: 
+000002.213| ALWAYS| hw.graphics.displaywidth1: 1600
+000002.213| ALWAYS| hw.graphics.displaywidth2: 
+000002.213| ALWAYS| hw.graphics.driverVersion1: 1.0
+000002.213| ALWAYS| hw.graphics.memory1: 4096.000
+000002.213| ALWAYS| hw.graphics.modelVersion1: NVIDIA GeForce 8800 GTX
+000002.213| ALWAYS| hw.memory.total: 11706
+000002.213| ALWAYS| hw.system.manufacturer: 
+000002.213| ALWAYS| hw.system.model: 
+000002.213| ALWAYS| perf.primary.cpuavg: 74.153
+000002.213| ALWAYS| perf.primary.memorypaged: 0.000
+000002.213| ALWAYS| perf.primary.memorypagedpeak: 0.000
+000002.213| ALWAYS| perf.primary.memorypvt: 14.875
+000002.213| ALWAYS| perf.primary.memoryuse: 37.000
+000002.213| ALWAYS| perf.primary.sysavg: 76.292
+000002.213| ALWAYS| -----HARDWARE SUMMARY END-----
+000009.761|  ERROR| UX process failed to start!
+000009.761|   OKAY| Unloading UX process
+000009.761|   OKAY| Quitting.
+000009.811|   OKAY| Waiting for the UX to hide.
+000009.811|   OKAY| Waiting for the UX to quit.
+000009.811|   OKAY| Waiting for the UX process to stop.
+000009.811|   OKAY| The UX process has stopped.
+000009.911| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__hardware_performance
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+hw.system.model: 
+common.code_build_id: 7468234
+common.locale: en_US
+hw.cpu.description: 
+common.content_build_id: 7449061
+hw.graphics.directx: 
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+hw.cpu.speed: 2727
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+perf.primary.memoryuse: 37.000
+common.region: NA
+perf.primary.sysavg: 38.661
+perf.primary.memorypagedpeak: 0.000
+hw.system.manufacturer: 
+perf.primary.cpuavg: 8.317
+perf.primary.memorypvt: 14.875
+perf.primary.memorypaged: 0.000
+hw.graphics.displaywidth1: 1600
+hw.graphics.modelVersion1: NVIDIA GeForce 8800 GTX
+hw.graphics.driverVersion1: 1.0
+hw.graphics.memory1: 4096.000
+hw.cpu.sseversion: 7
+hw.graphics.displayheight1: 900
+hw.graphics.displaywidth2: 
+hw.graphics.displayheight2: 
+hw.memory.total: 11706
+000009.912| ALWAYS| Queued Dradis event to be sent.
+000009.912| ALWAYS| Peak allocator usage: 2448198
+000009.913| ALWAYS| Process Memory:
+    1654M free.
+    2358M reserved.
+      83M commited.
+    Largest free block is 1407M.
+
+    PageFaultCount: 0
+    PeakWorkingSetSize: 88M
+    WorkingSetSize: 85M
+    QuotaPeakPagedPoolUsage: 0M
+    QuotaPagedPoolUsage: 0M
+    QuotaPeakNonPagedPoolUsage: 0M
+    QuotaNonPagedPoolUsage: 0M
+    PagefileUsage: 23M
+    PeakPagefileUsage: 23M
+    PrivateUsage: 0M
+000009.918| ALWAYS| Process Info:
+    ThreadCount: 25
+000009.919| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__foundation_plugin_stats_summary
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+common.region: NA
+allocatedBytes: 44608787
+allocatedCount: 60493
+freedBytes: 33558504
+freedCount: 55513
+maxOutstandingBytes: 11077107
+outstandingCount: 4980
+outstandingBytes: 11050283
+maxOutstandingCount: 5088
+000009.919| ALWAYS| Queued Dradis event to be sent.
+000009.919| ALWAYS|             Plugin Manager| ======================================================================================================================
+000009.919| ALWAYS|             Plugin Manager| Name                                   Max Outstanding     Outstanding         Allocated           Freed
+000009.919| ALWAYS|             Plugin Manager|                                        Bytes      Count    Bytes      Count    Bytes      Count    Bytes      Count
+000009.919| ALWAYS|             Plugin Manager|                          plugin totals   11077107     5088   11050283     4980   44608787    60493   33558504    55513
+000009.919| ALWAYS|             Plugin Manager|                                patcher   11027725     4439   11012253     4390   43067361    51965   32055108    47575
+000009.919| ALWAYS|             Plugin Manager|                          lol-bootstrap      49382      649      38030      590    1541426     8528    1503396     7938
+000009.919| ALWAYS|             Plugin Manager| Finalizing plugin rcp-be-lol-bootstrap
+000009.920| ALWAYS|             Plugin Manager| Finalizing plugin rcp-be-patcher
+000009.920| ALWAYS|                    patcher| Background Patcher set enable check for updates to 0.
+000009.920| ALWAYS|                    patcher| Background Patcher set enable check for updates to 0.
+000009.920| ALWAYS|                    patcher| Background Patcher set enable update product to 0.
+000009.920| ALWAYS|                    patcher| Background Patcher set enable update product to 0.
+000009.920|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::`anonymous-namespace'::ConsumeDownloadManager: K:/code/Solutions/RiotRADS/Source/RADS/Patching/Install/UpdateAndInstallShared.cpp(74): Cancellation request detected, aborting
+000009.920|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::DownloadManager<struct Riot::RADS::Patching::FileToDownload>::ExtractionThread: k:/code/solutions/riotrads/source/rads/patching/networking/DownloadManager.inl(188): Cancellation request detected, aborting
+000009.924|  ERROR|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::TryGetFile: K:/code/Solutions/RiotRADS/Source/RADS/Common/HTTPConnection.cpp(871): Cancellation request detected, aborting
+000009.969|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::AutoUpdateProgress::InternalTick: Cancelled
+000009.969|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::GetFileUsingPackageGridLoad::GetPackageForFile: K:/code/Solutions/RiotRADS/Source/RADS/Patching/Networking/GridLoad/GetFileUsingPackageGridLoad.cpp(573): Failed to download bin
+000009.969|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::DownloadManager<struct Riot::RADS::Patching::FileToDownload>::DownloadThread: k:/code/solutions/riotrads/source/rads/patching/networking/DownloadManager.inl(150): Failed to download package for file, "/releases/live/projects/league_client/releases/0.0.0.130/files/api-ms-win-core-console-l1-1-0.dll.compressed".
+000009.970| ALWAYS|           <unknown-plugin>| Riot::RADS::Patching::UpdateAndInstallShared::DownloadFilesStep: Completed timing in 8.3 sec
+000009.970|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::InstallProjectReleaseOperation::InternalExecute: K:/code/Solutions/RiotRADS/Source/RADS/Patching/Install/InstallProjectRelease.cpp(412): Download files step failed
+000009.970|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::InstallSolutionReleaseImpl::Execute::Execute: K:/code/Solutions/RiotRADS/Source/RADS/Patching/Install/InstallSolutionRelease.cpp(243): Execution step failed
+000009.971|  ERROR|           <unknown-plugin>| Riot::RADS::Patching::InstallSolutionRelease: K:/code/Solutions/RiotRADS/Source/RADS/Patching/Install/InstallSolutionRelease.cpp(295): InstallSolutionRelease failed
+000009.971|  ERROR|           <unknown-plugin>| Riot::Patching::`anonymous-namespace'::UpdateProduct: K:/code/Solutions/RiotRADS/Source/RADS/Patching/Install/UpdateProduct.cpp(66): Failed to install solution
+000009.971|   OKAY|           <unknown-plugin>| Riot::RADS::Common::HTTPConnection::Disconnect: ()
+000009.971|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: (league_client_sln)
+000009.971|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Found candidate "0.0.0.109" (0x0000006d).
+000009.971|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Failed to find OK-file, candidate is not valid
+000009.971|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Caller requested invalid releases to be included, candidate returned despite being invalid
+000009.971|   OKAY|           <unknown-plugin>| Riot::RADS::Patching::EnumerateInstalledReleases: Succeeded.
+000009.972| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__remove_unneeded_releases
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+common.region: NA
+duration_ms: 0
+success: success
+000009.972| ALWAYS| Queued Dradis event to be sent.
+000009.972| ALWAYS|           <unknown-plugin>| Background Patcher disabled for self update.
+000009.978| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__rads__patcher_operation
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+product_type: solution
+common.os_version_minor: Service Pack 1
+queue_to_finish_duration_secs: 8.896826
+common.region: NA
+bytes_downloaded.cdn: 14788827
+download_duration_secs: 8.195202
+bytes_downloaded.total: 14788827
+last_host_ip: 209.197.3.7
+success: canceled
+bytes_downloaded.p2p: 0
+is_using_gridload: 0
+operation_type: update
+product_name: league_client_sln
+update_location: new_install
+start_to_finish_duration_secs: 8.872236
+status: canceled
+000009.979| ALWAYS| Queued Dradis event to be sent.
+000009.979| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__rads__patcher_cdn
+common.os_platform: Windows
+common.application_name: LeagueClient
+file_count: 6
+file_size.minimum: 73
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+common.region: NA
+bytes_downloaded: 14839055
+downloaded_duration.milliseconds: 8458
+failures: 0
+name: HW
+operation_type: update
+retries: 0
+file_size.maximum: 47801122
+uuid: f3aa6219-8fb0-9f46-b7cf-21a0eb717f16
+000009.980| ALWAYS| Queued Dradis event to be sent.
+000009.996| ALWAYS| The following message is prepared to be sent to dradis:
+Event Name: riot__rclient__event
+common.os_platform: Windows
+common.application_name: LeagueClient
+common.application_version: 8.7.223.9193
+common.code_build_id: 7468234
+common.locale: en_US
+common.content_build_id: 7449061
+common.installation_id: e/ikBQ==
+common.os_version_major: 7
+common.machine_id: j5hVnHP3mUu0ZNwoKQJarw==
+common.os_edition: Ultimate N, x64
+common.os_version_minor: Service Pack 1
+common.region: NA
+event_name: app_terminate
+000009.996| ALWAYS| Queued Dradis event to be sent.
+000010.007|  ERROR| Failed to send collected events.
+000010.741|   OKAY| EventCollector: 6 events remaining after thread join
+000011.800|   OKAY| Shut down EventCollector in 1059 milliseconds

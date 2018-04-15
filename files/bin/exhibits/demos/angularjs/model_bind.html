@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+
+<div ng-app="App" ng-controller="Controller">
+Name: <input ng-model="name">
+      <p ng-bind="name"></p>
+<h3>{{myUrl}}</h3>
+</div>
+
+<script>
+var app = angular.module('App', []);
+app.controller('Controller', function($scope, $location) {
+    $scope.name = "myName";
+    $scope.myUrl = $location.absUrl();
+});
+</script>
+
+</body>
+</html>
+

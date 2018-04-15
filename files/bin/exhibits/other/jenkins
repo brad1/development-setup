@@ -1,0 +1,27 @@
+ssh -i ... root@host
+
+# system log
+http://jenkins.autoco.rax.io/log/all
+
+# Builds
+http://jenkins.autoco.rax.io/view/sharepoint/job/azure_mocktopus/buildTimeTrend
+                                                                /configure
+                                                                /46/console
+                                                                /46/consoleFull
+# Users
+http://jenkins.autoco.rax.io/securityRealm/
+                                          /addUser
+
+# Nodes
+http://jenkins.autoco.rax.io/computer/
+                                     /ENG
+                                     /ENG/configure
+
+# Artifacts
+curl -L http://brad.yohe:baef85c2bc5309154b68bacf455f61be@jenkins.autoco.rax.io/job/orca_installer/lastSuccessfulBuild/artifact/orca_archive.run > orca_installer.run
+
+
+# agent logs
+  "C:/Jenkins/jenkins-slave.err.log",
+  "C:/Jenkins/jenkins-slave.out.log",
+  "C:/Jenkins/jenkins-slave.wrapper.log",

@@ -1,0 +1,13 @@
+[sql server, usermapping property, powershell]
+import-module SQLPS
+$serverName="localhost"
+$databaseNames="A","B"
+$serverConnection = new-object Microsoft.SqlServer.Management.Common.ServerConnection
+$serverConnection.ServerInstance=$serverName
+$server = new-object Microsoft.SqlServer.Management.SMO.Server($serverConnection)
+foreach($databaseName in $databasenames) {
+  $database = $server.Databases[$databaseName]
+  Write-Host "WSS_Content_Application_Pools for database $databaseName"
+  Write-Host $database.roles["WSS_Content_Application_Pools"].EnumMembers()
+}
+$server.ConnectionContext.Disconnect()

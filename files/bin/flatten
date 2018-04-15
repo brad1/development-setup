@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+
+$content = STDIN.read
+
+$name_stack = []
+$new_hash = {} 
+
+def get_leaf_elements(doc)
+  all_elements  = doc.xpath('//*')
+  leaf_elements = []
+  all_elements.each do |element|
+
+    child_element_count = 0
+    element.children.each do |c|
+      if(Nokogiri::XML::Element.eql? c.class)
+        child_element_count += 1
+      end
+    end
+
+    if(child_element_count.eql?(0))
+     leaf_elements << element 
+    end
+  end
+  return leaf_elements
+end
+
+def flatten_name(elem)
+  name_parts = [] 
+  while(!elem.class.eql?(Nokogiri::XML::Document))
+    name_parts << elem.name
+    elem = elem.parent
+  end
+  return name_parts.join(':')
+end
+
+def flatten(hash)
+	hash.each do |k,v|
+		$name_stack.push(k)
+		if(Hash.eql?(v.class))
+			flatten(v)
+		elsif(Array.eql?(v.class))
+			temphash = {}
+			index = 0
+			v.each do |item|
+				temphash[index] = item
+				index += 1
+			end
+			flatten(temphash)
+		else
+			new_key = $name_stack.join('.')
+			$new_hash[new_key] = v
+		end
+		$name_stack.pop
+	end
+end
+
+begin
+  require 'json'
+  $hash = JSON.parse($content)
+  flatten($hash)
+  puts JSON.pretty_generate($new_hash)
+rescue
+  require 'nokogiri'
+  flat_hash = {}
+  $document = Nokogiri::XML($content)
+  elems = get_leaf_elements($document)
+  elems.each do |elem|
+    flat_hash[flatten_name(elem)] = elem.children[0].content
+  end
+  require 'json'
+  puts JSON.pretty_generate(flat_hash)
+end
+
+
+

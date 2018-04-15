@@ -1,0 +1,4 @@
+W, [2016-01-02T18:33:29.932151 #833]  WARN -- #<Bunny::Session:0xfb2b60 guest@127.0.0.1:5672, vhost=/, addresses=[127.0.0.1:5672]>: Could not establish TCP connection to 127.0.0.1:5672: 
+Couldn't connect to rabbitmq, skipping receive.
+W, [2016-01-02T18:33:29.938627 #834]  WARN -- #<Bunny::Session:0x159ac58 guest@127.0.0.1:5672, vhost=/, addresses=[127.0.0.1:5672]>: Could not establish TCP connection to 127.0.0.1:5672: 
+Couldn't connect to rabbitmq, skipping send.

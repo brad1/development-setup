@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="js/knockout-2.3.0.js"></script>
+  </head>
+  <body>
+    <p>First name: <input data-bind="value: firstName" /></p>
+    <h2>Hello, <span data-bind="text: firstName"> </span>!</h2>
+    <button onclick="myFunction()">Try it</button>
+    <script>
+      alert("script tag start.")
+	function myFunction() {
+              alert("function start")
+	      // Here's my data model
+	      var ViewModel = function(a) {
+		  this.firstName = ko.observable(a);
+	      };
+	      alert("ViewModel declared")
+              a = new ViewModel("fn");
+              alert("ViewModel built")
+	      ko.applyBindings(a);
+              alert("function end")
+	}
+      alert("script tag done.")
+    </script>
+  </body>
+</html>

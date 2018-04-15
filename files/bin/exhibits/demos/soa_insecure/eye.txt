@@ -1,0 +1,15 @@
+[install]: https://github.com/kostya/eye
+$ gem install sigar -- --with-cppflags="-fgnu89-inline"
+$ gem install eye
+
+[use]
+# load submodules, here just for example
+Eye.load('./eye/*.rb')
+
+# Eye self-configuration section
+Eye.config do
+  logger '/tmp/eye.log'
+end
+
+try something simpler:
+https://github.com/bluepill-rb/bluepill

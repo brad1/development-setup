@@ -1,0 +1,3 @@
+cd <cookbook>
+berks vendor ~/.chef/cookbooks
+chef-solo -o "recipe[<cookbook>::<recipe>]"

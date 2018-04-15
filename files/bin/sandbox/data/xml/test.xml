@@ -1,0 +1,7 @@
+<root>
+<element>element_text_0</element>
+<element>element_text_1</element>
+<element>
+  <sub_element>sub_element_text</sub_element>
+</element>
+</root>

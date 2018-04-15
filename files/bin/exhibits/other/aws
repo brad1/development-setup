@@ -1,0 +1,19 @@
+[aws availzone loadbalancers]
+http://docs.aws.amazon.com/sdkforruby/api/Aws/ElasticLoadBalancing/Client.html#create_load_balancer-instance_method
+^ this is the one I think
+
+http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Resource.html
+- create security group, vpc etc. not load balancers
+
+stack overflow:
+  require 'aws-sdk'
+  Aws.config.update({region: 'us-west-2'}) # for example
+  ec2 = Aws::EC2::Resource.new
+  vpc = ec2.create_vpc({:cidr_block => '10.3.0.0/16'})
+
+list of avilability zones per region:
+https://gist.github.com/neilstuartcraig/0ccefcf0887f29b7f240
+
+# cloud formation template
+http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/sample-templates-services-us-west-2.html
+http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-ec2.html#scenario-ec2-instance

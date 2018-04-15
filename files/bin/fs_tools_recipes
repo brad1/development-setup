@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require 'pry'
+
+$reference_counts = {}
+
+def something recipe_path
+  $reference_counts[recipe_path] = 0 if $reference_counts[recipe_path].nil?
+  # WRONG, but leave for now
+  $reference_counts[recipe_path] += 1 if recipe_includes.to_s.include?(File.basename(recipe_path))
+  output = `grep -c #{File.basename(recipe_path)} /Users/brad.yohe/repositories/Deployment`
+  binding.pry
+end
+
+recipe_filepaths = Dir['**/recipes/*.rb']
+recipe_includes = []
+
+recipe_filepaths.each do |recipe|
+  content = File.read(recipe)
+  m = content.scan(/^include_recipe.*$/)
+  recipe_includes << m
+  recipe_includes.flatten!
+end
+
+recipe_filepaths.each do |recipe_path| 
+  something recipe_path
+end
+
+
+
+binding.pry

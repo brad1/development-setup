@@ -1,0 +1,27 @@
+compare to chef way:
+windows_ad_group "#{node['2010_active_directory']['domain_name']}$$$" do
+  action :create
+  domain_name "contoso.com"
+  ou "users"
+end
+Not a local group!
+
+try:
+group "#{node['2010_active_directory']}..." do
+  action :create
+end
+Success!
+
+
+GPO:
+powershell create new group policy object
+New-GPO
+https://technet.microsoft.com/en-us/library/ee461027.aspx
+or, Get-GPO for the Audit policy
+or for the Default Domain Controllers Policy
+"Success and Failure"
+gpupdate /force
+Auditpol /set
+auditpol.exe /set /category:"Account Management" /success:enable /failure:enable
+auditpol.exe /set /category:"DS Access" /success:enable
+Success! Audit policy overrides Group policy, so no group policy needed for this.

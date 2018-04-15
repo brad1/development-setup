@@ -1,0 +1,62 @@
+[Sun Feb 26 16:08:34 2017] 
+# from arch wiki on mysql, needs root privs 
+mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+systemctl start mariadb.service
+
+# test
+# as developer...
+[developer@archvm ~]# mysql -u root # or just `mysql`
+MariaDB> show databases; # should be able to get this far
+
+# setup login
+MariaDB> CREATE USER 'devleoper'@'localhost' IDENTIFIED BY 'some_pass';
+MariaDB> GRANT ALL PRIVILEGES ON mydb.* TO 'devleoper'@'localhost';
+MariaDB> FLUSH PRIVILEGES;
+MariaDB> quit
+
+
+# test:
+mysql -p # should password prompt, mysql username should match system login name
+MariaDB [(none)]> select * from information_schema.USER_PRIVILEGES;
++-------------------------+---------------+----------------+--------------+
+| GRANTEE                 | TABLE_CATALOG | PRIVILEGE_TYPE | IS_GRANTABLE |
++-------------------------+---------------+----------------+--------------+
+| 'developer'@'localhost' | def           | USAGE          | NO           |
++-------------------------+---------------+----------------+--------------+
+
+mysql -u root
+SELECT User, Host FROM mysql.user;
++-----------+-----------+
+| User      | Host      |
++-----------+-----------+
+| root      | 127.0.0.1 |
+| root      | ::1       |
+|           | archvm    |
+| root      | archvm    |
+|           | localhost |
+| developer | localhost |
+| root      | localhost |
++-----------+-----------+
+
+ 
+# secure installation:
+# set root password, disable root remote access
+#  - on arch:
+mysql_secure_installation
+
+# test:
+MariaDB [(none)]> SELECT User, Host FROM mysql.user;
++-----------+-----------+
+| User      | Host      |
++-----------+-----------+
+| root      | 127.0.0.1 |
+| root      | ::1       |
+| developer | localhost |
+| root      | localhost |
++-----------+-----------+
+
+
+test
+MariaDB [(none)]> create database example;
+MariaDB> GRANT ALL PRIVILEGES ON *.* TO 'devleoper'@'localhost'; # give everything if cant create table
+

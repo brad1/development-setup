@@ -1,0 +1,4 @@
+Show source and docs for methods with pry
+
+pr(main)> show-method pry
+pry(main)> show-doc pry

@@ -1,0 +1,28 @@
+#!/bin/bash 
+DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+
+# Used with rvm plugin
+cd $DIR
+gem install bundler
+bundle install
+
+for str in $DIR/bash/bash_main $DIR/ruby/ruby_main
+do
+  s=`echo $str | sed 's/^.*\///g'`
+  echo "###############"
+  echo "Running $s"
+  $str
+  echo "Done!"
+  echo ""
+done
+
+# Some asynchronous
+for str in $DIR/ruby/client/rabbitmq/amqp.sh $DIR/ruby/client/zeromq/zeromq.sh
+do
+  s=`echo $str | sed 's/^.*\///g'`
+  echo "###############"
+  echo "Starting $s"
+  $str
+  echo "Done!"
+  echo ""
+done

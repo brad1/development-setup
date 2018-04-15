@@ -1,0 +1,10 @@
+tmux ls
+tmux a -t myname
+tmux kill-session -t myname
+
+# create/use project template
+tmuxinator new <name>
+tmuxinator start project_template directory # can't create two at once
+:set -g mode-mouse on
+:set -g mouse-resize-pane on
+ctrl-b , #rename window

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+
+
+<!--readme
+demoed here is helloworld, expression, and ng-init directive
+-->
+
+<div ng-app="" ng-init="name='temp'">
+  <p>name : <input type="text" ng-model="name"></p>
+  <!-- print name with filters-->
+  <h1>hello {{name | uppercase}}</h1>
+  <h1>hello {{name | lowercase}}</h1>
+  <p>expression: {{ 1 + 1 }}</p>
+</div>
+
+<!--notice this doesnt work-->
+<div ng-app="arbitrary">
+  <p>expression: {{ 1 + 1 }}</p>
+</div>
+
+
+</body>
+</html> 

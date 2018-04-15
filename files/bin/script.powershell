@@ -1,0 +1,82 @@
+cat << EOF > ./start.ps1
+
+Set-Item WSMan:\localhost\client\TrustedHosts * -Force
+
+\$password = ""
+\$domain   = ""
+\$hostname = ""
+
+ping -n 1 \$hostname
+test-wsman \$hostname
+
+\$command = {
+  \$domain   = ""
+
+  # get-command | findstr <string>
+  # get-eventlog -list
+  # get-eventlog Application | findstr <string> 
+
+  # sqlcmd -s localhost -q "EXEC sp_helpsrvrolemember 'sysadmin'" -Y30
+  # sqlcmd -s localhost -q "EXEC sp_helplogins"
+  # sqlcmd -s localhost -q "select * from master..syslogins"
+  # sqlcmd -s localhost -q "select * from master..sysdatabases" -Y30
+  
+  # SQL Alias
+  # Get-Item "HKLM:\\Software\\Microsoft\\MSSQLServer\\Client\\ConnectTo"
+  # Get-Item "HKLM:\\Software\\Wow6432Node\\Microsoft\\MSSQLServer\\Client\\ConnectTo"
+  
+  # Get-AdUser -Filter * -SearchBase "DC=\$domain,DC=com"
+  # Get-DnsServerResourceRecord -ZoneName "\$domain.com" | out-string  
+  # Get-WmiObject -class win32_product | fl Name
+  # Import-Module ServerManager; Get-WindowsFeature | fl Name,Installed
+
+  # get-childitem 'HKLM:\SOFTWARE\Microsoft\Shared Tools\Web Server Extensions\16.0\WSS\ResourcesToSecure\'
+  # foreach($key in $subkeys) {
+  #   get-item ... # doesn't work yet 
+  # }
+  # Get-Acl 'C:\Program Files\...' | fl
+  # Get-acl 'HKLM:\Software...' | fl
+
+  # Got sharepoint?
+  # Get-ChildItem 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft SharePoint 2016 Products'
+  # Add-PsSnapin Microsoft.SharePoint.PowerShell
+  # Get-ChildItem 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Exchange Server 2016'
+
+  # Chef running?
+  # Get-Service Chef-Client
+  # Get-Content C:\chef\client.log -Last 50
+
+  # Get-ChildItem -Recurse "C:\ProvisioningEngine\logs\TestProvEngine\**\*.failed.*.xml"
+
+  # 'C:\' | Test-Path
+
+  # Try
+  # {
+  #   <command> -ErrorAction Stop
+  # }
+  # Catch [System.OutOfMemoryException]
+  # {
+  #   Restart-Computer localhost
+  # }
+
+  # Try
+  # {
+  #     $AuthorizedUsers= Get-Content \\ FileServer\HRShare\UserList.txt -ErrorAction Stop
+  # }
+  # Catch
+  # {
+  #     Write-Host $_.Exception.GetType().FullName
+  #     echo $_.Exception|format-list -force
+  # }
+}
+
+\$passwd  = ConvertTo-SecureString -AsPlainText \$password -Force
+\$cred    = New-Object System.Management.Automation.PSCredential -ArgumentList \$domain\administrator,\$passwd
+\$session = New-PSSession -computername \$hostname -Credential \$cred
+\$res = Invoke-Command -session \$session -scriptblock \$command
+foreach(\$item in \$res) {
+    Write-Host(\$item)
+}
+
+Remove-PSSession -Session \$session -Confirm:\$false
+EOF

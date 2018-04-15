@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'sinatra'
+
+set :port, ARGV.shift.to_i || 80 
+
+
+get '/' do
+  'null'
+end
+
+post '/' do
+  'null'
+end
+
+get '/timeout' do
+  sleep 10000
+end
+
+get '/error' do
+  status 500
+end
+
+get '/hash' do
+  status 200
+  "{}"
+end
+
+get '/list' do
+  status 200
+  "[]"
+end

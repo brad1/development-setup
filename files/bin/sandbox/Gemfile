@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+
+gem 'bunny',       '1.4.0'
+gem 'nokogiri',    '1.6.2.1'
+gem 'httparty',    '0.13.1'
+gem 'sinatra',     '1.4.5'
+gem 'net-ping',    '1.7.5'
+gem 'ffi-rzmq'

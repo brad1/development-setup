@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+require 'json'
+content = STDIN.read
+list_of_lists = JSON.parse(content)
+
+def get_number_of_lables(list_of_lists)
+  list_of_lables = [] 
+  
+  unless list_of_lists.first.nil?
+    list_of_lables = list_of_lists.first
+  end
+
+  list_of_lables.size
+end
+
+def justify(list, field_widths, fill, separator)
+
+  until list.size >= field_widths.size
+    list << ''
+  end
+
+  unless list.size.eql? field_widths.size
+    raise "#{list} and #{field_widths} are not the same size."
+  end
+
+  j_list = []
+
+  list.size.times do |i|
+    j_list << list[i].to_s.ljust(field_widths[i], fill)
+  end
+
+  j_list.unshift('')
+  j_list << ''
+  j_list = j_list.join(separator)
+  j_list
+end
+
+def render_table(list_of_lists)
+
+  title = list_of_lists.shift
+
+  lable_count = get_number_of_lables(list_of_lists)
+  field_widths = []
+  lable_count.times do
+    field_widths << 0
+  end
+
+  list_of_lists.each do |list|
+
+    unless Array.eql? list.class
+      raise "Expecting list, got #{list}"
+    end
+
+    unless list.size <= lable_count
+      raise "#{list} has more items (#{list.size}) than there are labels (#{lable_count})"
+    end
+
+    list.size.times do |i|
+      current_field_size = list[i].to_s.size
+      if(field_widths[i] < current_field_size)
+        field_widths[i] = current_field_size
+      end
+    end
+
+  end
+
+  lines_to_render = []
+  barrier = justify([], field_widths, '-', '+')
+  
+  list_of_lists.each do |list|
+    j_list  = justify(list, field_widths, ' ', '|')
+    lines_to_render << barrier
+    lines_to_render << j_list
+  end
+  
+  lines_to_render << barrier
+
+  puts title
+  puts lines_to_render.join("\n")
+
+end
+
+
+render_table(list_of_lists)

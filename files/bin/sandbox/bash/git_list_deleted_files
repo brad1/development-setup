@@ -1,0 +1,2 @@
+#!/bin/bash
+git log --all --pretty=format: --name-only --diff-filter=D | sort -u

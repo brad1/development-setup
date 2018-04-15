@@ -1,0 +1,31 @@
+require "rake/testtask"
+
+# problem, only runs first spec
+#task :test do
+#  sh "ruby -I./lib:./test -S test/unit/spec*.rb"
+#end
+
+Rake::TestTask.new(:unittest) do |t|
+  t.libs << "test"
+  t.verbose = true
+  t.test_files = FileList["test/unit/spec*.rb"]
+end
+
+Rake::TestTask.new(:inttest => :services) do |t|
+  t.libs << "test"
+  t.verbose = true
+  t.test_files = FileList["test/integration/spec*.rb"]
+end
+
+# these will run on invocation, placing them in the TestTask block
+# runs them on definition 
+task(:services) do
+  sh 'timeout 15s ruby -I"lib" ./bin/api.rb    >> api.log    2>> api.log    3>> api.log &'
+  sh 'timeout 15s ruby -I"lib" ./bin/worker.rb >> worker.log 2>> worker.log 3>> worker.log &'
+end
+
+Rake::TestTask.new(:servicetest) do |t|
+  # see service_test.sh
+end
+
+

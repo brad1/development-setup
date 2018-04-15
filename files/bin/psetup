@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+begin
+  require 'yaml'
+  Dir.chdir(ARGV.shift)
+  hash = YAML.load(File.read('setup.yml'))
+  # def expand, so bash can easily consume and user can inspect
+  hash.each do |k,v|
+    Dir.mkdir k
+    v.each do |a|
+      File.write("#{k}/#{a}", "green")
+    end
+  end
+  # works [Wed Jan 25 14:56:45 2017] 
+  # File.write('testfile', hash['repos'].to_s)
+  exit 0
+rescue 
+end
+
+puts 'failed to parse'
+exit 1

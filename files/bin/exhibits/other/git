@@ -1,0 +1,17 @@
+# diff one file from 2 commits ago
+git diff HEAD~2 HEAD -- main.c
+
+# diff file from some commit ago
+git diff d39d33d8c4be bin/api.rb 
+
+# files modified in the last week
+git log --since="1 week ago" --name-only --pretty=format:"remove_me" | grep -v 'remove_me' | sort | uniq
+
+# first commit by author in the past week
+git log --author="name" --since="1 week ago" | grep '^commit' | tail -1 | cut -d' ' -f2
+
+# diff by author, best
+git log --author "${m[i]}" -p  --after "1 week ago" --reverse
+
+# diff repo by date
+git whatchanged --since="1 week ago" -p --reverse

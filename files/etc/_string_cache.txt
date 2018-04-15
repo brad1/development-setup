@@ -1,0 +1,104 @@
+knife node run_list set node recipe[cbook::disabled_firewall]
+knife cookbook upload cbook -o /var/chef/cookbooks
+log_level                :info
+log_location             STDOUT
+node_name                'pivotal'
+client_key               '/etc/opscode/pivotal.pem'
+validation_client_name   'chef-validator'
+validation_key           '/root/validator.pem'
+chef_server_url          'https://localhost/organizations/guid'
+syntax_check_cache_path  '/root/.chef/syntax_check_cache'
+ssl_verify_mode          :verify_none
+gc C:\chef\client.log -last 100
+C:\Users\SP_Admin> get-clusterresource
+Name                          State                         OwnerGroup                    ResourceType
+----                          -----                         ----------                    ------------
+AAG                           Online                        AAG                           SQL Server Availability Grou
+AAG_10.1.3.132                Offline                       AAG                           IP Address
+AAG_10.1.4.98                 Online                        AAG                           IP Address
+AAG_SQL_Listner               Online                        AAG                           Network Name
+Cluster IP Address            Offline                       Cluster Group                 IP Address
+Cluster IP Address 10.1.4.99  Online                        Cluster Group                 IP Address
+Cluster Name                  Online                        Cluster Group                 Network Name
+File Share Witness            Online                        Cluster Group                 File Share Witness
+server 2012 R2 iad logs:
+[
+  "C:/Boot/BCD.LOG",
+  "C:/chef/client.log",
+  "C:/chef/log/client.log",
+  "C:/opscode/chef/embedded/apps/chef/ext/win32-eventlog/mkmf.log",
+  "C:/opscode/chef/embedded/lib/ruby/gems/2.0.0/extensions/x86-mingw32/2.0.0/ffi-yajl-2.2.0/mkmf.log",
+  "C:/opscode/chef/embedded/lib/ruby/gems/2.0.0/gems/chef-12.4.1-universal-mingw32/ext/win32-eventlog/mkmf.log",
+  "C:/opscode/chef/embedded/lib/ruby/gems/2.0.0/gems/erubis-2.7.0/test/data/users-guide/stderr.log",
+  "C:/ProgramData/Microsoft/Windows/AppRepository/edb.log",
+  "C:/ProgramData/Microsoft/Windows/AppRepository/edbtmp.log",
+  "C:/rs-pkgs/rsWinRM/rsWinRM.exe.log",
+  "C:/Users/Administrator/AppData/Local/Microsoft/Windows/WebCache/V01.log",
+  "C:/Users/Administrator/AppData/Local/Microsoft/Windows/WebCache/V01tmp.log",
+  "C:/Windows/assembly/GAC_MSIL/System.IO.Log",
+  "C:/Windows/assembly/NativeImages_v2.0.50727_32/System.IO.Log",
+  "C:/Windows/assembly/NativeImages_v2.0.50727_64/System.IO.Log",
+  "C:/Windows/assembly/NativeImages_v4.0.30319_32/System.IO.Log",
+  "C:/Windows/assembly/NativeImages_v4.0.30319_64/System.IO.Log",
+  "C:/Windows/debug/mrt.log",
+  "C:/Windows/debug/PASSWD.LOG",
+  "C:/Windows/debug/sammui.log",
+  "C:/Windows/debug/WIA/wiatrace.log",
+  "C:/Windows/DtcInstall.log",
+  "C:/Windows/Inf/setupapi.dev.log",
+  "C:/Windows/Inf/setupapi.setup.log",
+  "C:/Windows/Logs/CBS/CBS.log",
+  "C:/Windows/Logs/CBS/CbsPersist_20160421001129.log",
+  "C:/Windows/Logs/CBS/CbsPersist_20160421013924.log",
+  "C:/Windows/Logs/CBS/CbsPersist_20160421014759.log",
+  "C:/Windows/Logs/CBS/CbsPersist_20160421023050.log",
+  "C:/Windows/Logs/CBS/CbsPersist_20160421023411.log",
+  "C:/Windows/Logs/DISM/dism.log",
+  "C:/Windows/Logs/DPX/setupact.log",
+  "C:/Windows/Logs/DPX/setuperr.log",
+  "C:/Windows/Microsoft.NET/assembly/GAC_MSIL/System.IO.Log",
+  "C:/Windows/Microsoft.NET/Framework/v4.0.30319/ngen.log",
+  "C:/Windows/Microsoft.NET/Framework/v4.0.30319/ngen.old.log",
+  "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/ngen.log",
+  "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/ngen.old.log",
+  "C:/Windows/Panther/cbs.log",
+  "C:/Windows/Panther/cbs_unattend.log",
+  "C:/Windows/Panther/FastCleanup/setupact.log",
+  "C:/Windows/Panther/FastCleanup/setuperr.log",
+  "C:/Windows/Panther/setupact.log",
+  "C:/Windows/Panther/setuperr.log",
+  "C:/Windows/Panther/UnattendGC/setupact.log",
+  "C:/Windows/Panther/UnattendGC/setuperr.log",
+  "C:/Windows/PFRO.log",
+  "C:/Windows/RackGold.log",
+  "C:/Windows/RShotfixes.log",
+  "C:/Windows/security/logs/scesetup.log",
+  "C:/Windows/ServiceProfiles/NetworkService/debug/NetSetup.LOG",
+  "C:/Windows/setupact.log",
+  "C:/Windows/setuperr.log",
+  "C:/Windows/SoftwareDistribution/DataStore/Logs/edb.log",
+  "C:/Windows/SoftwareDistribution/DataStore/Logs/edbtmp.log",
+  "C:/Windows/SoftwareDistribution/ReportingEvents.log",
+  "C:/Windows/Temp/ASPNETSetup_00000.log",
+  "C:/Windows/Temp/ASPNETSetup_00001.log",
+  "C:/Windows/Temp/silconfig.log",
+  "C:/Windows/vmgcoinstall.log",
+  "C:/Windows/WindowsUpdate.log",
+  "C:/Windows/WinSxS/amd64_microsoft-windows-com-dtc-runtime_31bf3856ad364e35_6.3.9600.16384_none_0a1162f033fa01f6/MSDTC.LOG",
+  "C:/Windows/WinSxS/amd64_microsoft-windows-com-dtc-runtime_31bf3856ad364e35_6.3.9600.17415_none_0a5dfdcc33c06e7e/MSDTC.LOG",
+  "C:/Windows/WinSxS/amd64_tsportalwebpart_31bf3856ad364e35_6.3.9600.16384_none_25545230c39231cd/allusers_tswa.log",
+  "C:/Windows/WinSxS/poqexec.log"
+]
+------------------------------------------------------------------------------ 
+PS C:\Users\admin> dnscmd host.A160F459CF9.X8C6  /zonereload A160F459CF9.X8C6
+Command failed:  DNS_ERROR_ZONE_DOES_NOT_EXIST     9601    0x2581
+PS C:\Users\admin> $lastExitCode
+9601
+(fixed w/ dnscmd <> /zoneadd <> /dsprimary, sort of obvious, but really shoulda replicat3ed on its own)
+------------------------------------------------------------------------------ 
+[X] Failover Clustering Tools                   RSAT-Clustering                Installed
+    [X] Failover Cluster Management Tools       RSAT-Clustering-Mgmt      InstallPending
+    [X] Failover Cluster Module for Windows ... RSAT-Clustering-Powe...   InstallPending- 
+------------------------------------------------------------------------------ 
+Chef Client finished, 13/13 resources updated in 1665.888181 seconds
+rvm osx-ssl-certs update all

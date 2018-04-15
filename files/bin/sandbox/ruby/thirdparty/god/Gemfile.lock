@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    god (0.13.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  god (= 0.13.6)
+
+BUNDLED WITH
+   1.10.2

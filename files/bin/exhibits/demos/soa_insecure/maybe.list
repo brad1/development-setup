@@ -1,0 +1,6 @@
+curation api: expose limited tasks with no auth
+- regex search demo
+  - process request, starting with test request
+  - status: seen, unseen, completed
+- queue request
+- list crons

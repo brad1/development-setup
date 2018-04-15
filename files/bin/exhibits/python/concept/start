@@ -1,0 +1,80 @@
+# python for example
+
+post /tasks
+- parse
+- selection
+- Task.new ...
+- google python shell command wrapper
+- make our decorator (Task), contains state related to it
+- return some identifier
+
+post /items
+- parse
+- selection
+- Item.new
+- decorator should have a DB connection, be able to insert 
+
+
+
+class Task
+- ...
+
+class searchTask < Task
+- const string "grep -r -e #{term} #{path}"
+- google stringbuilder or command builder for python
+
+
+------------------------------------------------------------------------------ 
+https://amoffat.github.io/sh/
+from sh import ifconfig
+print(ifconfig("wlan0"))
+------------------------------------------------------------------------------ 
+
+
+
+class Item
+- dbConn 
+- def execute (do an insert)
+- start w/ just one db and table, with 'comment' as the column
+
+
+------------------------------------------------------------------------------ 
+import mysql.connector
+cnx = mysql.connector.connect(user='scott', password='tiger',
+                              host='127.0.0.1',
+                              database='employees')
+cnx.close()
+------------------------------------------------------------------------------ 
+try:
+  cnx = mysql.connector.connect(user='scott',
+                                database='testt')
+except mysql.connector.Error as err:
+  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    print("Something is wrong with your user name or password")
+  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+    print("Database does not exist")
+  else:
+    print(err)
+else:
+  cnx.close()
+------------------------------------------------------------------------------ 
+cnx = mysql.connector.connect(user='scott', database='employees')
+cursor = cnx.cursor()
+
+tomorrow = datetime.now().date() + timedelta(days=1)
+
+add_employee = ("INSERT INTO employees "
+               "(first_name, last_name, hire_date, gender, birth_date) "
+               "VALUES (%s, %s, %s, %s, %s)")
+add_salary = ("INSERT INTO salaries "
+              "(emp_no, salary, from_date, to_date) "
+              "VALUES (%(emp_no)s, %(salary)s, %(from_date)s, %(to_date)s)")
+
+data_employee = ('Geert', 'Vanderkelen', tomorrow, 'M', date(1977, 6, 14))
+
+# Insert new employee
+cursor.execute(add_employee, data_employee)
+emp_no = cursor.lastrowid
+------------------------------------------------------------------------------ 
+
+

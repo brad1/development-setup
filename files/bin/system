@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Ubuntu
+[ -f /etc/os-release ] && cat /etc/os-release
+# Redhat
+[ -f /etc/redhat-release ] && cat /etc/redhat-release
+
+# OSX
+command -v sw_vers && sw_vers

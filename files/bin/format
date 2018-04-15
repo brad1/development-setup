@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+content = STDIN.read
+begin
+  require 'json'
+  hash = JSON.parse(content)
+  result = JSON.pretty_generate(hash)
+  puts result
+  exit 0
+rescue 
+end
+
+begin
+  require 'nokogiri'
+  doc = Nokogiri::XML(content) {|config| config.strict}
+  puts doc.to_s
+  exit 0
+rescue
+end
+
+begin
+  require 'yaml'
+  YAML.load(content)
+  puts 'possible YAML detected'
+  exit 0
+rescue 
+end
+
+puts 'failed to parse'
+exit 1

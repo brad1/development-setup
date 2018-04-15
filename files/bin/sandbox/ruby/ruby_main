@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require_relative 'lang/hello.rb'
+require_relative 'lang/exceptions.rb'
+require_relative 'lang/file.rb'
+require_relative 'lang/reflection.rb'
+require_relative 'lang/string.rb'
+require_relative 'lang/threads.rb'
+
+require_relative 'thirdparty/base64.rb'
+require_relative 'thirdparty/rabbitmq.rb'

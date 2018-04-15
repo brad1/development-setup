@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="js/knockout-2.3.0.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+  </head>
+<body>
+	<div data-bind="with: model">
+	   <p data-bind="text: name"></p>
+	</div>
+
+	<script>
+		alert("script start")
+		var model = {
+		    name: ko.observable('somename'),
+		}
+
+		ko.applyBindings(model);
+		alert("script end")
+	</script>
+</body>
+</html>

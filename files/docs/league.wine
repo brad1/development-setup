@@ -1,0 +1,17 @@
+dnf config-manager --add-repo https://dl.winehq.org/wine-builds/fedora/26/winehq.repo
+dnf install winehq-stable
+WINEPREFIX=~/.LoL64 winecfg
+WINEPREFIX=~/.LoL64 wine ~/Downloads/League\ of\ Legends\ installer\ NA.exe
+sudo dnf install mono-devel
+# failed!
+# uninstall winehq-stable
+sudo dnf install wine winetricks
+winetricks csmt=on
+let "repairing" screen run for 50 years
+- success!
+consider changing compat mode to winxp...
+
+
+
+[firefox]
+noscript?

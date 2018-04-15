@@ -1,0 +1,14 @@
+[root@host ~]# curl -X GET http://guest:guest@rabbit:12345/api/nodes
+[{"partitions":[],"os_pid":"3050","fd_used":67,"fd_total":1024,"sockets_used":2,"sockets_total":829,"mem_used":73618432,"mem_limit":3173434982,"mem_alarm":false,"disk_free_limit":50000000,"disk_free":36463775744,"disk_free_alarm":false,"proc_used":241,"proc_total":1048576,"statistics_level":"fine","uptime":4944022801,"run_queue":0,"processors":8,"exchange_types":[{"name":"topic","description":"AMQP topic exchange, as per the AMQP specification","enabled":true},{"name":"fanout","description":"AMQP fanout exchange, as per the AMQP specification","enabled":true},{"name":"direct","description":"AMQP direct exchange, as per the AMQP specification","enabled":true},{"name":"headers","description":"AMQP headers exchange, as per the AMQP specification","enabled":true}],"auth_mechanisms":[{"name":"AMQPLAIN","description":"QPid AMQPLAIN mechanism","enabled":true},{"name":"PLAIN","description":"SASL PLAIN authentication mechanism","enabled":true},{"name":"RABBIT-CR-DEMO","description":"RabbitMQ Demo challenge-response authentication mechanism","enabled":false}],"applications":[{"name":"amqp_client","description":"RabbitMQ AMQP Client","version":"3.3.5"},{"name":"inets","description":"INETS  CXC 138 49","version":"5.9.8"},{"name":"kernel","description":"ERTS  CXC 138 10","version":"2.16.4"},{"name":"mnesia","description":"MNESIA  CXC 138 12","version":"4.11"},{"name":"mochiweb","description":"MochiMedia Web Server","version":"2.7.0-rmq3.3.5-git680dba8"},{"name":"os_mon","description":"CPO  CXC 138 46","version":"2.2.14"},{"name":"rabbit","description":"RabbitMQ","version":"3.3.5"},{"name":"rabbitmq_management","description":"RabbitMQ Management Console","version":"3.3.5"},{"name":"rabbitmq_management_agent","description":"RabbitMQ Management Agent","version":"3.3.5"},{"name":"rabbitmq_web_dispatch","description":"RabbitMQ Web Dispatcher","version":"3.3.5"},{"name":"sasl","description":"SASL  CXC 138 11","version":"2.3.4"},{"name":"stdlib","description":"ERTS  CXC 138 10","version":"1.19.4"},{"name":"webmachine","description":"webmachine","version":"1.10.3-rmq3.3.5-gite9359c7"},{"name":"xmerl","description":"XML parser","version":"1.3.6"}],"contexts":[{"description":"RabbitMQ Management","path":"/","port":12345}],"name":"orca@chef","type":"disc","running":true}][root@orchprod12da7c4 ~]#
+
+curl -X GET http://guest:guest@rabbit:12345/api/aliveness-test/%2F
+
+
+
+rabbitmqctl
+rabbitmqctl list_vhosts
+rabbitmqctl list_queues -p <vhost>
+rabbitmqctl list_exchanges -p <vhost>
+
+whatis vhost for?
+- vhost has own set of user permissions

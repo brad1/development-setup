@@ -1,0 +1,34 @@
+function temp {
+}
+
+# cli args
+for var in "$@"
+do
+    echo "$var"
+done
+
+if [ "$var" == "string" ]; then
+  echo "Equal"
+else
+  echo "Not equal"
+fi
+
+# file iteration, paramter expansion
+for f in $( ls *.gem ); do
+  part=${f%.gem}
+  version=${part##*-}
+  gem=${f%-*}
+  echo $gem
+  echo $version
+done
+
+m=(a b c)
+for f in ${m[@]}; do
+  echo $f
+done
+
+if [ -e "/path/to/file" ]
+then
+  echo 'asdf'
+fi
+

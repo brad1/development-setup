@@ -1,0 +1,3 @@
+#!/bin/zsh
+source ~/.zshrc
+vim $work/pipes/start

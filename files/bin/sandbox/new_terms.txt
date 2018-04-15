@@ -1,0 +1,7 @@
+# What is the default behavior?
+yum downgrade
+
+# What is sid filtering?
+
+# ansible basics
+

@@ -1,0 +1,11 @@
+azure config mode arm  <--- fixed login issues
+azure login
+...
+azure vm image list westus --verbose
+azure vm sizes --location northcentralus --verbose
+azure location list
+
+
+
+https://azure.microsoft.com/en-us/regions/services/
+- availabillity matrix

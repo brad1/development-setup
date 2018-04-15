@@ -1,0 +1,11 @@
+Redundant processes:
+- processlabels
+- start stop control (one way)
+- cross platform
+
+1:26 PM 5/30/2015
+god gem does not support windows atm  
+can restart when cpu or mem limit is exceeded, could work well with queues and atomic operations
+could do cicd with this, or the gem that auto reloads source files
+config example looks like you can resurrect crashed processes
+

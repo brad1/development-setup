@@ -1,0 +1,5 @@
+# on windows this would runa a system user if not made to do otherwise
+execute 'apache_configtest' do
+  command '/usr/sbin/apachectl configtest'
+  notifies :run, 'execute[slapadd]', :immediately
+end

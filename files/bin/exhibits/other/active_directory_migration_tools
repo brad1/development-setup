@@ -1,0 +1,96 @@
+Attempt 1:
+- Ran PesKey.exe, no visible effect
+- Ran full msi, rebooted.  Password service visible.
+- On 2013 res forest, ran migration wizard and selected User account migration wizard.
+- Entered source and target domains, result is "The specified domain either does not exist or could not be cpntacted."
+- Error code 1355, Domain = domain.com
+Solution: make sure conditional dns forwarders are present, reboot.
+
+LDAP://domain.com/CN=Users,DC=domain,DC=com (selected Users in under target domain in selection tree)
+wizard: Unable to establish a session with the password export server. access is denied.
+Solution: add admt user to Builtin/Administrators, maybe reboot
+
+Adding admt user to Builtin/Administrators
+"The system has detected a possible attempt to compromise security"
+Solution: check for any conflicting upn suffix routes in forest trusts, disable offending ones.
+
+Add operation hangs or does not work:
+Solution: check for any dns records that point to NICs that don't respond to ping.
+delete, flushdns, than try again.
+
+RDP for migrated user does not work:
+Solution:
+1. Add user to Administrators group, (or Domain Admins to logon to non-dcs)
+2. search for "Select users who can use remote desktop", add the user
+3. In Ad users and computers, uncheck "User must change password at nest login"
+
+
+
+
+pes.msi /user /keyfile:"C:\pes.pes"
+PesKey.exe C:\pes.pes asd123
+PwMig.exe -create
+
+Need to find arguments for pessvc service.
+Solution:
+sc qc pessvc
+
+SERVICE_NAME: pessvc
+        TYPE               : 10  WIN32_OWN_PROCESS
+        START_TYPE         : 3   DEMAND_START
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\Windows\system32\PwMigSvc.exe
+        LOAD_ORDER_GROUP   :
+        TAG                : 0
+        DISPLAY_NAME       : Password Export Server Service
+        DEPENDENCIES       : rpcss
+        SERVICE_START_NAME : LocalSystem
+
+Can we create a service like this but in a different install location?
+Ex. sc create NewService binpath= c:\windows\system32\NewServ.exe type= share start= auto depend= "+TDI NetBIOS"
+Try:
+sc create PesSvc binpath= c:\pes\PwMigSvc.exe type= own start= demand depend= "rpcss" error= normal displayname= "Password Export Server Service" obj= "LocalSystem" 
+Success!
+(Ended up using msiexec instead of this)
+
+http://stackoverflow.com/questions/22371290/how-to-stop-custom-action-from-executing-from-parameters-while-installing-msi-th
+http://www.itninja.com/question/disable-msi-custom-actions-using-parameters
+Use orca to generate transform and disable StartCredentials in InstallExecuteSequence  (1=0 in Condition column)
+open msi, Transform->New, modify, Transform->generate, then msiexec /i .msi TRANSFORMS=thing.mst
+Success!
+Works unnattended?
+Success!
+Wrapped in chef?
+Failure!
+Embed changes in msi?
+Failure!
+Try on fresh environment?
+Success! (LocalSystem account may have been using cached msi data)
+
+
+dsmod group "CN=Administrators,CN=Builtin,DC=domain,DC=Com" -addmbr "CN=S-1-5-21-2306709042-1358553411-2773264248-500,CN=ForeignSecurityPrincipals,DC=domain,DC=com"  
+ 
+# followed by reboot might work
+dsmod group "CN=Administrators,CN=Builtin,DC=domain,DC=Com" -addmbr "CN=Administrator,CN=Users,DC=G6B8DDDFF717,DC=Com"
+dsget group "CN=Administrators,CN=Builtin,DC=domain,DC=com" -members
+"CN=S-1-5-21-2306709042-1358553411-2773264248-500,CN=ForeignSecurityPrincipals,DC=domain,DC=com"
+This is refering to administrator at 2013.com under the 2010.com foest.
+Does this work on a fresh environment?
+Success!
+Wrapped in chef?
+Success!
+
+Remove all 10. A records from current dns server:
+$zonename = "#{node[fqdn].split('.')[1]}.com"
+Get-DnsServerResourceRecord -ZoneName $zonename | where {$_.HostName -like "orchprod*" -and $_.RecordData.IPv4Address -like "10.*"} | Remove-DnsServerResourceRecord -ZoneName $zonename -force
+Failure! records came back before trust established.
+
+1:55pm - remove SN from dns on exchange_dc
+2:19pm - witnessed 10. coming back, timestamped at 2pm
+FAILURE!
+Disabled adapter.
+Success! 10. gone.
+If you had sat and pinged for a few minutes at a time, this problem could have been identified much sooner 
+
+PesKey.exe with PesSvc running....
+Success!

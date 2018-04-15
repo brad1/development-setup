@@ -1,0 +1,106 @@
+#!/usr/bin/env ruby
+require 'httparty'
+$configs = {}
+
+$configs['page'] = 'http://www.microsoft.com/en-in/search/DownloadResults.aspx'
+$configs['terms'] = [
+  "KB2386667",
+  "KB2425227",
+  "KB2468871",
+  "KB2487367",
+  "KB2506014",
+  "KB2506212",
+  "KB2506928",
+  "KB2509553",
+  "KB2511455",
+  "KB2515325",
+  "KB2529073",
+  "KB2533523",
+  "KB2533552",
+  "KB2536275",
+  "KB2536276",
+  "KB2541014",
+  "KB2544893",
+  "KB2545698",
+  "KB2547666",
+  "KB2552343",
+  "KB2560656",
+  "KB2563227",
+  "KB2564958",
+  "KB2570947",
+  "KB2574819"
+]
+$configs['filter_script'] = [
+  'details',
+  'go',
+  'msu',
+  'go'
+]
+
+$configs['filter_script'].freeze
+
+def crawl(url)
+  url.gsub!('details', 'confirmation')
+  puts url
+  response = HTTParty.get(url)
+  results = response.body.scan(/http[^"]*/)
+
+  actions = []
+  actions << $configs_copy.shift
+  until actions.include? 'go'
+    actions << $configs_copy.shift
+  end
+
+  actions.delete('go')
+
+  to_delete = []
+
+  results.each do |result|
+    actions.each do |action|
+      unless(result.include? action)
+        to_delete << result
+      end
+    end
+  end
+  to_delete.each do |td|
+    results.delete(td)
+  end
+
+  unless results.first.nil?
+    puts results.first
+  end
+end
+
+$configs['terms'].each do |search_term|
+  $configs_copy = $configs['filter_script'].dup
+  url = "#{$configs['page']}?q=#{search_term}"
+  puts url
+  response = HTTParty.get(url)
+  results = response.body.scan(/http[^"]*/)
+
+  actions = []
+  actions << $configs_copy.shift
+  until actions.include? 'go'
+    actions << $configs_copy.shift
+  end
+
+  actions.delete('go')
+
+  to_delete = []
+
+  results.each do |result|
+    actions.each do |action|
+      unless(result.include? action)
+        to_delete << result
+      end
+    end
+  end
+  to_delete.each do |td|
+    results.delete(td)
+  end
+
+  unless results.first.nil?
+    crawl(results.first)
+  end
+end
+

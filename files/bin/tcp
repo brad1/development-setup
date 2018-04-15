@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'net/ping'
+
+class PingCheck
+    def initialize(host)
+        pinger = Net::Ping::External.new(host)
+        puts "#{host} responds to ping?  : #{pinger.ping}" 
+    end
+end
+
+class PortCheck < PingCheck
+    def initialize(host, port)
+        super(host)
+        ip = host
+        puts "Port #{port} open?  : #{is_port_open?(ip, port)}"
+    end
+
+    private
+    def is_port_open?(ip, port)
+      begin
+        Timeout::timeout(1) do
+          begin
+            s = TCPSocket.new(ip, port)
+            s.close
+            return true
+          rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+            return false
+          end
+        end
+      rescue Timeout::Error
+      end
+
+      return false
+    end
+end
+
+PortCheck.new(ARGV.shift, ARGV.shift)
+
+

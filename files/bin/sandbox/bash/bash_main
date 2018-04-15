@@ -1,0 +1,32 @@
+#!/bin/bash
+
+DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+
+echo "Script located here:"
+echo $DIR
+
+#result=`cat file | head -1`  #capture one line
+#. /etc/profile.d/rvm.sh      # dot source, avoid using
+
+#ifelse
+#if [ "$result" == "rvm is a function" ]; then
+#  echo '===> RVM system install successful.'
+#else
+#  echo '===> Error - Installation not successful, RVM should be a function not a binary - See http://rvm.beginrescueend.com/rvm/install/ for more info'
+#  return
+#fi
+
+#foreach
+#for str in asdf jkl iuo
+#do
+#  echo str
+#done
+
+#grep -q #quit search when first match is found
+
+#minor_version=`printf "%03d" 9`  #pad with leading zeros
+
+# Heredoc
+#cat <<EOF > /etc/app/settings.config
+#  bootstrap_host: $eth1_ip:81
+#EOF

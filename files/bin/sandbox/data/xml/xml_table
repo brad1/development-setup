@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'json'
+
+content = STDIN.read
+doc = Nokogiri::XML(content)
+
+
+def flatten_name(elem)
+  name_parts = [] 
+  while(!elem.class.eql?(Nokogiri::XML::Document))
+    name_parts << elem.name
+    elem = elem.parent
+  end
+  return name_parts.reverse.join(':')
+end
+
+list_of_lists = []
+title  = ["Item values by full path."].freeze
+lables = ['key','value'].freeze
+
+list_of_lists << title
+list_of_lists << lables
+
+# Find all elements
+leaf_elements = []
+all_elements  = doc.xpath('//*')
+all_elements.each do |element|
+
+  child_element_count = 0
+  element.children.each do |c|
+    if(Nokogiri::XML::Element.eql? c.class)
+      child_element_count += 1
+    end
+  end
+
+  if child_element_count.eql? 0
+    leaf_elements << element
+  end
+
+end
+leaf_elements.each do |element|
+  list_of_lists << ["#{flatten_name element}","#{element.children[0].content.strip}"].freeze
+end
+
+puts JSON.pretty_generate(list_of_lists)

@@ -1,0 +1,67 @@
+------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=5r6yzFEXajQ
+vim tmux
+------------------------------------------------------------------------------ 
+https://www.youtube.com/watch?v=DB4h96bcrQw
+checkout vim fugitive plugin
+
+this is a thing too:
+http://vim.wikia.com/wiki/Creating_your_own_syntax_files
+------------------------------------------------------------------------------ 
+------------------------------------------------------------------------------ 
+dev dsc/ide
+- git window, 1-3 editor windows, build shell (rake) 
+- windows for log tailing
+- best if they each had independent shell history
+- youtube says vim w/ ctrl-hjkl for moving panes is really good
+- how to turn on relative numbering?
+- vim surround (quotes, parens)
+- custom templates are powerful, should expand script.ruby etc. first
+- what is this vim wiki plugin for making links etc?
+https://www.youtube.com/watch?v=YD9aFIvlQYs
+next:
+https://www.youtube.com/watch?v=lZdkUK2jgGY
+tmux new -s ruby #is tmuxinator?
+------------------------------------------------------------------------------ 
+tail -f no wrap:
+less -S and shift+f
+------------------------------------------------------------------------------ 
+vim insert mode:
+ctrl-w deletes word
+ctrl-u deletes line
+ctrl-d/t indentation (and ctrl-i apparently)
+------------------------------------------------------------------------------  ()
+remember to use z shortcut
+remember to ls -<TAB> for quick options
+remember to take test # mkdir test, cd test
+remember to use up arrow instead of ctrl-r orca<up> in zsh
+------------------------------------------------------------------------------ 
+
+# curl -X GET orchestration.autoco.rax.io/v2/limits --header "X-Auth-Token: Es4BC20-92lNI8H-d5Eis31-Qzc927Z"  | format
+
+# array.inject(0){|sum,x| sum + x } # sum the array
+# array.inject(1){|product,x| product*x } # product the array
+
+vim
+let vim do the typing
+https://www.youtube.com/watch?v=3TX3kV3TICU
+brew install ctags
+add alias b/c mac builtin ctags sucks
+good stuff
+ctags -R
+ctrl-] (jump to defn)
+ctrl-o (jump back, using jumplist)
+ctrl-t (jump back, using tagstack)
+ctrl-X ctrl-] (from insert mode, complete based on tags or definitions)
+Ra
+ctrl-x ctrl-f (filename completion)
+Rakefile
+LOOK UP completion mode
+asdf = asdf + 1
+a
+ctrl-x ctrl-n (select asdf, enter, then bang ctrl-x ctrl-n on repeat, grabs whole line)
+do the same thing with ^x ^l to copy entire paragraph line by line
+navigation
+https://www.youtube.com/watch?v=Qem8cpbJeYc
+http://usevim.com/2012/07/06/vim101-completion/
+

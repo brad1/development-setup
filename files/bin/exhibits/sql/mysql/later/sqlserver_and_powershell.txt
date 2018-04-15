@@ -1,0 +1,24 @@
+- insert ignore: inserts, but warns on duplicate key instead of erroring out.
+
+[mssql]
+powershell:
+New-Cluster -Name SQLCLUS ...
+Set-ClusterQuorum -FileShareWitness ...
+------------------------------------------------------------------------------ 
+$SqlConnection = New-Object System.Data.SqlClient.SqlConnection
+$SqlConnection.ConnectionString = "Server=localhost;Database=master;Integrated Security=True"
+------------------------------------------------------------------------------ 
+# square brackets rly needed
+DROP USER [username]
+------------------------------------------------------------------------------ 
+List stored procedure on master or other database:
+select * 
+  from master.information_schema.routines 
+ where routine_type = 'PROCEDURE' 
+
+Run stored procedure:
+sqlcmd -S localhost -Q "EXEC as_proc" -o .\Desktop\test.out
+------------------------------------------------------------------------------ 
+IF EXISTS(select * from sys.databases where name='WSS_Content')
+DROP DATABASE WSS_Content
+------------------------------------------------------------------------------ 
