@@ -12,8 +12,13 @@ git "#{homedir}/.oh-my-zsh" do
   action :sync
 end
 
-link "#{homedir}/.zsh" do
+link "#{homedir}/.zshrc" do
   to "/opt/chef/cookbooks/development-setup/files/zsh/zshrc"
+end
+
+link "#{homedir}/.oh-my-zsh/custom/include.zsh" do
+  to "/opt/chef/cookbooks/development-setup/files/zsh/oh-my-zsh.zsh"
+  only_if {::File.exists?("#{homedir}/.oh-my-zsh/custom")}
 end
 
 case node['platform_family']
