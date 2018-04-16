@@ -11,6 +11,8 @@
 #git blame file # shows file, with last commit hash for each line
 #git commit --ammend --no-edit # roll a staged file into the previous commir
 
+alias rvm_load='source /home/brad/.rvm/scripts/rvm; rvm use 2.4.3'
+
 alias aliases='cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; cat ~/Projects/sandbox/zshrc'
 
 alias http_get_with_status='curl -Li localhost:5000 2> /dev/null | grep -i HTTP'

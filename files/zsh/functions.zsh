@@ -8,3 +8,11 @@ readme () {
   fi
   vim $(ls | grep -v collapse | xargs)
 }
+
+# readme () {
+#  vim readme     # no
+#  vim **/readme  # maybe
+#  vim ~/Projects/**/readme # better
+#  vim ~/Documents/vim/raw/...  ~/Projects/**/readme # start with the global, than add others
+#  ...
+#}
