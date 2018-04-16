@@ -16,16 +16,18 @@ link "#{homedir}/.zshrc" do
   to "/opt/chef/cookbooks/development-setup/files/zsh/zshrc"
 end
 
-link "#{homedir}/.oh-my-zsh/custom/include.zsh" do
-  to "/opt/chef/cookbooks/development-setup/files/zsh/oh-my-zsh.zsh"
-  only_if {::File.exists?("#{homedir}/.oh-my-zsh/custom")}
-end
-
 case node['platform_family']
+when 'windows'
+when 'osx'
 when 'arch'
   user node['development-setup']['user']['name'] do
     action :modify
     shell '/bin/zsh'
+  end
+when 'fedora'
+  user node['development-setup']['user']['name'] do
+    action :modify
+    shell '/usr/bin/zsh'
   end
 else
 end
