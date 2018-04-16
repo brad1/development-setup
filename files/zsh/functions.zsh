@@ -4,7 +4,7 @@ readme () {
   terminal_height=$(tput lines)
   file_length=$(cat $(echo $list | tail -1) | wc -l)
   if [[ "$file_length" -gt "$terminal_height" ]]; then
-    echo $(date +%Y%m%d) > $(date +%Y%m%d)
+    echo $(date +%Y%m%d) >> $(date +%Y%m%d)
   fi
   vim $(ls | grep -v collapse | xargs)
 }
