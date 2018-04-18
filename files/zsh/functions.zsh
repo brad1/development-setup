@@ -10,8 +10,20 @@ readme () {
 }
 
 save () {
-  echo "### standard out of $@\n" > stdout.log
-  echo "### standard err of $@\n" > stderr.log
+  revision="$(git log --oneline | head -n1)"
+
+  echo "# Generated on $(date)"      >  stdout.log
+  echo "# git revision: ${revision}" >> stdout.log
+  echo "# run in $(pwd)"             >> stdout.log
+  echo "# standard out of \"$@\""    >> stdout.log
+  echo ""                            >> stdout.log
+
+  echo "# Generated on $(date)"      >  stderr.log
+  echo "# git revision: ${revision}" >> stderr.log
+  echo "# run in $(pwd)"             >> stderr.log
+  echo "# standard err of \"$@\""    >> stderr.log
+  echo ""                            >> stderr.log
+
   "$@" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 }
 
