@@ -1,4 +1,6 @@
 
+# command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+
 # printenv
 
 # git rebase master --preserve-merges
