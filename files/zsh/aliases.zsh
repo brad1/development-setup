@@ -57,8 +57,8 @@ alias project_clean='git checkout .; git clean -f; make clean'
 #   git commit --ammend --no-edit # roll a staged file into the previous commit
 alias vagrant_deathstar='vagrant halt && vagrant destroy --force'
 
-# [shell]
 
+# [shell]
 alias bash_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
 alias c="cut -d' ' -f"
 alias l='ls -lh'
@@ -67,3 +67,4 @@ alias selinux_permissive='setenforce 0'
 # env
 #
 # command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+#alias save='command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)'

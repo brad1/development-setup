@@ -9,6 +9,12 @@ readme () {
   vim $(ls | grep -v collapse | xargs)
 }
 
+save () {
+  echo "### standard out of $@\n" > stdout.log
+  echo "### standard err of $@\n" > stderr.log
+  "$@" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+}
+
 # readme () {
 #  vim readme     # no
 #  vim **/readme  # maybe
