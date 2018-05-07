@@ -1,29 +1,24 @@
-" reload vimrc
-nmap <Leader>a :source ~/.vimrc<CR>
+nmap <Leader>a :source ~/.vimrc<CR>       " reload vimrc
+nmap <leader>s :w!<CR>                    " save
+nmap <leader>d Gzz                        " Go to bottom and center the cursoer
+nmap <Leader>f :%s///g<Left><Left><Left>  " search
+nmap <Leader>r :reg<CR>                   " registers
+nmap <Leader>p :set mouse=a<CR>           " mouse mode
 
-" save
-nmap <leader>s :w!<CR>
+inoremap <Leader>a {"":"","":[]} " json template, follow by formatting it, there was a way to do this.
 
-" Go to bottom and center the cursoer
-nmap <leader>d Gzz
-nmap <Leader>f :%s///g<Left><Left><Left>
-nmap <Leader>r :reg<CR>
-nmap <Leader>o :set paste!<CR>
-nmap <Leader>p :set mouse=a<CR>
-nmap <Leader>i :set mouse=i<CR>
-nmap <leader><F4> :qa!<CR>
 
-inoremap <Leader>a {"":"","":[]}
+inoremap <Leader>d [<C-R>=strftime("%c")<CR>]   " timestamp
+inoremap <Leader>f ------------------------------------------------------------------------------ " seperator
 
-"inoremap <Leader>s TODO:
-
-inoremap <Leader>d [<C-R>=strftime("%c")<CR>]
-inoremap <Leader>f ------------------------------------------------------------------------------
-
-:nmap <Leader>l :setlocal number!<CR>
 :nmap <Leader>e :NERDTreeToggle<CR>
 :nmap <Leader>w :set wrap!<CR>
 :nmap <Leader>q :nohlsearch<CR>
 :map <Leader>g :echo expand('%:p')<CR>
 
 
+" nmap <Leader>o :set paste!<CR>
+" inoremap <Leader>s TODO:
+" nmap <leader><F4> :qa!<CR>      " just use :x instead
+" :nmap <Leader>l :setlocal number!<CR> " what did this even do?
+" nmap <Leader>i :set mouse=i<CR>           " mouse mode in insert, just allow this by default

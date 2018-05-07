@@ -1,0 +1,19 @@
+# rsync daemon needs 2 things to function:
+rsync --daemon   # a running service, and:
+/etc/rsyncd.conf # configuration.  see files/etc/rsync.conf for example
+
+# fire and forget
+rsync -avz rpmpkgs/ root@192.168.0.101:/home/
+
+# recursive, timestamp, update, delete (iaw sync the destination dir with the source)
+# requires source and est to have rsync daemon running, should be invoked from cron
+rsync -rtu --delete SOURCE root@x.x.x.x:/DESTINATION
+
+
+# walthrough:
+sudo yum install rsync -y # success!
+rsync -avz /mnt/data/ root@127.0.0.1:/root
+> ssh conn. refused on 22...
+rsync -azv -e "ssh -p 2222" /mnt/data root@127.0.0.1:/root
+> successfully sent 0 bytes, but with a password prompt
+

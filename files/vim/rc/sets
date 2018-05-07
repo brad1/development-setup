@@ -1,5 +1,6 @@
-set nonumber
-set mouse=
+set mouse= " what does this do again?
+
+:set mouse=i
 
 "indentation
 set smartindent
@@ -13,5 +14,12 @@ set incsearch
 set ignorecase
 set smartcase
 set hlsearch
-set rnu            " relative line numbers
-set hidden         " If you don't have this set already, then do so. It makes vim work like every other multiple-file editor on the planet. You can have edited buffers that aren't visible in a window somewhere.
+
+" toggle hybrid numbering
+set number!
+set relativenumber!
+
+" If you don't have this set already, then do so. It makes vim work like
+" every other multiple-file editor on the planet. You can have edited buffers
+" that aren't visible in a window somewhere.
+set hidden
