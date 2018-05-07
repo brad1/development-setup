@@ -6,4 +6,4 @@
 [ -f /etc/redhat-release ] && cat /etc/redhat-release
 
 # OSX
-command -v sw_vers && sw_vers
+#command -v sw_vers && sw_vers

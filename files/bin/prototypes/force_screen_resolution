@@ -1,4 +1,5 @@
+# Tested on Arch, force resolution
 gtf 2160 1440 60 | awk -F "Modeline" '{print $2}' | awk -F "-HSync" '{print $1}' > /.chefdev/xrandrargs
-xrandr --newmode `cat /.chefdev/xrandrargs` 
+xrandr --newmode `cat /.chefdev/xrandrargs`
 xrandr --addmode VGA-0 "2160x1440_60.00"
-xrandr --output VGA-0 --mode "2160x1440_60.00" 
+xrandr --output VGA-0 --mode "2160x1440_60.00"

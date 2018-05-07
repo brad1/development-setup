@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
+
+# Generic pretty-printer
+# cat example.json | format
+
+
+
 content = STDIN.read
 begin
   require 'json'
@@ -6,7 +12,7 @@ begin
   result = JSON.pretty_generate(hash)
   puts result
   exit 0
-rescue 
+rescue
 end
 
 begin
@@ -22,7 +28,7 @@ begin
   YAML.load(content)
   puts 'possible YAML detected'
   exit 0
-rescue 
+rescue
 end
 
 puts 'failed to parse'

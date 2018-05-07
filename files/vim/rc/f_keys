@@ -4,7 +4,6 @@ nmap <F4> :tabp<CR>
 nmap <F5> :tabn<CR>
 nmap <F6> :!open -a TextEdit %:p<CR>
 
-" broken b/c zsh
 nmap <F7> :split /opt/chef/cookbooks/development-setup/files/vim/cheatsheet<CR>
 
 

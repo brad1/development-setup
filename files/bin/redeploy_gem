@@ -1,4 +1,0 @@
-rm *.gem
-gem build *.gemspec
-gem uninstall orca_stack
-gem install *.gem

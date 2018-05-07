@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 result = []
 instring = false
-content = STDIN.read 
+content = STDIN.read
 content.split('').each do |w|
   if w =~ /[[:alpha:]]/ || w.eql?('_') || (w =~ /[[:digit:]]/ && instring)
     if !instring

@@ -1,3 +1,0 @@
-#!/bin/zsh
-work="/Users/brad.yohe/workspace"
-vim $work/state/cache/strings

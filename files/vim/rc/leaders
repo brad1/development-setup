@@ -5,11 +5,11 @@ nmap <Leader>f :%s///g<Left><Left><Left>  " search
 nmap <Leader>r :reg<CR>                   " registers
 nmap <Leader>p :set mouse=a<CR>           " mouse mode
 
-inoremap <Leader>a {"":"","":[]} " json template, follow by formatting it, there was a way to do this.
-
-
-inoremap <Leader>d [<C-R>=strftime("%c")<CR>]   " timestamp
-inoremap <Leader>f ------------------------------------------------------------------------------ " seperator
+inoremap <Leader>a {"":"","":[]}
+" date
+inoremap <Leader>d [<C-R>=strftime("%c")<CR>]<CR>
+" seperator
+inoremap <Leader>f ------------------------------------------------------------------------------
 
 :nmap <Leader>e :NERDTreeToggle<CR>
 :nmap <Leader>w :set wrap!<CR>
