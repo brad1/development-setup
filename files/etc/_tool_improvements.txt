@@ -33,8 +33,8 @@ ctrl-d/t indentation (and ctrl-i apparently)
 ------------------------------------------------------------------------------  ()
 remember to use z shortcut
 remember to ls -<TAB> for quick options
-remember to take test # mkdir test, cd test
-remember to use up arrow instead of ctrl-r orca<up> in zsh
+rmember to take test # mkdir test, cd test
+remember to use up arrow instead of ctrl-r in zsh
 ------------------------------------------------------------------------------ 
 
 # curl -X GET orchestration.autoco.rax.io/v2/limits --header "X-Auth-Token: Es4BC20-92lNI8H-d5Eis31-Qzc927Z"  | format

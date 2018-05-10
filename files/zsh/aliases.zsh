@@ -47,18 +47,28 @@ alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercon
 # [git/projects]
 alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 alias project_clean='git checkout .; git clean -f; make clean'
+#
 #   git rebase master --preserve-merges
 #   git rebase -i HEAD~4 #for squashing
+#
 #   git log --oneline --decorate --graph --all
 #   git log --grep 'keyword'
 #   git log -S code_snippet # find commits that adds or removes the string
 #   git log --oneline -- Gemfile # only look at gemfile
+#
 #   git blame file # shows file, with last commit hash for each line
 #   git commit --ammend --no-edit # roll a staged file into the previous commit
-alias vagrant_deathstar='vagrant halt && vagrant destroy --force'
-
+#
+#   # checkout last version of a file before it was deleted.
+#   git checkout $(git rev-list -n 1 HEAD -- "$file")~1 -- "$file"
+#
+#   # what files changed in my branch?
+#   git diff --name-only SHA1 SHA2
+#
+alias vagrant_deathstar='vagrant halt ; vagrant destroy --force'
 
 # [shell]
+alias tmp='vim ~/tmp/$(date "+%F-%T")'
 alias bash_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
 alias c="cut -d' ' -f"
 alias l='ls -lh'
