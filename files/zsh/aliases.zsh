@@ -78,3 +78,6 @@ alias selinux_permissive='setenforce 0'
 #
 # command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 #alias save='command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)'
+
+# [other]
+run_chef="bash --login -c 'rvm use 2.4.0; chef-solo -c /opt/chef/cookbooks/development-setup/solo.rb'"
