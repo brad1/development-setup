@@ -1,0 +1,11 @@
+cd ~/Projects/vmass
+tmux new-session -d
+#tmux split-window -v
+#tmux split-window -h
+cd $DEVSETUP
+tmux new-window 'vim files/tmux/cheatsheet'
+tmux split-window -v
+tmux split-window -h
+tmux split-window -v
+tmux select-layout tiled
+tmux -2 attach-session -d
