@@ -17,3 +17,11 @@ CTRL + S	Stop output to screen
 CTRL + Q	Re-enable screen output
 CTRL + C	Terminate/kill current foreground process
 CTRL + Z	Suspend/stop current foreground process
+
+# empty control keys:
+e f k x b n
+maybe z i g (bell)
+j o (unknown)
+
+
+
