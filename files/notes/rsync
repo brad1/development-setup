@@ -6,7 +6,7 @@ rsync --daemon   # a running service, and:
 rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 
 # recursive, timestamp, update, delete (iaw sync the destination dir with the source)
-# requires source and est to have rsync daemon running, should be invoked from cron
+# requires source and dest to have rsync daemon running, should be invoked from cron
 rsync -rtu --delete SOURCE root@x.x.x.x:/DESTINATION
 
 
@@ -17,3 +17,9 @@ rsync -avz /mnt/data/ root@127.0.0.1:/root
 rsync -azv -e "ssh -p 2222" /mnt/data root@127.0.0.1:/root
 > successfully sent 0 bytes, but with a password prompt
 
+# passwordless:
+rsync -avz --delete -e "ssh -i /home/thisuser/rsync-key" /local/dir remoteuser@remotehost:/remote/dir/
+
+# to sync on every change:
+on linux, see inotifywait, dnotify, etc.
+with events "close_write" or "modify"

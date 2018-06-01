@@ -1,0 +1,7 @@
+tmux ls                    # list sessions
+tmux a -t session_name     # attach session
+Ctrl-a d                   # detach session
+Ctrl-a )                   # next session
+Ctrl-a n                   # next window
+Ctrl-a &                   # kill window
+

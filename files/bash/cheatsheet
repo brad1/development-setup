@@ -6,4 +6,10 @@ for i in /etc/*.conf; do cp $i /backup; done
 Ex.
 for i in $(vagrant box list | cut -f 1 -d' ' | xargs); do vagrant box remove $i; done
 
+# run a function in the background
+my_background_method {
+  ...
+}
+my_background_method &
+
 

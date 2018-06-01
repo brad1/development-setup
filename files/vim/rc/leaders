@@ -5,6 +5,7 @@ nmap <Leader>f :%s///g<Left><Left><Left>  " search
 nmap <Leader>r :reg<CR>                   " registers
 nmap <Leader>p :set mouse=a<CR>           " mouse mode
 
+" TODO find a better way to do this
 inoremap <Leader>a {"":"","":[]}
 " date
 inoremap <Leader>d [<C-R>=strftime("%c")<CR>]<CR>
@@ -15,6 +16,8 @@ inoremap <Leader>f -------------------------------------------------------------
 :nmap <Leader>w :set wrap!<CR>
 :nmap <Leader>q :nohlsearch<CR>
 :map <Leader>g :echo expand('%:p')<CR>
+
+:map <Leader>l :ls<CR>
 
 
 " nmap <Leader>o :set paste!<CR>

@@ -1,0 +1,11 @@
+sudo su    # gimme root
+crontab -e # edit
+crontab -l # list
+
+# Does this run when user is logged out?  yes.
+# Does this run before user's first login? yes.
+
+
+
+
+

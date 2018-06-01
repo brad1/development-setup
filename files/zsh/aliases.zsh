@@ -1,3 +1,8 @@
+# [new]
+alias zsh_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/zsh/cheatsheet'
+alias zsh_controls='cat /opt/chef/cookbooks/development-setup/files/zsh/functions'
+alias tmux_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/tmux/cheatsheet'
+
 # [locations]
 
 alias cd_devsetup='cd /opt/chef/cookbooks/development-setup'

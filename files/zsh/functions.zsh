@@ -27,6 +27,10 @@ save () {
   "$@" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 }
 
+# This only works once....
+# zle -N readme
+# bindkey "^g" readme
+
 # readme () {
 #  vim readme     # no
 #  vim **/readme  # maybe
