@@ -1,3 +1,7 @@
+# filenames in batches, plus gsub:
+names=$(ls packages/*.rpm | xargs -I % basename %)
+names=${PACKAGE_NAMES//\.rpm/}
+
 (list)   # run in subshell, exit 1 does not kill the script
 {list; } # run in current shell
 

@@ -30,7 +30,7 @@ alias vbox_target_6021='VBoxManage startvm target-VE6021'
 alias vbox_target_6025='VBoxManage startvm Centos6-target'
 alias vbox_target_tps='VBoxManage startvm Centos6-target-tps'
 alias vbox_target_ccserver='VBoxManage startvm target-CCServer'
-alias vbox_vmass_view_screenshot="scp $(type ssh_build | cut -d' ' -f7):~/screenshot.png . && open -a Finder ./screenshot.png"
+alias vbox_vmass_view_screenshot="scp $(type ssh_build | cut -d' ' -f7):~/screenshot.png ~/.state/vmass_vagrant.png && open -a Finder ~/.state/vmass_vagrant.png"
 alias vbox_vmass_gen_screenshot="VBoxManage controlvm vmass screenshotpng screenshot.png && sudo mv screenshot.png /home/brad && sudo chown brad /home/brad/screenshot.png"
 
 

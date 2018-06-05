@@ -1,11 +1,26 @@
-cd ~/Projects/vmass
 tmux new-session -d
-#tmux split-window -v
-#tmux split-window -h
+tmux rename-window 'readme'
+tmux send-keys 'readme' C-m
 cd $DEVSETUP
-tmux new-window 'vim files/tmux/cheatsheet'
+tmux new-window 'view files/tmux/cheatsheet'
+tmux rename-window 'cheatsheets'
 tmux split-window -v
+tmux send-keys 'view files/zsh/cheatsheet' C-m
 tmux split-window -h
+tmux send-keys 'view files/vim/cheatsheet' C-m
 tmux split-window -v
+tmux send-keys 'view files/bash/cheatsheet' C-m
 tmux select-layout tiled
+tmux new-window 'bash ~/Documents/vim/prototypes/matches.sh'
+tmux rename-window 'dashboard'
+tmux split-window -v
+tmux send-keys 'view ~/.state/todo.txt' C-m
+tmux split-window -v
+tmux send-keys 'view ~/.state/remember.txt' C-m
+tmux split-window -v
+tmux send-keys 'view ~/.state/tags.txt' C-m
+tmux select-layout tiled
+cd
+tmux new-window
+tmux rename-window 'shell'
 tmux -2 attach-session -d

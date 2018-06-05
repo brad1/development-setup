@@ -35,6 +35,13 @@ save () {
   "$@" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 }
 
+function goto_devsetup() {
+ BUFFER="cd $DEVSETUP"$BUFFER
+ zle end-of-line
+ zle accept-line
+}
+zle -N goto_devsetup
+bindkey "^g" goto_devsetup
 function goto_home() {
  BUFFER="cd ~/"$BUFFER
  zle end-of-line
