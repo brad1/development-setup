@@ -1,0 +1,19 @@
+cd /etc/yum.repos.d
+wget http://download.virtualbox.org/virtualbox/rpm/rhel/virtualbox.repo
+dnf update # on fedora
+dnf install VirtualBox-5.2
+
+➜  ~ rpm -qa kernel |sort -V |tail -n 1
+kernel-4.16.7-200.fc27.x86_64
+➜  ~ uname -r
+4.16.5-200.fc27.x86_64
+
+mismatch.
+
+dnf install binutils gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-devel dkms
+reboot
+
+no more mismatch.
+------------------------------------------------------------------------------
+
+

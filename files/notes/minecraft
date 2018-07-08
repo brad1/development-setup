@@ -1,0 +1,38 @@
+http://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.rpm
+from http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+sudo dnf install *.rpm
+oops! looks like fedora already came with openjdk
+headless exception..... do it yourself.
+
+sudo mkdir -p /usr/local/java # and cd
+mv java tar gz here
+tar xvzf ...
+gives use /usr/local/java/jdk*
+
+vim /etc/profile
+
+JAVA_HOME=/usr/local/java/jdk1.8.0_141
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
+export JAVA_HOME
+export PATH
+
+sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jdk1.8.0_141/bin/java" 1
+sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/jdk1.8.0_141/bin/javac" 1
+sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jdk1.8.0_141/bin/javaws" 1
+
+sudo update-alternatives --set java /usr/local/java/jdk1.8.0_141/bin/java
+sudo update-alternatives --set javac /usr/local/java/jdk1.8.0_141/bin/javac
+sudo update-alternatives --set javaws /usr/local/java/jdk1.8.0_141/bin/javaws
+
+# that last one didn't work, ignoring....
+
+java -jar Minecraft.jar # success! kind of slow though.
+
+lspci -v | grep -i graphics
+rpm -qa | grep -i intel
+# intel chipsets and driver package appear here
+
+found a suggested launcher:
+# java -Dsun.java3d.opengl=true -Xmx1024M -Xms512M -cp minecraft.jar net.minecraft.LauncherFrame
+# optimine mod might also help! 

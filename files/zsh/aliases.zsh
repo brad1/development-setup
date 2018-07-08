@@ -105,3 +105,6 @@ alias selinux_permissive='setenforce 0'
 
 # [other]
 run_chef="bash --login -c 'rvm use 2.4.0; chef-solo -c /opt/chef/cookbooks/development-setup/solo.rb'"
+mem="cat /proc/meminfo | grep Total"
+cpu="cat /proc/cpuinfo"
+graphics="lspci -v|grep -i graphics"
