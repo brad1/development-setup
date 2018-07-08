@@ -2,10 +2,27 @@
 names=$(ls packages/*.rpm | xargs -I % basename %)
 names=${PACKAGE_NAMES//\.rpm/}
 
+# args
+for arg in $@;
+do
+  [ "vecap" = "$arg" ] && echo hello
+done
+
+## increment
+var=0
+echo $((var++))
+echo $((var++))
+
+## no escape
+port=$(cat file | grep -o "$pattern")     # works
+port="$(cat file | grep -o \"$pattern\")" # can't work
+
 (list)   # run in subshell, exit 1 does not kill the script
 {list; } # run in current shell
 
+for i in $(seq 1 $END); do echo $i; done
 for i in /etc/*.conf; do cp $i /backup; done
+for word in word1 word2 word3 word4; do echo word; done
 
 Ex.
 for i in $(vagrant box list | cut -f 1 -d' ' | xargs); do vagrant box remove $i; done
@@ -17,3 +34,11 @@ my_background_method {
 my_background_method &
 
 
+case "$asdf" in
+"hello")
+   echo hello
+   ;;
+"abcd")
+   echo asdf
+   ;;
+esac

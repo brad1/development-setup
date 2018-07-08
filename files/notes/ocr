@@ -1,0 +1,8 @@
+# packages
+yum install epel-release tesseract ImageMagick
+
+# sharpen
+convert -colorspace gray -fill white  -resize 480%  -sharpen 0x1  file.png file.jpg
+
+# OCR
+tesseract file.jpg file
