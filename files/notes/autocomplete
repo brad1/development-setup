@@ -1,0 +1,6 @@
+Examples: to be places in zshrc
+https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org
+/usr/share/zsh/functions/Completion/
+compdef _gnu_generic foobar goocar hoodar
+compdef _function foobar
+compdef cmd1=cmd2
