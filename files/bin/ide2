@@ -1,0 +1,17 @@
+tmux new-session -d
+#tmux rename-window 'readme'
+#tmux send-keys 'readme' C-m
+#cd $DEVSETUP/files/
+#tmux new-window 'vim ./vim/cheatsheet ./zsh/cheatsheet ./tmux/cheatsheet ./bash/cheatsheet'
+#tmux rename-window 'cheatsheets'
+#tmux new-window 'view ~/.state/todo.txt ~/.state/remember.txt ~/.state/tags.txt'
+#tmux rename-window 'dashboard'
+#cd
+#tmux new-window
+#tmux rename-window 'shell'
+#tmux -2 attach-session -d
+
+tmux new-session -d
+tmux rename-window 'vim-specs'
+tmux send-keys 'vim spec/features/**/*.rb' C-m
+tmux -2 attach-session -d

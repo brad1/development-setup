@@ -1,4 +1,5 @@
 # [new]
+alias cd_devsetup="cd $DEVSETUP"
 alias zsh_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/zsh/cheatsheet'
 alias zsh_controls='cat /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
 alias tmux_cheatsheet='cat /opt/chef/cookbooks/development-setup/files/tmux/cheatsheet'
