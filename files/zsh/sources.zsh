@@ -7,7 +7,7 @@ source $INCLUDE/functions.zsh
 # source $INCLUDE/moveme.zsh # left over from before
 # source $INCLUDE/numpad.zsh
 
-WORK_ZSHRC=~/projects/sandbox/zshrc
+WORK_ZSHRC=~/Projects/sandbox/zshrc
 if [ -f $WORK_ZSHRC ]; then
   source $WORK_ZSHRC
 fi

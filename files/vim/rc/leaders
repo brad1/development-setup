@@ -9,6 +9,7 @@ nmap <Leader>p :set mouse=a<CR>           " mouse mode
 inoremap <Leader>a {"":"","":[]}
 " date
 inoremap <Leader>d [<C-R>=strftime("%c")<CR>]<CR>
+inoremap <Leader>t [<C-R>=strftime("%T")<CR>]
 " seperator
 inoremap <Leader>f ------------------------------------------------------------------------------
 
