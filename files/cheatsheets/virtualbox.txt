@@ -1,0 +1,19 @@
+which VBoxManage
+/usr/local/bin/VBoxManage
+
+VBoxManage list vms
+
+# headless examples:
+VBoxManage startvm "Ubuntu Server" --type headless
+VBoxManage controlvm "Ubuntu Server" pause --type headless
+VBoxManage controlvm "Ubuntu Server" resume --type headless
+VBoxManage controlvm "Ubuntu Server" poweroff --type headless
+
+VBoxManage snapshot UBUNTUSERVER_WEB take "$SNAPSHOT_NAME" --description "$SNAPSHOT_DESCRIPTION"
+
+vboxmanage snapshot VM_NAME list
+
+VBoxManage snapshot <Name_of_VM> take <Name_of_Snapshot>
+VBoxManage snapshot <Name_of_VM> restore <Name_of_Snapshot>
+
+

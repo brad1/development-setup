@@ -2,6 +2,10 @@
 names=$(ls packages/*.rpm | xargs -I % basename %)
 names=${PACKAGE_NAMES//\.rpm/}
 
+echo $(basename $(pwd)) # name directory were running in:
+echo $(basename $(dirname $(<script_filepath>))) # equivalent to above
+echo $(basename $(dirname $(pwd))) # name of 2 dirs up!
+
 # args
 for arg in $@;
 do
@@ -42,3 +46,19 @@ case "$asdf" in
    echo asdf
    ;;
 esac
+
+
+# Background watcher
+ls /path/to/file || exit
+:>/root/log
+:>/root/err
+run_when_appears() {
+  for i in $(seq 1 30); do
+    ls /path/to/generated_file && break
+    echo "waiting..." >> /root/log;
+    sleep 20
+  done
+  run_thing
+}
+run_when_appears &
+

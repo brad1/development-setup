@@ -1,0 +1,4 @@
+strings <filename> # pull out strings
+awk
+perl
+ag

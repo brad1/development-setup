@@ -1,9 +1,12 @@
 nmap <Leader>a :source ~/.vimrc<CR>       " reload vimrc
 nmap <leader>s :w!<CR>                    " save
 nmap <leader>d Gzz                        " Go to bottom and center the cursoer
-nmap <Leader>f :%s///g<Left><Left><Left>  " search
+"nmap <Leader>f
 nmap <Leader>r :reg<CR>                   " registers
 nmap <Leader>p :set mouse=a<CR>           " mouse mode
+
+" search
+nmap <Leader>f :%s///g<Left><Left><Left>
 
 " TODO find a better way to do this
 inoremap <Leader>a {"":"","":[]}

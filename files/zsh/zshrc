@@ -1,6 +1,16 @@
 # [Tue Jan  9 16:14:33 2018]
 # zshrc: toggle other zshrc files.
 
+echo '
+
+Ctrl-H: Home                      ______ _____ _    _
+Ctrl-K: Up a directory           |___  // ____| |  | |
+                                    / /| (___ | |__| |
+clipboard                          / /  \___ \|  __  |    git_<TAB>
+                                  / /__ ____) | |  | |    zsh_<TAB>
+cd_<TAB>                         /_____|_____/|_|  |_|    cheatsheet_<TAB>
+'
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -10,3 +20,6 @@ source $INCLUDE/oh-my-zsh.zsh
 
 # Include this instead when using .oh-my-zsh/custom
 source $INCLUDE/sources.zsh
+
+# Vi editing mode with visual mode.
+bindkey -M vicmd v edit-command-line
