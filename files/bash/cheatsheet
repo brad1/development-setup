@@ -12,10 +12,11 @@ do
   [ "vecap" = "$arg" ] && echo hello
 done
 
-## increment
+## increment/math
 var=0
 echo $((var++))
 echo $((var++))
+echo $((COLUMNS - 2))
 
 ## no escape
 port=$(cat file | grep -o "$pattern")     # works

@@ -1,25 +1,33 @@
 # [Tue Jan  9 16:14:33 2018]
 # zshrc: toggle other zshrc files.
 
+
+# Splash page!!! ############
 clear
-echo '#------------------------------------------------------------------------------------------------------#
-#                                                                                                      #
-#                                   ______ _____ _    _                                                #
-#                                  |___  // ____| |  | |                                               #
-#                                     / /| (___ | |__| |                                               #
-#                                    / /  \___ \|  __  |                                               #
-#                                   / /__ ____) | |  | |                                               #
-#                                  /_____|_____/|_|  |_|                                               #
-#                                                                                                      #
-#------------------------------------------------------------------------------------------------------#
-# Ctrl-H: Home               git_<TAB>           VBoxManage list vms                                   #
-# Ctrl-K: Up a directory     zsh_<TAB>           VBoxManage showvminfo                                 #
-#                            cheatsheet_<TAB>                                                          #
-# zsh_aliases                cd_<TAB>                                                                  #
-#                            vim_<TAB>                                                                 #
-#                            clipboard                                                                 #
-#------------------------------------------------------------------------------------------------------#
-'
+sep=""
+blank=""
+pad=""
+for i in $(seq 1 $((COLUMNS - 2))); do sep="$sep-"; done
+for i in $(seq 1 $((COLUMNS - 2))); do blank="$blank "; done
+for i in $(seq 1 $(((COLUMNS - 23) / 2))); do pad="$pad "; done
+echo "\e[35m#$sep#"
+echo "#$blank#
+#$pad ______ _____ _    _ $pad#
+#$pad|___  // ____| |  | |$pad#
+#$pad   / /| (___ | |__| |$pad#
+#$pad  / /  \___ \|  __  |$pad#
+#$pad / /__ ____) | |  | |$pad#
+#$pad/_____|_____/|_|  |_|$pad#
+#$blank#
+#$sep#\e[39m
+  Ctrl-H: Home               git_<TAB>           VBoxManage list vms
+  Ctrl-K: Up a directory     zsh_<TAB>           VBoxManage showvminfo
+                             cheatsheet_<TAB>
+  zsh_aliases                cd_<TAB>
+                             vim_<TAB>
+                             clipboard
+"
+# end Splash page!!! ############
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
