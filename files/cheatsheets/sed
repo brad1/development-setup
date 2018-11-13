@@ -1,0 +1,20 @@
+sed 's/string/"&"/' sed.txt           # Wrap the match
+sed -i '' ...                         # OSX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
