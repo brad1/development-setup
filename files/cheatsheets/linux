@@ -1,0 +1,8 @@
+# dead but subsys locked
+ls /var/run/*.pid and /var/lock/subsys/*
+
+# packages
+rpm -qa # list out
+
+/etc/sysconfig/network-scripts # network hooks
+/etc/sysconfig/network         # these are set on boot

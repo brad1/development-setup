@@ -1,0 +1,28 @@
+[follow a file]
+git blame <filepath>
+git log --oneline -- $(find . -name filename)
+gitk [--follow] filename
+
+git log branchB..branchA
+
+[stash]
+git stash [show [-p] |list|drop|pop|save "comment"]
+git stash -p # will ask you which files to stash
+
+# wip: find where a commit came from, doesn't really work
+git branch -r --contains e087f18e5
+# better: find a branch where:
+# the head commit's date is within a week after the date of <commit>?
+# consider: git log <SHA1>..HEAD --ancestry-path --merges
+
+[find changes to a file since last release/tag]
+date=$(git show 6025-v4.10.0 | grep Date | cut -d':' -f2-4)
+git blame --since="$date" -- Vagrantfile | grep -v '^\^'
+
+[WIP: for all files]
+for file in $(git ls-files); do git blame $file; done
+for file in $(git ls-files); do git blame --since="$date" -- $file | grep -v '^/^'; done
+# this almost works, but redirect to file doesn't record it.
+
+checkout version of a file
+git checkout master -- myplugin.js

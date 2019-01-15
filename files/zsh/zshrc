@@ -4,6 +4,8 @@
 
 # Splash page!!! ############
 clear
+
+
 sep=""
 blank=""
 pad=""
@@ -22,11 +24,17 @@ echo "#$blank#
 #$sep#\e[39m
   Ctrl-H: Home               git_<TAB>           VBoxManage list vms
   Ctrl-K: Up a directory     zsh_<TAB>           VBoxManage showvminfo
-                             cheatsheet_<TAB>
-  zsh_aliases                cd_<TAB>
-                             vim_<TAB>
-                             clipboard
+
+  directories:               cd_<TAB>
+  cheatsheets:               ch_<TAB>
+  other files:               vim_<TAB>
+  works-in-progress:         wip<TAB>
 "
+
+# if screenfetchis here, call it first, discarded warnings
+# which screenfetch >/dev/null 2>/dev/null && screenfetch 2>/dev/null
+# shows apple logo and some stats
+
 # end Splash page!!! ############
 
 # Path to your oh-my-zsh installation.

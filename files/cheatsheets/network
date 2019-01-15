@@ -1,0 +1,7 @@
+# add default gateway
+# fixes: setsocketopt: No such device
+route add default gw 192.168.1.1 eth0
+
+
+curl --head https://gitlab.valcom.com/servers/vmass/-/jobs/artifacts/master/raw/image_builder/veewee/vmass.box?job=vagrant
+curl -H "header: header"

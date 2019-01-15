@@ -1,5 +1,7 @@
 set mouse= " what does this do again?
 
+set foldmethod=syntax "syntax|indent|manual|marker
+
 set path=$PWD/** " for gf
 set path=~/Documents/vim/** " for gf
 

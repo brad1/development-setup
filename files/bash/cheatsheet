@@ -1,3 +1,10 @@
+# unset variable
+end -U NAME
+unset NAME
+
+# check regex
+[[ "$string" =~ ^[0-9]+$ ]] && echo yes
+
 # filenames in batches, plus gsub:
 names=$(ls packages/*.rpm | xargs -I % basename %)
 names=${PACKAGE_NAMES//\.rpm/}
@@ -17,6 +24,7 @@ var=0
 echo $((var++))
 echo $((var++))
 echo $((COLUMNS - 2))
+echo $((RANDOM % 2)) # random 1 or 0
 
 ## no escape
 port=$(cat file | grep -o "$pattern")     # works

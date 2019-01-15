@@ -17,3 +17,5 @@ VBoxManage snapshot <Name_of_VM> take <Name_of_Snapshot>
 VBoxManage snapshot <Name_of_VM> restore <Name_of_Snapshot>
 
 
+Moar RAM
+VBoxManage modifyvm "Windows XP" --memory 512

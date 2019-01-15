@@ -8,26 +8,55 @@ alias mem="cat /proc/meminfo | grep Total"
 alias cpu="cat /proc/cpuinfo"
 alias graphics="lspci -v|grep -i graphics"
 
+alias sys-proc='ps aux | grep'
+
+
+# [works-in-progress]
+alias wip-password='vim ~/Documents/vim/topics/valcom/wip/password'
+alias wip-readme='vim ~/Documents/vim/topics/valcom/wip/readme'
+alias wip-meeting='vim ~/Documents/vim/topics/valcom/wip/meeting'
+alias wip-build='vim ~/Documents/vim/topics/valcom/wip/build'
+alias wip-capybara='vim ~/Documents/vim/topics/valcom/wip/capybara'
+alias wip-perfect-world='vim ~/Documents/vim/topics/valcom/wip/perfect-world'
+alias wip-healthcheck='vim ~/Documents/vim/topics/valcom/wip/vmass-healthcheck'
+alias wip-important='vim ~/Documents/vim/topics/valcom/wip/important'
+alias wip-problems='vim ~/Documents/vim/topics/valcom/wip/problems'
+alias wip-unknowns='vim ~/Documents/vim/topics/valcom/wip/vmass-unknowns'
+alias wip-expected-packages='vim ~/Documents/vim/topics/valcom/wip/expected-packages'
+alias wip-ha-manual='vim ~/Documents/vim/topics/valcom/wip/ha-manual'
+alias wip-gitlab-manual='vim ~/Documents/vim/topics/valcom/wip/gitlab-manual'
+alias wip-bugs='vim ~/Documents/vim/topics/valcom/wip/bugs'
+alias wip-one-on-one='vim ~/Documents/vim/topics/valcom/wip/one-on-one'
+alias wip-vagrant='vim ~/Documents/vim/topics/valcom/wip/vagrant'
+alias wip-legacy-tests='vim ~/Documents/vim/topics/valcom/wip/legacy-tests'
+alias wip-ha-test='vim ~/Documents/vim/topics/valcom/wip/ha-tests'
+
+# alias wip-vecap-upgrade='vim ~/Documents/vim/topics/valcom/wip/vecap-upgrade'
+
 # [cheatsheets]
-alias cheatsheet_virtualbox='view /opt/chef/cookbooks/development-setup/files/cheatsheets/virtualbox.txt'
-alias cheatsheet_postgres='view /opt/chef/cookbooks/development-setup/files/cheatsheets/postgres'
-alias cheatsheet_vim='view /opt/chef/cookbooks/development-setup/files/cheatsheets/vim'
-alias cheatsheet_qwerty='cat /opt/chef/cookbooks/development-setup/files/cheatsheets/qwerty'
-alias cheatsheet_zsh='cat /opt/chef/cookbooks/development-setup/files/zsh/cheatsheet'
-alias cheatsheet_bash='vim /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
-alias cheatsheet_unix='cat /opt/chef/cookbooks/development-setup/files/cheatsheets/bash_commands'
-alias cheatsheet_tmux='cat /opt/chef/cookbooks/development-setup/files/tmux/cheatsheet'
-alias cheatsheet_ranger='echo S open shell in directory, c-h to show hidden files '
-alias cheatsheet_sed='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/sed'
-alias cheatsheet_php='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/php'
-alias cheatsheet_sql='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/sql'
+alias ch-ruby='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/ruby.txt'
+alias ch-virtualbox='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/virtualbox.txt'
+alias ch-postgres='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/postgres'
+alias ch-vim='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/vim'
+alias ch-qwerty='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/qwerty'
+alias ch-zsh='vim /opt/chef/cookbooks/development-setup/files/zsh/cheatsheet'
+alias ch-bash='vim /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
+alias ch-unix='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/bash_commands'
+alias ch-rhel='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/linux'
+alias ch-network='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/network'
+alias ch-tmux='vim /opt/chef/cookbooks/development-setup/files/tmux/cheatsheet'
+alias ch-ranger='echo S open shell in directory, c-h to show hidden files '
+alias ch-sed='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/sed'
+alias ch-php='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/php'
+alias ch-sql='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/sql'
+alias ch-git='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/git'
 #select * from information where label like 'ldap%';
 #update information set value = 7 where label = 'loglevel';
 # SELECT MAX(id) FROM information; # in postgres, should supposedly be in sync with:
 # SELECT nextval('information_id_seq');
 # SELECT setval('the_primary_key_sequence', (SELECT MAX(the_primary_key) FROM the_table)+1);
-# That will set the sequence to the next available value that's higher than any existing primary key in the sequence. 
-alias cheatsheet_markdown='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/markdown'
+# That will set the sequence to the next available value that's higher than any existing primary key in the sequence.
+alias ch-markdown='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/markdown'
 # rpm -ql postgresql95-9.5.10-1PGDG.rhel7.x86_64 | grep bin
 # rsyslogd -N1 -f /etc/rsyslog.conf # valdaite rsyslog conf
 
@@ -40,18 +69,24 @@ alias swap_files='find ~/Documents/vim -iname ".*.swp"'
 alias swap_files_remove='rm $(swap_files|xargs)'
 
 # [vim]
-alias vim_timesheet='vim ~/Documents/vim/topics/planning/timesheet/log'
-alias vim_timesheet_status='vim ~/Documents/vim/topics/planning/timesheet/status-update'
-alias vim_clipboard='vim ~/Documents/vim/clipboard.txt'
-alias vim_known_hosts='vim ~/.ssh/known_hosts'
-alias vim_zsh_rc='vim ~/.zshrc'
-alias vim_atoms='vim ~/Documents/vim/topics/planning/atoms'
-alias vim_zsh_noscm='vim ~/.noscm.zsh'
-alias vim_zsh_sources='vim /opt/chef/cookbooks/development-setup/files/zsh/sources.zsh'
-alias vim_zsh_controls='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
+alias vim-bootstrap='vim ~/Documents/vim/bootstrap.txt'
+alias vim-reading-list='vim ~/Documents/vim/reading-list.txt'
+alias vim-clipboard='vim ~/Documents/vim/clipboard.txt'
+alias vim-timesheet='vim ~/Documents/vim/topics/planning/timesheet.log'
+alias vim-zshrc='vim ~/.zshrc'
+alias vim-atoms='vim ~/Documents/vim/topics/planning/atoms'
+alias vim-zsh-noscm='vim ~/.noscm.zsh'
+alias vim-zsh-sources='vim /opt/chef/cookbooks/development-setup/files/zsh/sources.zsh'
+alias vim-zsh-controls='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
+#alias vim-oneonone='vim ~/Documents/vim/oneonone'
+#alias vim-presentation='vim ~/Documents/vim/topics/valcom/vagrant-presentation'
+#alias vim_timesheet_status='vim ~/Documents/vim/topics/planning/timesheet/status-update'
+
+#alias vim_known_hosts='vim ~/.ssh/known_hosts'
 
 # [locations]
 alias cd_vim='cd ~/Documents/vim/links'
+alias cd_downloads='cd ~/Downloads'
 alias cd_devsetup='cd /opt/chef/cookbooks/development-setup'
 alias cd_ib='cd ~/Projects/image_builder'
 alias cd_projects='cd ~/Projects'
