@@ -38,7 +38,7 @@ alias ch-ruby='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/ruby.
 alias ch-virtualbox='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/virtualbox.txt'
 alias ch-postgres='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/postgres'
 alias ch-vim='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/vim'
-alias ch-qwerty='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/qwerty'
+alias ch-qwerty='cat /opt/chef/cookbooks/development-setup/files/cheatsheets/qwerty'
 alias ch-zsh='vim /opt/chef/cookbooks/development-setup/files/zsh/cheatsheet'
 alias ch-bash='vim /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
 alias ch-unix='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/bash_commands'
@@ -97,12 +97,11 @@ alias examples='open -a Finder ~/Examples'
 
 # [vim]
 
-alias aliases='cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; cat ~/Projects/sandbox/zshrc'
 # This bugs out when using Ctrl-z
 #alias readme='cd ~/Documents/vim; vim raw/$(date +%Y%m%d); cd -'
-alias zsh_aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
-alias zsh_aliases_work='vim ~/Projects/sandbox/zshrc'
-alias zsh_functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
+alias zsh-aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
+alias zsh-aliases_work='vim ~/Projects/sandbox/zshrc'
+alias zsh-functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
 
 
 # [virtualbox]
