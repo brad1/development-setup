@@ -1,4 +1,4 @@
-set mouse= " what does this do again?
+" set mouse= " disables mouse mode so you copy to system keyboard with a mouse highlight
 
 set foldmethod=syntax "syntax|indent|manual|marker
 
@@ -23,6 +23,14 @@ set hlsearch
 " toggle hybrid numbering
 set number!
 set relativenumber!
+
+" Turn off mouse mode only when numbering is off
+if &number
+    set mouse=a
+else
+    set mouse=
+endif
+
 
 " If you don't have this set already, then do so. It makes vim work like
 " every other multiple-file editor on the planet. You can have edited buffers

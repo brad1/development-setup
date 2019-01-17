@@ -2,3 +2,6 @@ strings <filename> # pull out strings
 awk
 perl
 ag
+
+
+netstat -ntp # show ports in a time_wait state

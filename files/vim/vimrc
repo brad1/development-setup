@@ -1,5 +1,22 @@
-" [Wed Jan 10 15:57:36 2018]
-" extracted source files in development-setup
+" move me "
+
+" This might make sense to toggle when enabling line numbers.
+" when mouse mode is disabled, you can copy/paste to system keyboard,
+" but with line numbers enabled they will be captured too.
+function! ToggleMouse()
+    " check if mouse is enabled
+    if &mouse == 'a'
+        " disable mouse
+        set mouse=
+    else
+        " enable mouse everywhere
+        set mouse=a
+    endif
+endfunc
+" call ToggleMouse() " does not currently toggle on rc reload
+
+
+" end move me"
 
 source /opt/chef/cookbooks/development-setup/files/vim/rc/f_keys
 source /opt/chef/cookbooks/development-setup/files/vim/rc/leaders

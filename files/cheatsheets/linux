@@ -4,5 +4,8 @@ ls /var/run/*.pid and /var/lock/subsys/*
 # packages
 rpm -qa # list out
 
+yum install yum-utils
+yumdownloader cyrus-sasl... --destdir rpms
+
 /etc/sysconfig/network-scripts # network hooks
 /etc/sysconfig/network         # these are set on boot
