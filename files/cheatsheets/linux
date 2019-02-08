@@ -3,6 +3,7 @@ ls /var/run/*.pid and /var/lock/subsys/*
 
 # packages
 rpm -qa # list out
+sudo rpm -e --noscripts ruby-2.1.9-4.el6.x86_64 # if failed scripts prevent removal.
 
 yum install yum-utils
 yumdownloader cyrus-sasl... --destdir rpms

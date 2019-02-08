@@ -6,6 +6,8 @@
 clear
 
 
+alias_prefixes=$(cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o "^alias [^\-]*-.*=" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs)
+
 sep=""
 blank=""
 pad=""
@@ -22,13 +24,11 @@ echo "#$blank#
 #$pad/_____|_____/|_|  |_|$pad#
 #$blank#
 #$sep#\e[39m
-  Ctrl-H: Home               git_<TAB>           VBoxManage list vms
-  Ctrl-K: Up a directory     zsh_<TAB>           VBoxManage showvminfo
+  Ctrl-H: Home               VBoxManage list vms
+  Ctrl-K: Up a directory     VBoxManage showvminfo
 
-  directories:               cd_<TAB>
-  cheatsheets:               ch_<TAB>
-  other files:               vim_<TAB>
-  works-in-progress:         wip<TAB>
+  aliases:
+  $alias_prefixes
 "
 
 # if screenfetchis here, call it first, discarded warnings

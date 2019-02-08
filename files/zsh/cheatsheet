@@ -1,5 +1,9 @@
 # New
 set -o vi, then <esc>, then 'v' to edit a command
+bindkey "^R" history-incremental-search-backward # to restore reverse search
+# see man zshzle for more info
+
+
 CTRL + k  go up a directory
 CTRL + j  reverse (popd)
 CTRL + h  home

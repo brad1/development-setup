@@ -1,1 +1,13 @@
-
+# postgres looping
+# fun fact, 'user' and 'group' are reserved words here.
+DO LANGUAGE plpgsql $$
+DECLARE
+    userr RECORD;
+    groupp RECORD;
+BEGIN
+   FOR userr IN SELECT id FROM users LOOP
+        -- FOR groupp IN SELECT id FROM groups LOOP
+            INSERT INTO group_users (group_id, user_id) VALUES (groupp.id, userr.id);
+        -- END LOOP;
+    END LOOP;
+END$$;

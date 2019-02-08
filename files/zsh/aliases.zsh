@@ -1,6 +1,7 @@
 # [new]
 alias new_grep='ag -o "[0-9]+"' # fast
 alias fzf_search='fzf' # fast fuzzy file search
+alias clear-screen='printf "\033c"' # found on stack overflow
 
 # [system]
 alias osx_ram='sysctl -a | grep hw.memsize'
@@ -12,6 +13,9 @@ alias sys-proc='ps aux | grep'
 
 
 # [works-in-progress]
+alias wip-build-system='vim ~/Documents/vim/topics/valcom/wip/build-system'
+alias wip-grpd='vim ~/Documents/vim/topics/valcom/wip/grpd'
+alias wip-elk='vim ~/Documents/vim/topics/valcom/wip/elk'
 alias wip-password='vim ~/Documents/vim/topics/valcom/wip/password'
 alias wip-readme='vim ~/Documents/vim/topics/valcom/wip/readme'
 alias wip-meeting='vim ~/Documents/vim/topics/valcom/wip/meeting'
@@ -34,6 +38,7 @@ alias wip-ha-test='vim ~/Documents/vim/topics/valcom/wip/ha-tests'
 # alias wip-vecap-upgrade='vim ~/Documents/vim/topics/valcom/wip/vecap-upgrade'
 
 # [cheatsheets]
+alias ch-systemd='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/systemd.txt'
 alias ch-ruby='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/ruby.txt'
 alias ch-virtualbox='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/virtualbox.txt'
 alias ch-postgres='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/postgres'
@@ -43,6 +48,7 @@ alias ch-zsh='vim /opt/chef/cookbooks/development-setup/files/zsh/cheatsheet'
 alias ch-bash='vim /opt/chef/cookbooks/development-setup/files/bash/cheatsheet'
 alias ch-unix='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/bash_commands'
 alias ch-rhel='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/linux'
+alias ch-rpm='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/linux-rpm'
 alias ch-network='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/network'
 alias ch-tmux='vim /opt/chef/cookbooks/development-setup/files/tmux/cheatsheet'
 alias ch-ranger='echo S open shell in directory, c-h to show hidden files '
@@ -50,23 +56,23 @@ alias ch-sed='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/sed'
 alias ch-php='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/php'
 alias ch-sql='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/sql'
 alias ch-git='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/git'
+alias ch-markdown='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/markdown'
+# rpm -ql postgresql95-9.5.10-1PGDG.rhel7.x86_64 | grep bin
+# rsyslogd -N1 -f /etc/rsyslog.conf # valdaite rsyslog conf
 #select * from information where label like 'ldap%';
 #update information set value = 7 where label = 'loglevel';
 # SELECT MAX(id) FROM information; # in postgres, should supposedly be in sync with:
 # SELECT nextval('information_id_seq');
 # SELECT setval('the_primary_key_sequence', (SELECT MAX(the_primary_key) FROM the_table)+1);
 # That will set the sequence to the next available value that's higher than any existing primary key in the sequence.
-alias ch-markdown='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/markdown'
-# rpm -ql postgresql95-9.5.10-1PGDG.rhel7.x86_64 | grep bin
-# rsyslogd -N1 -f /etc/rsyslog.conf # valdaite rsyslog conf
 
 # [cp]
 alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 
 # [find]
-alias list_files='find . -maxdepth 1 -type f'
-alias swap_files='find ~/Documents/vim -iname ".*.swp"'
-alias swap_files_remove='rm $(swap_files|xargs)'
+alias find-list_files='find . -maxdepth 1 -type f'
+alias find-swap_files='find ~/Documents/vim -iname ".*.swp"'
+alias find-swap_files_remove='rm $(swap_files|xargs)'
 
 # [vim]
 alias vim-bootstrap='vim ~/Documents/vim/bootstrap.txt'
@@ -85,14 +91,15 @@ alias vim-zsh-controls='vim /opt/chef/cookbooks/development-setup/files/zsh/func
 #alias vim_known_hosts='vim ~/.ssh/known_hosts'
 
 # [locations]
-alias cd_vim='cd ~/Documents/vim/links'
-alias cd_downloads='cd ~/Downloads'
-alias cd_devsetup='cd /opt/chef/cookbooks/development-setup'
-alias cd_ib='cd ~/Projects/image_builder'
-alias cd_projects='cd ~/Projects'
-alias cd_prototypes='~/Documents/vim/scratch/prototypes'
-alias cd_vmass='cd ~/Projects/vmass'
-alias examples='open -a Finder ~/Examples'
+alias cd-vim='cd ~/Documents/vim/links'
+alias cd-downloads='cd ~/Downloads'
+alias cd-devsetup='cd /opt/chef/cookbooks/development-setup'
+alias cd-ib='cd ~/Projects/image_builder'
+alias cd-projects='cd ~/Projects'
+alias cd-prototypes='~/Documents/vim/scratch/prototypes'
+alias cd-vmass='cd ~/Projects/vmass'
+alias open-examples='open -a Finder ~/Examples'
+alias open-tmp='open -a Finder /tmp'
 
 
 # [vim]
@@ -134,12 +141,13 @@ alias open_80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NE
 alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 
 # [git]
-alias git_time_back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
-alias git_clean='echo WIP: git clean -xdf --exclude=".vagrant*" --exclude="node_modules"'
-#alias git_clean='git clean -xf --exclude=".vagrant"'
-#alias git_clean='git clean -xdn --exclude=".vagrant*" --exclude="node_modules"'
-alias git_importfrombranch='git checkout release -- path/to/file'
-alias git_realclean='git clean -fdx'
+alias git-recent-files='git diff --name-only HEAD~10..HEAD'
+alias git-time_back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
+alias git-clean='echo WIP: git clean -xdf --exclude=".vagrant*" --exclude="node_modules"'
+#alias git-clean='git clean -xf --exclude=".vagrant"'
+#alias git-clean='git clean -xdn --exclude=".vagrant*" --exclude="node_modules"'
+alias git-importfrombranch='git checkout release -- path/to/file'
+alias git-realclean='git clean -fdx'
 #
 #   git rebase master --preserve-merges
 #   git rebase -i HEAD~4 #for squashing
@@ -159,7 +167,8 @@ alias git_realclean='git clean -fdx'
 #   git diff --name-only SHA1 SHA2
 #
 
-alias project_clean='git checkout .; git clean -f; make clean'
+alias project-clean='git checkout .; git clean -fd'
+# alias project-clean='git checkout .; git clean -fd; make clean'
 
 
 # [shell]

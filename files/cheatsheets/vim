@@ -1,3 +1,6 @@
+visual mode select plus:
+s/^\(.*\)$/'\1',/g # for quoting big lists
+
 * search for word under the cursor
 
 :set colorcolumn=80 # mark col 80

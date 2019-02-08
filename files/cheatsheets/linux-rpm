@@ -1,0 +1,66 @@
+### RPM build
+
+# prequisites
+sudo yum install -y rpmdevtools rpmlint
+
+# init
+rpmdev-setuptree
+tree rpmbuild/
+
+# specfile
+cd rpmbuild/SPECS/
+rpmdev-newspec
+mv newpackage.spec my-script.spec
+
+mkdir myscript-1.0
+vim myscript-1.0/myscript.sh
+------------------------------------------------------------------------------
+#!/bin/bash
+echo "Hello from bash. Zsh is for hipsters."
+------------------------------------------------------------------------------
+tar czvf rpmbuild/SOURCES/myscript-1.0.tar.gz myscript-1.0/
+chmod +x myscript-1.0/myscript.sh
+rpmdev-newspec rpmbuild/SPECS/myscript.spec
+vim rpmbuild/SPECS/myscript.spec
+------------------------------------------------------------------------------
+
+Name:           myscript
+Version:        1.0
+Release:        1%{?dist}
+Summary:        Small epic script but not really usable
+
+Group:          Utilities
+License:        GPL
+Source0:        myscript-%{version}.tar.gz
+BuildArch:      noarch
+
+%description
+Small epic script that prints some stuff
+
+%prep
+%setup -q
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/opt/myscript
+install myscript.sh $RPM_BUILD_ROOT/opt/myscript/myscript.sh
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+/opt/myscript/myscript.sh
+%doc
+
+%changelog
+
+------------------------------------------------------------------------------
+[bob@vagrant-centos65 ~]$ rpmbuild -bb rpmbuild/SPECS/myscript.spec
+------------------------------------------------------------------------------
+[root@vagrant-centos65 ~]# rpm -ivh /home/bob/rpmbuild/RPMS/noarch/myscript-1.0-1.el6.noarch.rpm
+[root@vagrant-centos65 ~]# /opt/myscript/myscript.sh
+Hello from bash. Zsh is for hipsters.
