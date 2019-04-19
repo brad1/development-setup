@@ -1,0 +1,25 @@
+# list mount points including ramdisk
+findmnt
+
+# ramdisk tmpfs/ramfs
+mount -t tmpfs -o size=512m tmpfs /mnt/ramdisk
+
+lscpu | grep -E '^Core|^Socket\('
+Core(s) per socket:    6
+Socket(s):             2
+so, 12 physical cores across 2 physical CPU sockets.
+
+a disk usage:
+I recursively use:
+du -sh *
+when it gets stuck, it hit a large directory.
+
+# docker cleanup:
+docker image prune, etc
+
+
+# Network
+netstat -ntp # show ports in a time_wait state
+
+# crontab 5am daily:
+0 5 * * * rm /root/file

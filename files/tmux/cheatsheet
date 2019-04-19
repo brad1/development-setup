@@ -1,12 +1,15 @@
 tmux ls                    # list sessions
 tmux a -t session_name     # attach session
-Ctrl-a $                   # rename session
 Ctrl-a d                   # detach session
+Ctrl-a $                   # rename session
 Ctrl-a S                   # list sessions (pref over windows)
-Ctrl-a W                   # list windows
 Ctrl-a )                   # next session
+
+Ctrl-a W                   # list windows
 Ctrl-a n                   # next window
 Ctrl-a &                   # kill window
 
 %  vertical split
 "  horizontal split
+or type out:
+:split

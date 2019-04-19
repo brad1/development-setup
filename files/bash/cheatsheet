@@ -1,3 +1,52 @@
+# find/exec on mac
+find . -type f -exec wc -l {} \;
+
+# sort files by number of lines
+wc -l classes.output/* | sort -n
+find classes.output -type f -exec wc -l {} \; | sort -rn | less
+
+# is a useful one-liner which will give you the full directory name of the script no matter where it is being called from.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# absolute filepath of parent dir:
+"$(cd ..; pwd)"
+
+# check shell type
+"[[ $- == *i* ]] && echo 'Interactive' || echo 'Not interactive'"
+"shopt -q login_shell && echo 'Login shell' || echo 'Not login shell'"
+
+# mass search/replace
+find /path/to/dir/ -type f | xargs sed -i  's/replace_me_with/this/g'
+
+# greater than
+if [ "$a" -gt "$b" ];
+fi
+
+# remove a char from a string:
+asdf="\"static\""
+"${asdf//\"}"
+# "static" vs. static
+
+date +"%Y-%m-%d_%H-%M-%S"
+
+# string include
+if [[ $state == *"original"* ]]
+
+# follow link
+readlink -f /root/Public/myothertextfile.txt
+
+# lazy variabel heredoc
+VAR=$(cat <<'END_HEREDOC'
+abc'asdf"
+$(dont-execute-this)
+foo"bar"''
+END_HEREDOC
+)
+
+# default values in bash ksh?
+COMMIT1=$1
+COMMIT1=${COMMIT1:=f4c11a2}
+
 # unset variable
 end -U NAME
 unset NAME

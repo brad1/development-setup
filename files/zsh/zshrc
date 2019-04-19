@@ -24,14 +24,17 @@ echo "#$blank#
 #$pad/_____|_____/|_|  |_|$pad#
 #$blank#
 #$sep#\e[39m
-  Ctrl-H: Home               VBoxManage list vms
-  Ctrl-K: Up a directory     VBoxManage showvminfo
+  Ctrl-H: Home              ranger
+  Ctrl-K: Up a directory    set -o vi # followed by ESC then:
+                              '/' to reverse search shell history, or:
+                                bindkey \"^R\" history-incremental-search-backward
+                              'v' to edit.
 
   aliases:
   $alias_prefixes
 "
 
-# if screenfetchis here, call it first, discarded warnings
+# if screenfetch is here, call it first, discarded warnings
 # which screenfetch >/dev/null 2>/dev/null && screenfetch 2>/dev/null
 # shows apple logo and some stats
 
@@ -49,3 +52,8 @@ source $INCLUDE/sources.zsh
 
 # Vi editing mode with visual mode.
 bindkey -M vicmd v edit-command-line
+# See:
+# "/" vi-history-search-backward
+# "?" vi-history-search-forward
+# "n" vi-repeat-search
+# "N" vi-rev-repeat-search

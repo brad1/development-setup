@@ -1,1 +1,68 @@
 if_this_is_a_true_value ? then_the_result_is_this : else_it_is_this
+
+
+def get_request_token
+    consumer.get_request_token(oauth_callback: callback_url)
+rescue OAuth::Unauthorized => oua
+        case oua.request.code.to_s
+        when '401'
+                throw Exception.new 'check your tokens'
+        when '403'
+                throw Exception.new 'check your whitelist'
+        else
+                raise
+        end
+end
+
+### tracing a stack overflow:
+$enable_tracing = false
+$trace_out = open('trace.txt', 'w')
+
+set_trace_func proc { |event, file, line, id, binding, classname|
+  if $enable_tracing && event == 'call'
+    $trace_out.puts "#{file}:#{line} #{classname}##{id}"
+  end
+}
+
+$enable_tracing = true
+###
+
+
+
+
+[gem]
+    gem build
+    gem cert
+    gem check
+    gem cleanup
+    gem contents
+    gem dependency
+    gem environment
+    gem fetch
+    gem generate_index
+    gem help
+    gem info
+    gem install
+    gem list
+    gem lock
+    gem mirror
+    gem open
+    gem outdated
+    gem owner
+    gem pristine
+    gem push
+    gem query
+    gem rdoc
+    gem search
+    gem server
+    gem signin
+    gem signout
+    gem sources
+    gem specification
+    gem stale
+    gem uninstall
+    gem unpack
+    gem update
+    gem which
+    gem yank
+

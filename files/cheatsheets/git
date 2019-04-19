@@ -1,7 +1,21 @@
+[show the commit message for a line in a given file]
+git show $(git blame ../.gitlab-ci.yml| grep psql | cut -d' ' -f1)
+
+[revert a git stash pop]
+https://stackoverflow.com/questions/8515729/aborting-a-stash-pop-in-git
+maybe: git merge-recursive stash@{0}: -- $(git write-tree) stash@{0}^1
+or:
+git reset HEAD --hard
+git checkout my_correct_branch
+git stash pop
+
 [follow a file]
 git blame <filepath>
 git log --oneline -- $(find . -name filename)
 gitk [--follow] filename
+
+or:
+git log --oneline --all --full-history -- \*\*/ruby.\*
 
 git log branchB..branchA
 

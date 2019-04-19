@@ -1,3 +1,10 @@
+[update]
+update information set value = 7 where label='loglevel';
+
+[create database...]
+> create database mydb
+> \l # list databases
+
 psql -U postgres
 
 Some interesting flags (to see all, use -h):
