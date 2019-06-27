@@ -1,7 +1,14 @@
 # [new]
+# Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
+alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
+alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
 alias new_grep='ag -o "[0-9]+"' # fast
 alias fzf_search='fzf' # fast fuzzy file search
 alias clear-screen='printf "\033c"' # found on stack overflow
+
+# [ssh]
+alias ssh_fast='ssh brad@$FASTBUILDER'
+alias ssh_build='ssh brad@$BUILD'
 
 # [system]
 alias osx_ram='sysctl -a | grep hw.memsize'
@@ -13,16 +20,17 @@ alias sys-proc='ps aux | grep'
 
 
 # [works-in-progress]
-alias wip='cd ~/Documents/vim/topics/valcom/wip;clear;ls'
-alias wip-reading-list='vim ~/Documents/vim/topics/valcom/wip/buffers/reading-list'
-alias wip-build-system='vim ~/Documents/vim/topics/valcom/wip/topics/build'
-alias wip-healthcheck='vim ~/Documents/vim/topics/valcom/wip/topics/healthcheck'
-alias wip-bugs='vim ~/Documents/vim/topics/valcom/buffers/bugs'
-alias wip-one-on-one='vim ~/Documents/vim/topics/valcom/wip/topics/one-on-one'
+alias wip='cd ~/Documents/txt/;clear;ls'
+alias wip-reading-list='vim ~/Documents/txt/topics/valcom/wip/buffers/reading-list'
+alias wip-build-system='vim ~/Documents/txt/topics/valcom/wip/topics/build'
+alias wip-healthcheck='vim ~/Documents/txt/topics/valcom/wip/topics/healthcheck'
+alias wip-bugs='vim ~/Documents/txt/topics/valcom/buffers/bugs'
+alias wip-one-on-one='vim ~/Documents/txt/topics/valcom/wip/topics/one-on-one'
 
-# alias wip-vecap-upgrade='vim ~/Documents/vim/topics/valcom/wip/vecap-upgrade'
+# alias wip-vecap-upgrade='vim ~/Documents/txt/topics/valcom/wip/vecap-upgrade'
 
 # [cheatsheets]
+alias ch-terminal='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/terminal.txt'
 alias ch-sysadmin='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/sysadmin.txt'
 alias ch-systemd='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/systemd.txt'
 alias ch-ruby='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/ruby.txt'
@@ -57,27 +65,27 @@ alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 
 # [find]
 alias find-list_files='find . -maxdepth 1 -type f'
-alias find-swap_files='find ~/Documents/vim -iname ".*.swp"'
+alias find-swap_files='find ~/Documents/txt -iname ".*.swp"'
 alias find-swap_files_remove='rm $(swap_files|xargs)'
 
 # [vim]
-alias vim-bootstrap='vim ~/Documents/vim/bootstrap.txt'
-alias vim-reading-list='vim ~/Documents/vim/reading-list.txt'
-alias vim-clipboard='vim ~/Documents/vim/clipboard.txt'
-alias vim-timesheet='vim ~/Documents/vim/topics/planning/timesheet.log'
+alias vim-bootstrap='vim ~/Documents/txt/bootstrap.txt'
+alias vim-reading-list='vim ~/Documents/txt/reading-list.txt'
+alias vim-clipboard='vim ~/Documents/txt/clipboard.txt'
+alias vim-timesheet='vim ~/Documents/txt/topics/planning/timesheet.log'
 alias vim-zshrc='vim ~/.zshrc'
-alias vim-atoms='vim ~/Documents/vim/topics/planning/atoms'
+alias vim-atoms='vim ~/Documents/txt/topics/planning/atoms'
 alias vim-zsh-noscm='vim ~/.noscm.zsh'
 alias vim-zsh-sources='vim /opt/chef/cookbooks/development-setup/files/zsh/sources.zsh'
 alias vim-zsh-controls='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
-#alias vim-oneonone='vim ~/Documents/vim/oneonone'
-#alias vim-presentation='vim ~/Documents/vim/topics/valcom/vagrant-presentation'
-#alias vim_timesheet_status='vim ~/Documents/vim/topics/planning/timesheet/status-update'
+#alias vim-oneonone='vim ~/Documents/txt/oneonone'
+#alias vim-presentation='vim ~/Documents/txt/topics/valcom/vagrant-presentation'
+#alias vim_timesheet_status='vim ~/Documents/txt/topics/planning/timesheet/status-update'
 
 #alias vim_known_hosts='vim ~/.ssh/known_hosts'
 
 # [locations]
-alias cd-vim='cd ~/Documents/vim/links'
+alias cd-vim='cd ~/Documents/txt/links'
 alias cd-downloads='cd ~/Downloads'
 alias cd-devsetup='cd /opt/chef/cookbooks/development-setup'
 alias cd-ib='cd ~/Projects/image_builder'
@@ -85,13 +93,13 @@ alias cd-projects='cd ~/Projects'
 alias cd-vmass='cd ~/Projects/vmass'
 alias open-examples='open -a Finder ~/Examples'
 alias open-tmp='open -a Finder /tmp'
-# alias cd-prototypes='~/Documents/vim/scratch/prototypes'
+# alias cd-prototypes='~/Documents/txt/scratch/prototypes'
 
 
 # [vim]
 
 # This bugs out when using Ctrl-z
-#alias readme='cd ~/Documents/vim; vim raw/$(date +%Y%m%d); cd -'
+#alias readme='cd ~/Documents/txt; vim raw/$(date +%Y%m%d); cd -'
 alias zsh-aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
 alias zsh-aliases_work='vim ~/Projects/sandbox/zshrc'
 alias zsh-functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'

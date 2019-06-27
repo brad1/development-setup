@@ -1,3 +1,6 @@
+[insert]
+insert into v_roles values (1,'role1',2,2,2,2,2,2,2,2,2,2,2,2)
+
 [update]
 update information set value = 7 where label='loglevel';
 

@@ -50,6 +50,8 @@ source $INCLUDE/oh-my-zsh.zsh
 # Include this instead when using .oh-my-zsh/custom
 source $INCLUDE/sources.zsh
 
+source ~/.env.valcom
+
 # Vi editing mode with visual mode.
 bindkey -M vicmd v edit-command-line
 # See:
