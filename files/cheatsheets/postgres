@@ -1,3 +1,9 @@
+[clean]
+SELECT setval('information_id_seq', (SELECT MAX(id) FROM information)+1);
+
+[count]
+select count(tablename) from pg_catalog.pg_tables;
+
 [insert]
 insert into v_roles values (1,'role1',2,2,2,2,2,2,2,2,2,2,2,2)
 

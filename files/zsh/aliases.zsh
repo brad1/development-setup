@@ -1,5 +1,7 @@
 # [new]
 # Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
+#alias asdfasdf='emacs $(git show --name-only --format=  bd61ad98)' # open all files from a commit
+alias vimf='vim $(fzf)'
 alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
 alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
 alias new_grep='ag -o "[0-9]+"' # fast
@@ -7,8 +9,8 @@ alias fzf_search='fzf' # fast fuzzy file search
 alias clear-screen='printf "\033c"' # found on stack overflow
 
 # [ssh]
-alias ssh_fast='ssh brad@$FASTBUILDER'
-alias ssh_build='ssh brad@$BUILD'
+alias ssh-fast='ssh brad@$FASTBUILDER'
+alias ssh-build='ssh brad@$BUILD'
 
 # [system]
 alias osx_ram='sysctl -a | grep hw.memsize'
@@ -30,6 +32,8 @@ alias wip-one-on-one='vim ~/Documents/txt/topics/valcom/wip/topics/one-on-one'
 # alias wip-vecap-upgrade='vim ~/Documents/txt/topics/valcom/wip/vecap-upgrade'
 
 # [cheatsheets]
+alias ch-awk='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/awk.txt'
+alias ch-syslog='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/syslog.txt'
 alias ch-terminal='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/terminal.txt'
 alias ch-sysadmin='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/sysadmin.txt'
 alias ch-systemd='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/systemd.txt'
@@ -60,6 +64,10 @@ alias ch-markdown='vi /opt/chef/cookbooks/development-setup/files/cheatsheets/ma
 # SELECT setval('the_primary_key_sequence', (SELECT MAX(the_primary_key) FROM the_table)+1);
 # That will set the sequence to the next available value that's higher than any existing primary key in the sequence.
 
+# [plugin]
+# Load plugins, some of these won't be compatible
+alias zsh-plugin-zsh-autosuggestions='source ~/.oh-my-zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh'
+
 # [cp]
 alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 
@@ -69,12 +77,9 @@ alias find-swap_files='find ~/Documents/txt -iname ".*.swp"'
 alias find-swap_files_remove='rm $(swap_files|xargs)'
 
 # [vim]
-alias vim-bootstrap='vim ~/Documents/txt/bootstrap.txt'
-alias vim-reading-list='vim ~/Documents/txt/reading-list.txt'
+alias vim-quick='vim ~/Documents/txt/quick.txt'
 alias vim-clipboard='vim ~/Documents/txt/clipboard.txt'
-alias vim-timesheet='vim ~/Documents/txt/topics/planning/timesheet.log'
 alias vim-zshrc='vim ~/.zshrc'
-alias vim-atoms='vim ~/Documents/txt/topics/planning/atoms'
 alias vim-zsh-noscm='vim ~/.noscm.zsh'
 alias vim-zsh-sources='vim /opt/chef/cookbooks/development-setup/files/zsh/sources.zsh'
 alias vim-zsh-controls='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
@@ -91,8 +96,9 @@ alias cd-devsetup='cd /opt/chef/cookbooks/development-setup'
 alias cd-ib='cd ~/Projects/image_builder'
 alias cd-projects='cd ~/Projects'
 alias cd-vmass='cd ~/Projects/vmass'
-alias open-examples='open -a Finder ~/Examples'
-alias open-tmp='open -a Finder /tmp'
+alias open-examples='open -a Finder ~/Examples || nautilus --browser ~/Examples'
+alias open-tmp='open -a Finder /tmp || nautilus --browser /tmp'
+alias open-dot='open -a Finder . || nautilus --browser .'
 # alias cd-prototypes='~/Documents/txt/scratch/prototypes'
 
 

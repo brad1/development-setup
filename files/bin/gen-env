@@ -1,0 +1,10 @@
+vagrant status release > /tmp/vsd
+
+port=$(cat /tmp/vsd | grep -Eo 'HTTP:[0-9]{,4}' | cut -d: -f2)
+echo "VAGRANT_HTTP=$port" >> .env
+
+port=$(cat /tmp/vsd | grep -Eo 'HTTPS:[0-9]{,4}' | cut -d: -f2)
+echo "VAGRANT_HTTPS=$port" >> .env
+
+port=$(cat /tmp/vsd | grep -Eo 'SSH:[0-9]{,4}' | cut -d: -f2)
+echo "VAGRANT_SSH=$port" >> .env

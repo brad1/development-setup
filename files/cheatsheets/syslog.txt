@@ -1,0 +1,6 @@
+sudo yum install -y rsyslog
+setenforce 0
+ufw disable
+service iptables stop
+logger -p local0.info "helloooooo"
+view /var/log/messages

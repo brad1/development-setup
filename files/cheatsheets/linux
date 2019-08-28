@@ -1,3 +1,6 @@
+# search a repo in rhel6
+yum --disablerepo="*" --enablerepo="remi-safe" list available
+
 # dead but subsys locked
 ls /var/run/*.pid and /var/lock/subsys/*
 

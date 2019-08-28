@@ -1,4 +1,16 @@
+require 'erb'
+
+weekday = Time.now.strftime('%A')
+simple_template = "Today is <%= weekday %>."
+
+renderer = ERB.new(simple_template)
+puts output = renderer.result()
+------------------------------------------------------------------------------
+
+
 if_this_is_a_true_value ? then_the_result_is_this : else_it_is_this
+
+    # rubocop:disable Metrics/MethodLength
 
 
 def get_request_token

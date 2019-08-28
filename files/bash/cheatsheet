@@ -1,3 +1,7 @@
+# arrays
+dirs[0] = '/'
+dirs[1] = '/home'
+
 # find/exec on mac
 find . -type f -exec wc -l {} \;
 
