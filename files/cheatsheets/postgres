@@ -1,20 +1,19 @@
+[rundown]
+psql db_name db_user                                                     # open psql
+select * from pg_catalog.pg_tables where tableowner != 'postgres';       # list custom tables
+select column_name, data_type, character_maximum_length from             # describe table
+  INFORMATION_SCHEMA.COLUMNS where table_name = 'destinations'
+
+
 [clean]
 SELECT setval('information_id_seq', (SELECT MAX(id) FROM information)+1);
 
-[count]
-select count(tablename) from pg_catalog.pg_tables;
+select count(tablename) from pg_catalog.pg_tables;                       # Count all tables
+insert into v_roles values (1,'role1',2,2,2,2,2,2,2,2,2,2,2,2)           # Insert row
+update information set value = 7 where label='loglevel';                 # edit row
 
-[insert]
-insert into v_roles values (1,'role1',2,2,2,2,2,2,2,2,2,2,2,2)
-
-[update]
-update information set value = 7 where label='loglevel';
-
-[create database...]
-> create database mydb
-> \l # list databases
-
-psql -U postgres
+create database mydb         # create database
+> \l                         # list databases
 
 Some interesting flags (to see all, use -h):
 

@@ -15,8 +15,7 @@ for i in $(seq 1 $((COLUMNS - 2))); do sep="$sep-"; done
 for i in $(seq 1 $((COLUMNS - 2))); do blank="$blank "; done
 for i in $(seq 1 $(((COLUMNS - 23) / 2))); do pad="$pad "; done
 echo "\e[35m#$sep#"
-echo "#$blank#
-#$pad ______ _____ _    _ $pad#
+echo "#$pad ______ _____ _    _ $pad#
 #$pad|___  // ____| |  | |$pad#
 #$pad   / /| (___ | |__| |$pad#
 #$pad  / /  \___ \|  __  |$pad#

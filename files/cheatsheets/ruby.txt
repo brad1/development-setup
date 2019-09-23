@@ -1,3 +1,12 @@
+------------------------------------------------------------------------------
+Resqueu
+#!/usr/bin/ruby 
+require 'resque'
+puts Resque.info
+job = Resque.redis.lrange('queue:system', 0, 0).last
+h = Resque.decode(job)
+puts h
+------------------------------------------------------------------------------
 require 'erb'
 
 weekday = Time.now.strftime('%A')

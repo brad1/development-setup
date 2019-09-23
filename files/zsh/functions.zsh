@@ -1,5 +1,18 @@
-vimm () {
-  vim $(find . -name \*$1\*)
+grebase () {
+  git rebase -i HEAD~$1
+}
+
+grebase-master () {
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  git stash
+  git checkout master
+  git pull
+  git checkout $branch
+  git rebase master
+}
+
+git-append () {
+  git commit --amend --no-edit
 }
 
 save () {
@@ -74,4 +87,9 @@ readme () {
 #  vim ~/Projects/**/readme # better
 #  vim ~/Documents/vim/raw/...  ~/Projects/**/readme # start with the global, than add others
 #  ...
+#}
+
+# Use vimf instead
+# vimm () {
+#  vim $(find . -name \*$1\*)
 #}

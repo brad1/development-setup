@@ -4,6 +4,7 @@
 alias vimf='vim $(fzf)'
 alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
 alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
+alias ls-changed-files='git diff --name-only HEAD HEAD~1'
 alias new_grep='ag -o "[0-9]+"' # fast
 alias fzf_search='fzf' # fast fuzzy file search
 alias clear-screen='printf "\033c"' # found on stack overflow
@@ -20,9 +21,12 @@ alias graphics="lspci -v|grep -i graphics"
 
 alias sys-proc='ps aux | grep'
 
+TEXT='~/Documents/txt'
 
 # [works-in-progress]
-alias wip='cd ~/Documents/txt/;clear;ls'
+alias ls-active="ls $TEXT/2_focus"
+alias ls-standby="ls $TEXT/4_idle"
+alias cd-txt="cd $TEXT;clear;ls"
 alias wip-reading-list='vim ~/Documents/txt/topics/valcom/wip/buffers/reading-list'
 alias wip-build-system='vim ~/Documents/txt/topics/valcom/wip/topics/build'
 alias wip-healthcheck='vim ~/Documents/txt/topics/valcom/wip/topics/healthcheck'
@@ -78,16 +82,28 @@ alias find-swap_files_remove='rm $(swap_files|xargs)'
 
 # [vim]
 alias vim-quick='vim ~/Documents/txt/quick.txt'
-alias vim-clipboard='vim ~/Documents/txt/clipboard.txt'
+alias vim-clipboard='vim ~/Documents/txt/buffers/clipboard'
+alias vim-journal='vim ~/Documents/txt/buffers/journal'
+alias vim-one-on-one='vim ~/Documents/txt/buffers/one-on-one'
+alias vim-status='vim ~/Documents/txt/buffers/status'
+alias vim-document-me='vim ~/Documents/txt/buffers/volatile/document-me'
+alias vim-improvements='vim ~/Documents/txt/buffers/volatile/improvements'
+alias vim-problems='vim ~/Documents/txt/buffers/volatile/problems'
+alias vim-quick='vim ~/Documents/txt/buffers/volatile/quick'
+alias vim-reading-list='vim ~/Documents/txt/buffers/volatile/reading-list'
+alias vim-remember='vim ~/Documents/txt/buffers/volatile/remember'
+alias vim-scriptify='vim ~/Documents/txt/buffers/volatile/scriptify'
+
 alias vim-zshrc='vim ~/.zshrc'
 alias vim-zsh-noscm='vim ~/.noscm.zsh'
 alias vim-zsh-sources='vim /opt/chef/cookbooks/development-setup/files/zsh/sources.zsh'
 alias vim-zsh-controls='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
-#alias vim-oneonone='vim ~/Documents/txt/oneonone'
-#alias vim-presentation='vim ~/Documents/txt/topics/valcom/vagrant-presentation'
-#alias vim_timesheet_status='vim ~/Documents/txt/topics/planning/timesheet/status-update'
+alias vim-zsh-aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
+alias vim-zsh-aliases_work='vim ~/Projects/sandbox/zshrc'
+alias vim-zsh-functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
 
-#alias vim_known_hosts='vim ~/.ssh/known_hosts'
+alias vim-known_hosts='vim ~/.ssh/known_hosts'
+
 
 # [locations]
 alias cd-vim='cd ~/Documents/txt/links'
@@ -106,9 +122,6 @@ alias open-dot='open -a Finder . || nautilus --browser .'
 
 # This bugs out when using Ctrl-z
 #alias readme='cd ~/Documents/txt; vim raw/$(date +%Y%m%d); cd -'
-alias zsh-aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
-alias zsh-aliases_work='vim ~/Projects/sandbox/zshrc'
-alias zsh-functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
 
 
 # [virtualbox]
@@ -143,11 +156,18 @@ alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercon
 # [git]
 alias git-recent-files='git diff --name-only HEAD~10..HEAD'
 alias git-time_back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
-alias git-clean='echo WIP: git clean -xdf --exclude=".vagrant*" --exclude="node_modules"'
+alias git-importfrombranch='git checkout release -- path/to/file'
+alias git-deepclean='git clean -fdx'
+alias git-update='git checkout master && git pull'
+
+# [docker]
+alias docker-build='sudo docker build . | tee /tmp/docker-build-out'
+alias docker-run-bash='cat /tmp/docker-build-out | tail -n1 | awk "{print $3}" > /tmp/last-container && sudo docker run -it "$(cat /tmp/last-container)" /bin/bash'
+
+
+#alias git-clean='echo WIP: git clean -xdf --exclude=".vagrant*" --exclude="node_modules"'
 #alias git-clean='git clean -xf --exclude=".vagrant"'
 #alias git-clean='git clean -xdn --exclude=".vagrant*" --exclude="node_modules"'
-alias git-importfrombranch='git checkout release -- path/to/file'
-alias git-realclean='git clean -fdx'
 #
 #   git rebase master --preserve-merges
 #   git rebase -i HEAD~4 #for squashing
