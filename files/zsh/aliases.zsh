@@ -1,6 +1,7 @@
 # [new]
 # Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
 #alias asdfasdf='emacs $(git show --name-only --format=  bd61ad98)' # open all files from a commit
+alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
 alias vimf='vim $(fzf)'
 alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
 alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
@@ -27,10 +28,10 @@ TEXT='~/Documents/txt'
 alias ls-active="ls $TEXT/2_focus"
 alias ls-standby="ls $TEXT/4_idle"
 alias cd-txt="cd $TEXT;clear;ls"
-alias wip-reading-list='vim ~/Documents/txt/topics/valcom/wip/buffers/reading-list'
+alias wip-reading-list='vim ~/Documents/txt/topics/valcom/wip/topics/tasks/buffers/reading-list'
 alias wip-build-system='vim ~/Documents/txt/topics/valcom/wip/topics/build'
 alias wip-healthcheck='vim ~/Documents/txt/topics/valcom/wip/topics/healthcheck'
-alias wip-bugs='vim ~/Documents/txt/topics/valcom/buffers/bugs'
+alias wip-bugs='vim ~/Documents/txt/topics/valcom/topics/tasks/buffers/bugs'
 alias wip-one-on-one='vim ~/Documents/txt/topics/valcom/wip/topics/one-on-one'
 
 # alias wip-vecap-upgrade='vim ~/Documents/txt/topics/valcom/wip/vecap-upgrade'
@@ -82,17 +83,17 @@ alias find-swap_files_remove='rm $(swap_files|xargs)'
 
 # [vim]
 alias vim-quick='vim ~/Documents/txt/quick.txt'
-alias vim-clipboard='vim ~/Documents/txt/buffers/clipboard'
-alias vim-journal='vim ~/Documents/txt/buffers/journal'
-alias vim-one-on-one='vim ~/Documents/txt/buffers/one-on-one'
-alias vim-status='vim ~/Documents/txt/buffers/status'
-alias vim-document-me='vim ~/Documents/txt/buffers/volatile/document-me'
-alias vim-improvements='vim ~/Documents/txt/buffers/volatile/improvements'
-alias vim-problems='vim ~/Documents/txt/buffers/volatile/problems'
-alias vim-quick='vim ~/Documents/txt/buffers/volatile/quick'
-alias vim-reading-list='vim ~/Documents/txt/buffers/volatile/reading-list'
-alias vim-remember='vim ~/Documents/txt/buffers/volatile/remember'
-alias vim-scriptify='vim ~/Documents/txt/buffers/volatile/scriptify'
+alias vim-clipboard='vim ~/Documents/txt/topics/tasks/buffers/clipboard'
+alias vim-journal='vim ~/Documents/txt/topics/tasks/buffers/journal'
+alias vim-one-on-one='vim ~/Documents/txt/topics/tasks/buffers/one-on-one'
+alias vim-status='vim ~/Documents/txt/topics/tasks/buffers/status'
+alias vim-document-me='vim ~/Documents/txt/topics/tasks/buffers/volatile/document-me'
+alias vim-improvements='vim ~/Documents/txt/topics/tasks/buffers/volatile/improvements'
+alias vim-problems='vim ~/Documents/txt/topics/tasks/buffers/volatile/problems'
+alias vim-quick='vim ~/Documents/txt/topics/tasks/buffers/volatile/quick'
+alias vim-reading-list='vim ~/Documents/txt/topics/tasks/buffers/volatile/reading-list'
+alias vim-remember='vim ~/Documents/txt/topics/tasks/buffers/volatile/remember'
+alias vim-scriptify='vim ~/Documents/txt/topics/tasks/buffers/volatile/scriptify'
 
 alias vim-zshrc='vim ~/.zshrc'
 alias vim-zsh-noscm='vim ~/.noscm.zsh'
@@ -103,6 +104,13 @@ alias vim-zsh-aliases_work='vim ~/Projects/sandbox/zshrc'
 alias vim-zsh-functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
 
 alias vim-known_hosts='vim ~/.ssh/known_hosts'
+
+alias zsh-noscm='vim ~/.noscm.zsh'
+alias zsh-sources='vim /opt/chef/cookbooks/development-setup/files/zsh/sources.zsh'
+alias zsh-controls='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
+alias zsh-aliases='vim /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh'
+alias zsh-aliases_work='vim ~/Projects/sandbox/zshrc'
+alias zsh-functions='vim /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh'
 
 
 # [locations]
@@ -122,6 +130,7 @@ alias open-dot='open -a Finder . || nautilus --browser .'
 
 # This bugs out when using Ctrl-z
 #alias readme='cd ~/Documents/txt; vim raw/$(date +%Y%m%d); cd -'
+alias today='date +%Y%m%d'
 
 
 # [virtualbox]
@@ -154,6 +163,7 @@ alias open_80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NE
 alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 
 # [git]
+alias git-ca='git commit --amend'
 alias git-recent-files='git diff --name-only HEAD~10..HEAD'
 alias git-time_back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
 alias git-importfrombranch='git checkout release -- path/to/file'
@@ -192,13 +202,14 @@ alias project-clean='git checkout .; git clean -fd'
 
 
 # [shell]
+alias ls-ps='ps | grep -Ev "grep|ps|zsh"'
 alias tmp='vim ~/tmp/$(date "+%F-%T")'
 alias c="cut -d' ' -f"
 alias l='ls -lh'
-alias selinux_permissive='setenforce 0'
-alias mount_iso='mount -t iso9660 -o loop /home/brad/DVD.iso /mnt/iso/'
-alias group_list='getent group wheel'
-alias grep_extended='grep -Eo [0-9]+'
+alias selinux-permissive='setenforce 0'
+alias mount-iso='mount -t iso9660 -o loop /home/brad/DVD.iso /mnt/iso/'
+alias group-list='getent group wheel'
+alias grep-extended='grep -Eo [0-9]+'
 # printenv # print environment variables
 # env
 #

@@ -1,3 +1,7 @@
+ln-first() {
+  ln -sf $(find . -name "$1" | head -n1)
+}
+
 grebase () {
   git rebase -i HEAD~$1
 }

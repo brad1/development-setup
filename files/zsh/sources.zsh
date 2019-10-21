@@ -1,5 +1,4 @@
 INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
-ZSH_THEME="powerlevel9k/powerlevel9k"
 
 source $INCLUDE/aliases.zsh
 source $INCLUDE/ruby.zsh
