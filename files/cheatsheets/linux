@@ -1,5 +1,15 @@
+# find dependencies:
+yum deplist <pkg>
+yum install yum-utils; repoquery --requires --resolve <pkg>
+rpm -q --requires
+# from Red Hat Videos (youtube):
+# despite yum's best effort, sometimes there are dependecy issues that
+# confuse yum, and yum is unable to install the package
+
+
 # search a repo in rhel6
 yum --disablerepo="*" --enablerepo="remi-safe" list available
+yum --disablerepo="*" --enablerepo="remi-php73" install php
 
 # dead but subsys locked
 ls /var/run/*.pid and /var/lock/subsys/*

@@ -1,6 +1,15 @@
+# TODO
+# idea from a legit comment:
+#   [alias]
+#  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --decorate --date=short
+#  quick-push = "!f() { git add . && git commit -m \"$1\" && git push; }; f"
+#  grep-log = log -E -i --grep
+#  grep-hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --decorate --date=short -E -i --grep
+
 # [new]
 # Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
 #alias asdfasdf='emacs $(git show --name-only --format=  bd61ad98)' # open all files from a commit
+alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
 alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
 alias vimf='vim $(fzf)'
 alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
@@ -9,6 +18,9 @@ alias ls-changed-files='git diff --name-only HEAD HEAD~1'
 alias new_grep='ag -o "[0-9]+"' # fast
 alias fzf_search='fzf' # fast fuzzy file search
 alias clear-screen='printf "\033c"' # found on stack overflow
+
+alias install-remi='echo wget https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
+
 
 # [ssh]
 alias ssh-fast='ssh brad@$FASTBUILDER'
@@ -37,6 +49,7 @@ alias wip-one-on-one='vim ~/Documents/txt/topics/valcom/wip/topics/one-on-one'
 # alias wip-vecap-upgrade='vim ~/Documents/txt/topics/valcom/wip/vecap-upgrade'
 
 # [cheatsheets]
+alias ch-docker='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/docker.txt'
 alias ch-awk='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/awk.txt'
 alias ch-syslog='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/syslog.txt'
 alias ch-terminal='vim /opt/chef/cookbooks/development-setup/files/cheatsheets/terminal.txt'
@@ -146,7 +159,19 @@ alias vbox_vmass_view_screenshot="scp $(type ssh_build | cut -d' ' -f7):~/screen
 alias vbox_vmass_gen_screenshot="VBoxManage controlvm vmass screenshotpng screenshot.png && sudo mv screenshot.png /home/brad && sudo chown brad /home/brad/screenshot.png"
 alias vbox_screenshot_to_text='VBoxManage controlvm vmass screenshotpng screenshot.png && convert -colorspace gray -fill white -resize 600% -sharpen 0x2 screenshot.png screenshot.jpg && tesseract screenshot.jpg ocr && cat ocr.txt'
 
-alias vagrant_box_download='vagrant box remove vmass; vagrant up'
+
+# [vagrant]
+alias vg-ssh-dev='vagrant ssh development'
+alias vg-up-dev='vagrant up development'
+alias vg-suspend-dev='vagrant suspend development'
+alias vg-halt-dev='vagrant halt development'
+alias vg-resume-dev='vagrant resume development'
+alias vg-ssh-rel='vagrant ssh release'
+alias vg-up-rel='vagrant up release'
+alias vg-suspend-rel='vagrant suspend release'
+alias vg-halt-rel='vagrant halt release'
+alias vg-resume-rel='vagrant resume release'
+alias vg-box-upgrade='vagrant box remove vmass; vagrant up development'
 
 # [ruby]
 alias rvm_load='source /home/brad/.rvm/scripts/rvm; rvm use 2.4.3'

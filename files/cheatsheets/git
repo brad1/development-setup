@@ -1,3 +1,6 @@
+# lightweight tag!
+git tag platform-real-ifup-local-done
+
 [search diff history for one file for text!]
 git log -S allow_failure .gitlab-ci.yml
 Example usage:

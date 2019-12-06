@@ -1,0 +1,4 @@
+sudo docker build -t platform platform
+sudo docker run -it -v $(pwd):/home/gitlab-runner platform /bin/bash
+sudo docker run -v $(pwd):/home/gitlab-runner platform /bin/bash -c "./node_modules/.bin/eslint src *.js"
+

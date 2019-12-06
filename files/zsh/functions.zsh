@@ -52,7 +52,7 @@ function goto_home() {
 zle -N goto_home
 bindkey "^h" goto_home
 function up_widget() {
-	BUFFER="pushd .; cd .."
+	BUFFER="pushd . >/dev/null; cd .."
 	zle accept-line
 }
 zle -N up_widget
