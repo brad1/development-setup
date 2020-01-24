@@ -1,3 +1,7 @@
+# yum errors
+no such table packages
+yum clean all
+
 # find dependencies:
 yum deplist <pkg>
 yum install yum-utils; repoquery --requires --resolve <pkg>

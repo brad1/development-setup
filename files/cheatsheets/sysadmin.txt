@@ -1,3 +1,11 @@
+# reset time on rhel 7
+timedatectl set-ntp false
+timedatectl set-time 2020-01-07
+
+
+# alt to netstat -lnt
+ss -lnt
+
 # list mount points including ramdisk
 findmnt
 

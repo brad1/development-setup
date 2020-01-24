@@ -1,6 +1,18 @@
 ------------------------------------------------------------------------------
-Resqueu
-#!/usr/bin/ruby 
+"hello".ljust(4)            #=> "hello"
+"hello".ljust(20)           #=> "hello               "
+"hello".ljust(20, '1234')   #=> "hello123412341234123"
+
+and rjust
+------------------------------------------------------------------------------
+  text = <<-EOH
+    vagrant_http_port=#{http}
+    vagrant_https_port=#{https}
+    vagrant_ssh_port=#{ssh}
+  EOH
+------------------------------------------------------------------------------
+#Resqueu
+#!/usr/bin/ruby
 require 'resque'
 puts Resque.info
 job = Resque.redis.lrange('queue:system', 0, 0).last

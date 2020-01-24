@@ -15,6 +15,8 @@ Restart=on-failure
 WantedBy=multi-user.target
 
 # There are more options you can specify. For example, in addition to ExecStart you can specify ExecStop and ExecReload to control what happens when stopping and restarting. Those are not required though. If you omit the ExecStop option, it is smart enough to know it should kill the process. If you need a more graceful shutdown though, specify that with ExecStop. To see some more options, look at man systemd.service in your distribution. Freedesktop.org's man systemd.service .
+
+# try cat /etc/services
 ------------------------------------------------------------------------------
 
 # Read all the service options

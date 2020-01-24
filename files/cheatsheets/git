@@ -1,3 +1,12 @@
+# update local tags
+ git fetch --tags
+
+# Just show commits new in this branch
+git log master... --oneline
+
+# git lg -p -- <file>
+emulate a 'git show' for a single file
+
 # lightweight tag!
 git tag platform-real-ifup-local-done
 

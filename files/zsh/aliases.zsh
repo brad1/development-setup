@@ -9,6 +9,10 @@
 # [new]
 # Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
 #alias asdfasdf='emacs $(git show --name-only --format=  bd61ad98)' # open all files from a commit
+alias vim-exe='vim $FN && chmod +x $FN'
+alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
+alias ssh-gitlab-web='ssh brad@gitlab.valcom.com'
+alias ssh-gitlab-local='ssh -p 2222 root@localhost'
 alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
 alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
 alias vimf='vim $(fzf)'
@@ -92,16 +96,16 @@ alias cp_iso='cp $(find . -name VE\*iso) /media/sf_Desktop'
 # [find]
 alias find-list_files='find . -maxdepth 1 -type f'
 alias find-swap_files='find ~/Documents/txt -iname ".*.swp"'
-alias find-swap_files_remove='rm $(swap_files|xargs)'
+alias find-swap_files_remove='rm $(find-swap_files|xargs)'
 
 # [vim]
 alias vim-quick='vim ~/Documents/txt/quick.txt'
-alias vim-clipboard='vim ~/Documents/txt/topics/tasks/buffers/clipboard'
-alias vim-journal='vim ~/Documents/txt/topics/tasks/buffers/journal'
-alias vim-one-on-one='vim ~/Documents/txt/topics/tasks/buffers/one-on-one'
-alias vim-status='vim ~/Documents/txt/topics/tasks/buffers/status'
-alias vim-document-me='vim ~/Documents/txt/topics/tasks/buffers/volatile/document-me'
-alias vim-improvements='vim ~/Documents/txt/topics/tasks/buffers/volatile/improvements'
+alias vim-clipboard='vim ~/Documents/txt/var/clipboard'
+alias vim-journal='vim ~/Documents/txt/var/journal'
+alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
+alias vim-status='vim ~/Documents/txt/var/status'
+alias vim-document-me='vim ~/Documents/txt/var/document-me'
+alias vim-improvements='vim ~/Documents/txt/var/improvements'
 alias vim-problems='vim ~/Documents/txt/topics/tasks/buffers/volatile/problems'
 alias vim-quick='vim ~/Documents/txt/topics/tasks/buffers/volatile/quick'
 alias vim-reading-list='vim ~/Documents/txt/topics/tasks/buffers/volatile/reading-list'
@@ -188,6 +192,8 @@ alias open_80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NE
 alias install_homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
 
 # [git]
+alias git-ch='git cherry-pick'
+alias git-cc='git cherry-pick --continue'
 alias git-ca='git commit --amend'
 alias git-recent-files='git diff --name-only HEAD~10..HEAD'
 alias git-time_back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
@@ -222,7 +228,7 @@ alias docker-run-bash='cat /tmp/docker-build-out | tail -n1 | awk "{print $3}" >
 #   git diff --name-only SHA1 SHA2
 #
 
-alias project-clean='git checkout .; git clean -fd'
+alias git-project-clean='git checkout .; git clean -fd'
 # alias project-clean='git checkout .; git clean -fd; make clean'
 
 

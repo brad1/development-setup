@@ -1,1 +1,10 @@
 *.swp
+
+# Oops, third party tools dump stuff into your personal bin directory
+files/bin/bundle
+files/bin/bundler
+files/bin/coderay
+files/bin/pry
+files/bin/rubocop
+files/bin/ruby-parse
+files/bin/ruby-rewrite

@@ -2,3 +2,8 @@ sudo docker build -t platform platform
 sudo docker run -it -v $(pwd):/home/gitlab-runner platform /bin/bash
 sudo docker run -v $(pwd):/home/gitlab-runner platform /bin/bash -c "./node_modules/.bin/eslint src *.js"
 
+# cleanup
+docker rmi $(docker images | grep "none" | awk '/ / { print $3 }')
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+docker rm $(docker ps -qa --no-trunc --filter "status=exited")
+
