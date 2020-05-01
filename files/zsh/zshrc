@@ -1,29 +1,13 @@
-# [Tue Jan  9 16:14:33 2018]
-# zshrc: toggle other zshrc files.
+#WARNING! Your terminal appears to support fewer than 256 colors!
+#If your terminal supports 256 colors, please export the appropriate environment variable
+#_before_ loading this theme in your ~/.zshrc. In most terminal emulators, putting
+#export TERM="xterm-256color" at the top of your ~/.zshrc is sufficient.
+export TERM="xterm-256color"
 
-
-# Splash page!!! ############
 clear
 
-
 alias_prefixes=$(cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o "^alias [^\-]*-.*=" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs)
-#
-# old splash banner
-sep=""
-blank=""
-pad=""
-for i in $(seq 1 $((COLUMNS - 2))); do sep="$sep-"; done
-for i in $(seq 1 $((COLUMNS - 2))); do blank="$blank "; done
-for i in $(seq 1 $(((COLUMNS - 23) / 2))); do pad="$pad "; done
- echo "\e[35m#$sep#"
- echo "#$pad ______ _____ _    _ $pad#
-#$pad|___  // ____| |  | |$pad#
-#$pad   / /| (___ | |__| |$pad#
-#$pad  / /  \___ \|  __  |$pad#
-#$pad / /__ ____) | |  | |$pad#
-#$pad/_____|_____/|_|  |_|$pad#
-#$blank#
-$sep#\e[39m
+ echo "
    Ctrl-H: Home              ranger
    Ctrl-K: Up a directory    set -o vi # followed by ESC then:
                               '/' to reverse search shell history, or:
