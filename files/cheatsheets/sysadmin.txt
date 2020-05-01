@@ -1,3 +1,14 @@
+# sorted disk usage:
+du -sh * | sort -rh
+
+# host key checking
+Host *
+    StrictHostKeyChecking no
+
+sudo chmod 400 ~/.ssh/config
+
+
+
 # reset time on rhel 7
 timedatectl set-ntp false
 timedatectl set-time 2020-01-07

@@ -1,0 +1,6 @@
+[config.toml]
+
+concurrent = 0 # does not mean unlimited... ok
+
+"gitlab-runner register" - adds runner entries here with the appropriate token.
+

@@ -1,3 +1,6 @@
+:set textwidth=80
+-> then, position cursor, then gq} to wrap paragraph to the right width
+
 visual mode select plus:
 s/^\(.*\)$/'\1',/g # for quoting big lists
 

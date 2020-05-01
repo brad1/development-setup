@@ -1,6 +1,7 @@
 " set mouse= " disables mouse mode so you copy to system keyboard with a mouse highlight
 
-set foldmethod=syntax "syntax|indent|manual|marker
+" annoying in practice, off by default w/ a toggle might be good 
+" set foldmethod=syntax "syntax|indent|manual|marker
 
 set path=$PWD/** " for gf
 set path=~/Documents/vim/** " for gf

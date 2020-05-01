@@ -1,3 +1,60 @@
+#
+
+# remote polling w/ pgrep
+ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment 'for i in $(seq 1 12); do (sleep 10; echo -n .; pgrep script.sh >/dev/null 2>&1 ) && break; done'
+ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment 'for i in $(seq 1 60); do (sleep 10; echo -n .; pgrep script.sh >/dev/null 2>&1 ) || break; done'
+ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment '! pgrep script.sh >/dev/null 2>&1'
+
+
+# one of my favorites
+# recursive diff
+find . -type f | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{print $2 " " $1 }'
+# then compare a coupel files with vim -d
+# a variant
+find . -name post-\* | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{print $2 " " $1 }'
+
+
+# find exec on fedora
+find . -user root -exec rm -rf {} +
+
+# nonempty files
+find . -type f -name scratch -size +0
+
+# greater less then
+[ 0 -lt 1 ] && echo hello
+
+# search replace
+# #------------------------------------------------------------------------------
+rw = {} # replace with
+
+rw['pgsql-9\.6'] = 'pgsql-12'
+rw['postgresql96'] = 'postgresql12'
+rw['postgresql-9\.6'] = 'postgresql-12'
+rw['pgdg96'] = 'pgdg12'
+
+
+rw.each_pair do |p,s| # pattern, substitute
+  `ag -l '#{p}' | xargs sed -i 's/#{p}/#{s}/g'`
+end
+# ------------------------------------------------------------------------------
+
+# polling
+# ------------------------------------------------------------------------------
+server_is_using() {
+  #shellcheck disable=2009
+  ps aux | grep -v grep | grep -qs "$1"
+}
+
+while (server_is_using "kworker"); do
+  sleep 20
+  [ -z "$start" ] && start="$(date +%s)"
+  now=$(date +%s)
+  [ $(("$now" - "$start")) -le 360 ] || break # timeout after 6 mins
+done
+# ------------------------------------------------------------------------------
+
+
+
 # universal argument parser
 while (( "$#" )); do
   case "$1" in
@@ -87,6 +144,8 @@ date +"%Y-%m-%d_%H-%M-%S"
 
 # string include
 if [[ $state == *"original"* ]]
+# strign equality
+if [ "$state" == "original" ]]
 
 # follow link
 readlink -f /root/Public/myothertextfile.txt
@@ -176,3 +235,31 @@ run_when_appears() {
 }
 run_when_appears &
 
+
+
+
+
+
+
+
+
+
+# man [
+    -b FILE - True if the FILE exists and is a block special file.
+    -c FILE - True if the FILE exists and is a special character file.
+    -d FILE - True if the FILE exists and is a directory.
+    -e FILE - True if the FILE exists and is a file, regardless of type (node, directory, socket, etc.).
+    -f FILE - True if the FILE exists and is a regular file (not a directory or device).
+    -G FILE - True if the FILE exists and has the same group as the user running the command.
+    -h FILE - True if the FILE exists and is a symbolic link.
+    -g FILE - True if the FILE exists and has set-group-id (sgid) flag set.
+    -k FILE - True if the FILE exists and has a sticky bit flag set.
+    -L FILE - True if the FILE exists and is a symbolic link.
+    -O FILE - True if the FILE exists and is owned by the user running the command.
+    -p FILE - True if the FILE exists and is a pipe.
+    -r FILE - True if the FILE exists and is readable.
+    -S FILE - True if the FILE exists and is socket.
+    -s FILE - True if the FILE exists and has nonzero size.
+    -u FILE - True if the exists and set-user-id (suid) flag is set.
+    -w FILE - True if the FILE exists and is writable.
+    -x FILE - True if the FILE exists and is executable.

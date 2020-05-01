@@ -1,3 +1,7 @@
+# list repositories
+yum -v repolist
+yum repolist
+
 # yum errors
 no such table packages
 yum clean all
@@ -10,6 +14,9 @@ rpm -q --requires
 # despite yum's best effort, sometimes there are dependecy issues that
 # confuse yum, and yum is unable to install the package
 
+# file search packages
+rpm -ql <package>  | grep filename
+rpm -qf filename # other direction
 
 # search a repo in rhel6
 yum --disablerepo="*" --enablerepo="remi-safe" list available

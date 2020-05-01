@@ -7,24 +7,25 @@ clear
 
 
 alias_prefixes=$(cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o "^alias [^\-]*-.*=" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs)
-
+#
+# old splash banner
 sep=""
 blank=""
 pad=""
 for i in $(seq 1 $((COLUMNS - 2))); do sep="$sep-"; done
 for i in $(seq 1 $((COLUMNS - 2))); do blank="$blank "; done
 for i in $(seq 1 $(((COLUMNS - 23) / 2))); do pad="$pad "; done
-echo "\e[35m#$sep#"
-echo "#$pad ______ _____ _    _ $pad#
+ echo "\e[35m#$sep#"
+ echo "#$pad ______ _____ _    _ $pad#
 #$pad|___  // ____| |  | |$pad#
 #$pad   / /| (___ | |__| |$pad#
 #$pad  / /  \___ \|  __  |$pad#
 #$pad / /__ ____) | |  | |$pad#
 #$pad/_____|_____/|_|  |_|$pad#
 #$blank#
-#$sep#\e[39m
-  Ctrl-H: Home              ranger
-  Ctrl-K: Up a directory    set -o vi # followed by ESC then:
+$sep#\e[39m
+   Ctrl-H: Home              ranger
+   Ctrl-K: Up a directory    set -o vi # followed by ESC then:
                               '/' to reverse search shell history, or:
                                 bindkey \"^R\" history-incremental-search-backward
                               'v' to edit.
@@ -58,3 +59,11 @@ bindkey -M vicmd v edit-command-line
 # "?" vi-history-search-forward
 # "n" vi-repeat-search
 # "N" vi-rev-repeat-search
+#
+
+# TMU, this means that:
+#   sessions append to global history, but only on exit, and do not replaced the history
+unsetopt inc_append_history
+setopt share_history
+setopt APPEND_HISTORY
+# # # # #

@@ -1,3 +1,12 @@
+# delete and recreate remote branch
+git branch -D branchname
+git checkout --track origin/branchname
+
+# restore a file
+git log file
+> abc123 <commit message of undesired change>
+git checkout abc123~1 -- file
+
 # update local tags
  git fetch --tags
 

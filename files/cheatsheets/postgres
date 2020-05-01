@@ -1,8 +1,39 @@
+[table owner can't access tables]
+GRANT USAGE ON SCHEMA public TO username;
+
+[echo queries for shortcuts]
+psql -Upostgres -c '\dn' -E
+# this gives me the real query
+
+[list schema permissions]
+\dn+
+https://stackoverflow.com/questions/22715053/postgresql-view-schema-privileges
+
 [rundown]
 psql db_name db_user                                                     # open psql
 select * from pg_catalog.pg_tables where tableowner != 'postgres';       # list custom tables
-select column_name, data_type, character_maximum_length from             # describe table
+                                                                         # describe table
+select column_name, data_type, character_maximum_length from
   INFORMATION_SCHEMA.COLUMNS where table_name = 'destinations'
+
+[replace]
+UPDATE etable SET name = replace(name, 'string', 'newstring')
+
+[dump]
+pg_dump -Upostgres vip_db > vip_db.txt
+
+[clear table / delete form table]
+psql -Upostgres db -c "delete from tablename;" # remove all rows
+
+[check and update]
+[root@localhost ~]# psql -Upostgres db -c "select * from information" | grep log # or...
+[root@localhost ~]# psql -Upostgres db -c "select * from information where label like '%log%'"
+[root@localhost ~]# psql -Upostgres db -c "update information set value=7 where label='loglevel'"
+
+[induce failure]
+\set STOP_ON_ERROR true
+ALTER SCHEMA main RENAME TO delete_later;
+this line fails the psql command, will have a non-zero exit code
 
 
 [clean]

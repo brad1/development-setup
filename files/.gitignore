@@ -1,1 +1,3 @@
 .ignore/
+
+web/.*.tmp

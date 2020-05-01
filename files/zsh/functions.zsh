@@ -1,3 +1,7 @@
+lsg() {
+  ls -lah | grep "$1"
+}
+
 ln-first() {
   ln -sf $(find . -name "$1" | head -n1)
 }
