@@ -1,6 +1,20 @@
 [table owner can't access tables]
 GRANT USAGE ON SCHEMA public TO username;
 
+[get all the tables]
+------------------------------------------------------------------------------
+[root@localhost pgiterate]# psql -Upostgres vip_db -At < test2.sql > test2.out
+[root@localhost pgiterate]# cat test2.sql
+select table_name
+from information_schema.tables
+where
+  table_schema not in ('pg_catalog', 'information_schema')
+
+> cat query.sh:
+for t in $(cat test2.out); do echo '**********************'; echo "-- $t --"; psql -Upostgres vip_db -c "select * from $t"; done
+
+------------------------------------------------------------------------------
+
 [echo queries for shortcuts]
 psql -Upostgres -c '\dn' -E
 # this gives me the real query
