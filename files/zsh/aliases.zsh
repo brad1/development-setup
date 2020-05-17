@@ -9,26 +9,35 @@
 # [new]
 # Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
 #alias asdfasdf='emacs $(git show --name-only --format=  bd61ad98)' # open all files from a commit
-alias vim-exe='vim $FN && chmod +x $FN'
-alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
-alias ssh-gitlab-web='ssh brad@gitlab.valcom.com'
-alias ssh-gitlab-local='ssh -p 2222 root@localhost'
-alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
-alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
-alias vimf='vim $(fzf)'
-alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
-alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
-alias ls-changed-files='git diff --name-only HEAD HEAD~1'
-alias new_grep='ag -o "[0-9]+"' # fast
-alias fzf_search='fzf' # fast fuzzy file search
 alias clear-screen='printf "\033c"' # found on stack overflow
 
-alias install-remi='echo wget https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
+
+# [commonly used]
+
+# [vim]
+alias vimf='vim $(fzf)'
+alias vim-exe='vim $FN && chmod +x $FN'
+alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
+alias open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
+
+# [packages/installation]
+alias download-remi='echo wget https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
+alias download-wifi-driver='git clone https://github.com/tomaspinho/rtl8821ce'
+
+# [find/list/git]
+alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
+alias ls-changed-files='git diff --name-only HEAD HEAD~1'
+alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
+
+# [run]
+alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
 
 
 # [ssh]
 alias ssh-fast='ssh brad@$FASTBUILDER'
 alias ssh-build='ssh brad@$BUILD'
+alias ssh-gitlab-web='ssh brad@gitlab.valcom.com'
+alias ssh-gitlab-local='ssh -p 2222 root@localhost'
 
 # [system]
 alias osx_ram='sysctl -a | grep hw.memsize'
