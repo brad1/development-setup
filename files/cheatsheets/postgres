@@ -1,3 +1,15 @@
+------------------------------------------------------------------------------
+truncate hangs:
+select * from pg_catalog.pg_locks
+select * from pg_catalog.pg_stat_activity
+# see https://stackoverflow.com/questions/1063043/how-to-release-possible-postgres-row-locks
+------------------------------------------------------------------------------
+[single user mode]
+sudo su -l postgres
+/usr/pgsql-12/bin/pg_ctl -D /path/to/database -l logfile start
+or 
+/usr/pgsql-12/bin/postgres --single -D /path
+
 [table owner can't access tables]
 GRANT USAGE ON SCHEMA public TO username;
 

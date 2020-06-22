@@ -1,3 +1,16 @@
+# temporary one-off
+lnb() {
+  #files="$(find `pwd`/vipsched -type f -name \*cap\* | grep -v capybara | grep -v capabilities | grep -v vendor)"
+  files="$(ag -l ':class_name')"
+  mkdir -p links
+  for f in $(echo $files | xargs); do ln -sf "$f" links; done
+}
+
+# related: find `pwd`/vipsched -name \*cap\* | grep -v capybara | grep -v capabilities | grep -v vendor
+lna() {
+  ln -sf `pwd`/$1 links
+}
+
 lsg() {
   ls -lah | grep "$1"
 }

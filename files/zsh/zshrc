@@ -24,17 +24,17 @@ alias_prefixes=$(cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh
 
 # end Splash page!!! ############
 
+INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
 
 source $INCLUDE/oh-my-zsh.zsh
 
 # Include this instead when using .oh-my-zsh/custom
 source $INCLUDE/sources.zsh
 
-source ~/.env.valcom
 
 # Vi editing mode with visual mode.
 bindkey -M vicmd v edit-command-line

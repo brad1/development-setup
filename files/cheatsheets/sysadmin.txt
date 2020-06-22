@@ -1,3 +1,29 @@
+# silently kill child processes
+flask run --host=0.0.0.0 --port=9000 >/dev/null 2>&1 &
+pid="$!"
+disown
+echo "$pid">flask_pid
+flask_pid="$(cat flask_pid)"
+kill "$flask_pid"
+wait "$!" 2>/dev/null
+
+
+
+
+# send udp plaintext payload
+[root@localhost ~]# nc -u 127.0.0.1 8989
+<xml>matchme</xml>
+
+
+# tar
+tar -cvf tecmint-14-09-12.tar /home/tecmint/
+
+tar cvfj Phpfiles-org.tar.bz2 /home/php
+
+tar -xvf public_html-14-09-12.tar -C /home/public_html/videos/
+
+tar -xvf thumbnails-14-09-12.tar.gz -C /
+
 # sorted disk usage:
 du -sh * | sort -rh
 

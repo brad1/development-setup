@@ -2,6 +2,9 @@
 # fixes: setsocketopt: No such device
 route add default gw 192.168.1.1 eth0
 
+# in rhel7:
+ip route add default via 192.168.1.1 # may require eth0 to already be in the routing table
+
 
 curl --head https://gitlab.valcom.com/servers/vmass/-/jobs/artifacts/master/raw/image_builder/veewee/vmass.box?job=vagrant
 curl -H "header: header"

@@ -1,9 +1,15 @@
 # change a line
 sed -i "/^IFACE=/ c IFACE=$IFACE" $FN
 
+# warning:
+sed -i WILL overwrite a symlink!
+
 # idempotent inplace test:
 sed -i 's/a/aa/g ; s/b/bb/g' target.txt && cat target.txt && cp target.txt.bak target.txt
 sed -i 's|/a/path|/another/path|g' # for using filepaths!
+
+# delete
+sed '/^u/d' file
 
 
 #sed 's/string/"&"/' sed.txt           # Wrap the match

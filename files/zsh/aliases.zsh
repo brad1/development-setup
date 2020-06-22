@@ -1,107 +1,155 @@
+# [new]
+#  Instead of this, I keep a permanent log of every shell command I ever typed and have a handy alias to keep through it.
+# It also keeps track of the directory a command was run from, so I can limit my search. That way if I ever want to get back into a project I was working on long ago, I can just grep for commands run from that directory.
+# Not only that, but I can use it to cd to directories quickly. So if I was working under a huge p 10 level deep directory path, I have a alias that will match a string and cd into the last matching path in the permanent history file.
+# Not only that, but I can also search and then choose and rerun a command in the history, and also edit before rerunning it.
+# Just put:
+# export PROMPT_COMMAND='if [ "$(id -u)" -ne 0 ]; then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> "${HOME}/bash_logs_$(hostname)/bash-history-$(date "+%Y-%m-%d").log"; fi'
+# in your ~/.bash_profile. You also may need to `mkdir "${HOME}/bash_logs_$(hostname)"`
+# I took this command from a Hacker News thread of the past. I don't have a link to it any more.
+
+# ps aux | grep -E 'ping|ha' | grep -v grep | awk '{ print $1 " " $2 " " substr($0, index($0,$11)) }'
+
 # [edit]
-alias my-vimf='vim $(fzf)'
-alias my-vim-exe='vim $FN && chmod +x $FN'
-alias my-vim-var='cd ~/Documents/txt/var; vimf; cd -'
-alias my-open-modified='vim $(git status | grep modified | cut -f2 | cut -d' ' -f4)'
-alias my-tmp='vim ~/tmp/$(date "+%F-%T")'
-alias my-vim-clipboard='vim ~/Documents/txt/var/clipboard'
-alias my-vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
-alias my-vim-status='vim ~/Documents/txt/var/status'
-alias my-vim-known-hosts='vim ~/.ssh/known_hosts'
-# alias my-vim-zsh-noscm='vim ~/.noscm.zsh' # replaced with ~/.env.<company-name>
-alias my-zsh-sources='vim $DEVSETUP/files/zsh/sources.zsh'
-alias my-zsh-controls='vim $DEVSETUP/files/zsh/functions.zsh'
-alias my-zsh-aliases='vim $DEVSETUP/files/zsh/aliases.zsh'
-alias my-zsh-functions='vim $DEVSETUP/files/zsh/functions.zsh'
+alias -s {cs,ts,html,json,md}=$EDITOR
+alias vimf='vim $(fzf)'
+alias vim-exe='vim $FN && chmod +x $FN'
+alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
+alias vim-queue='cd ~/Documents/txt/var; vim queue; cd -'
+alias vimrc="vim $DEVSETUP/files/vim/vimrc"
+alias vim-open-modified='vim $(git status | grep modified | cut -f2 | cut -d" " -f4)'
+alias vim-tmp='vim ~/tmp/$(date "+%F-%T")'
+alias vim-clipboard='vim ~/Documents/txt/var/clipboard'
+alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
+alias vim-status='vim ~/Documents/txt/var/status'
+alias vim-known-hosts='vim ~/.ssh/known_hosts'
+alias zsh-sources='vim $DEVSETUP/files/zsh/sources.zsh'
+alias zsh-controls='vim $DEVSETUP/files/zsh/functions.zsh'
+alias zsh-aliases='vim $DEVSETUP/files/zsh/aliases.zsh'
+alias zsh-functions='vim $DEVSETUP/files/zsh/functions.zsh'
+alias zshrc='vim $DEVSETUP/files/zsh/zshrc'
+#alias zshrc='vim ~/.zshrc'
 
 # [packages/installation]
-alias my-download-remi='echo wget https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
-alias my-download-wifi-driver='git clone https://github.com/tomaspinho/rtl8821ce'
-alias my-install-homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-alias my-install-rvm='\curl -sSL https://get.rvm.io | bash -s stable --ruby'
+alias download-remi='echo curl -LO https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
+alias download-wifi-driver='git clone https://github.com/tomaspinho/rtl8821ce'
+alias install-homebrew='/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+alias install-rvm='\curl -sSL https://get.rvm.io | bash -s stable --ruby'
 
 # [find/list/git]
-alias my-ls-merges-last-10='git log --oneline | grep Merge | head -n10'
-alias my-ls-changed-files='git diff --name-only HEAD HEAD~1'
-alias my-find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
-alias my-find-list-files='find . -maxdepth 1 -type f'
-alias my-find-swap-files='find ~/Documents/txt -iname ".*.swp"'
-alias my-find-swap-files_remove='rm $(find-swap_files|xargs)'
+alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
+alias ls-changed-files='git diff --name-only HEAD HEAD~1'
+alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
+alias find-list-files='find . -maxdepth 1 -type f'
+alias find-swap-files='find ~/Documents/txt -iname ".*.swp"'
+alias find-swap-files_remove='rm $(find-swap_files|xargs)'
 
 # [run]
-alias my-run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
-alias my-run-chef="bash --login -c 'rvm use 2.4.0; chef-solo -c $DEVSETUP/solo.rb'"
+alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
+alias run-chef="bash --login -c 'rvm use 2.4.0; chef-solo -c $DEVSETUP/solo.rb'"
 
-# [ssh]
-alias my-ssh-fast='ssh brad@$FASTBUILDER'
-alias my-ssh-build='ssh brad@$BUILD'
-alias my-ssh-gitlab-web='ssh brad@gitlab.valcom.com'
-alias my-ssh-gitlab-local='ssh -p 2222 root@localhost'
+# [network]
+alias ping-8='ping -c 3 8.8.8.8'
 
 # [system]
-alias my-mem="cat /proc/meminfo | grep Total"
-alias my-cpu="cat /proc/cpuinfo"
-alias my-graphics="lspci -v|grep -i graphics"
-alias my-network="lspci -v|grep -i net"
+alias cat-meminfo="cat /proc/meminfo | grep Total"
+alias cat-cpuinfo="cat /proc/cpuinfo"
+alias lspci-graphics="lspci -v|grep -i graphics"
+alias lspci-network="lspci -v|grep -i net"
+
+# [vagrant]
+alias vgs="vagrant global-status"
+alias vs="vagrant status"
+alias vssh="vagrant ssh"
+alias vup="vagrant up"
+alias vd="vagrant destroy"
+alias vsus="vagrant suspend"
 
 # [shell]
-alias my-mount-iso='mount -t iso9660 -o loop /home/brad/DVD.iso /mnt/iso/'
-alias my-group-list='getent group wheel'
-alias my-printenv='printenv' # print environment variables # or, env?
-alias my-clear-screen='printf "\033c"' # found on stack overflow
+alias ff='echo make a function: <command> >/dev/null 2>&1 &' # maybe nohup?
+# related, see: xargs -P 10 -r -n 1 wget -nv # (xargs start commands in parallel)
+# maybe related: https://github.com/alexanderepstein/Bash-Snippets
+# https://www.ostechnix.com/list-useful-bash-keyboard-shortcuts/ # add to terminal splash
+# cool!:
+#   mkdir /path/to/exampledir
+#   cd !$
+# Ctrl-Z, followed by `bg`, puts a process in the background
+# https://linuxacademy.com/blog/linux/tutorial-the-best-tips-tricks-for-bash-explained/
+# log iterations:
+#   [ -z "$n" ] && n=0 || ((n=n+1)); echo hello >> "h.log.$n";
+alias mount-iso-home-DVD.iso='mount -t iso9660 -o loop /home/brad/DVD.iso /mnt/iso/'
+alias getent-group-wheel='getent group wheel'
+alias printenv-default='printenv' # print environment variables # or, env?
+alias clear-screen='printf "\033c"' # found on stack overflow
 # Ctrl-S: freeze terminal output, Ctrl-Q: continue terminal output.
-alias my-rvm-load='source /home/brad/.rvm/scripts/rvm; rvm use 2.4.3'
-alias my-today='date +%Y%m%d'
+alias rvm-load='source /home/brad/.rvm/scripts/rvm; rvm use 2.4.3'
+alias date-today='date +%Y%m%d'
+alias cat-zsh-aliases-magic='print -rl -- ${(k)aliases} ${(k)functions} ${(k)parameters}'
+alias cat-zsh-aliases='cat $DEVSETUP/files/zsh/aliases.zsh | grep -o "^alias.*=" | sed "s/^alias\(.*\)=/\1/"'
+# For suffix aliases, you can bulk them
+# alias -s {ape,avi,flv,m4a,mkv,mov,mp3,mp4,mpeg,mpg,ogg,ogm,wav,webm}=mpv
+# alternate: echo 'employee_id=1234' | grep -oP 'employee_id=\K([0-9]+)'
+
 
 # [cheatsheets]
-alias my-ch-gitlab='vim $DEVSETUP/files/cheatsheets/gitlab.txt'
-alias my-ch-docker='vim $DEVSETUP/files/cheatsheets/docker.txt'
-alias my-ch-python='vim $DEVSETUP/files/cheatsheets/python.txt'
-alias my-ch-awk='vim $DEVSETUP/files/cheatsheets/awk.txt'
-alias my-ch-syslog='vim $DEVSETUP/files/cheatsheets/syslog.txt'
-alias my-ch-terminal='vim $DEVSETUP/files/cheatsheets/terminal.txt'
-alias my-ch-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
-alias my-ch-systemd='vim $DEVSETUP/files/cheatsheets/systemd.txt'
-alias my-ch-ruby='vim $DEVSETUP/files/cheatsheets/ruby.txt'
-alias my-ch-bundler='vim $DEVSETUP/files/cheatsheets/bundler.txt'
-alias my-ch-virtualbox='vim $DEVSETUP/files/cheatsheets/virtualbox.txt'
-alias my-ch-postgres='vim $DEVSETUP/files/cheatsheets/postgres'
-alias my-ch-vim='vim $DEVSETUP/files/cheatsheets/vim'
-alias my-ch-qwerty='cat $DEVSETUP/files/cheatsheets/qwerty'
-alias my-ch-zsh='vim $DEVSETUP/files/zsh/cheatsheet'
-alias my-ch-bash='vim $DEVSETUP/files/bash/cheatsheet'
-alias my-ch-unix='vim $DEVSETUP/files/cheatsheets/bash_commands'
-alias my-ch-rhel='vim $DEVSETUP/files/cheatsheets/linux'
-alias my-ch-rpm='vim $DEVSETUP/files/cheatsheets/linux-rpm'
-alias my-ch-network='vim $DEVSETUP/files/cheatsheets/network'
-alias my-ch-tmux='vim $DEVSETUP/files/tmux/cheatsheet'
-alias my-ch-ranger='echo S open shell in directory, c-h to show hidden files '
-alias my-ch-sed='vi $DEVSETUP/files/cheatsheets/sed'
-alias my-ch-php='vi $DEVSETUP/files/cheatsheets/php'
-alias my-ch-sql='vi $DEVSETUP/files/cheatsheets/sql'
-alias my-ch-git='vi $DEVSETUP/files/cheatsheets/git'
-alias my-ch-markdown='vi $DEVSETUP/files/cheatsheets/markdown'
+alias cheatsheet-gitlab='vim $DEVSETUP/files/cheatsheets/gitlab.txt'
+alias cheatsheet-docker='vim $DEVSETUP/files/cheatsheets/docker.txt'
+alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'
+alias cheatsheet-awk='vim $DEVSETUP/files/cheatsheets/awk.txt'
+alias cheatsheet-syslog='vim $DEVSETUP/files/cheatsheets/syslog.txt'
+alias cheatsheet-terminal='vim $DEVSETUP/files/cheatsheets/terminal.txt'
+alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
+alias cheatsheet-systemd='vim $DEVSETUP/files/cheatsheets/systemd.txt'
+alias cheatsheet-ruby='vim $DEVSETUP/files/cheatsheets/ruby.txt'
+alias cheatsheet-bundler='vim $DEVSETUP/files/cheatsheets/bundler.txt'
+alias cheatsheet-virtualbox='vim $DEVSETUP/files/cheatsheets/virtualbox.txt'
+alias cheatsheet-postgres='vim $DEVSETUP/files/cheatsheets/postgres'
+alias cheatsheet-vim='vim $DEVSETUP/files/cheatsheets/vim'
+alias cheatsheet-qwerty='cat $DEVSETUP/files/cheatsheets/qwerty'
+alias cheatsheet-zsh='vim $DEVSETUP/files/zsh/cheatsheet'
+alias cheatsheet-bash='vim $DEVSETUP/files/bash/cheatsheet'
+alias cheatsheet-unix='vim $DEVSETUP/files/cheatsheets/bash_commands'
+alias cheatsheet-rhel='vim $DEVSETUP/files/cheatsheets/linux'
+alias cheatsheet-rpm='vim $DEVSETUP/files/cheatsheets/linux-rpm'
+alias cheatsheet-network='vim $DEVSETUP/files/cheatsheets/network'
+alias cheatsheet-tmux='vim $DEVSETUP/files/tmux/cheatsheet'
+alias cheatsheet-ranger='echo S open shell in directory, c-h to show hidden files '
+alias cheatsheet-sed='vi $DEVSETUP/files/cheatsheets/sed'
+alias cheatsheet-php='vi $DEVSETUP/files/cheatsheets/php'
+alias cheatsheet-sql='vi $DEVSETUP/files/cheatsheets/sql'
+alias cheatsheet-git='vi $DEVSETUP/files/cheatsheets/git'
+alias cheatsheet-markdown='vi $DEVSETUP/files/cheatsheets/markdown'
 
 # [locations]
-alias my-cd-downloads='cd ~/Downloads'
-alias my-cd-devsetup='cd $DEVSETUP'
-alias my-cd-projects='cd ~/Projects'
-alias my-cd-vmass='cd ~/Projects/vmass'
-alias my-open-examples='open -a Finder ~/Examples || nautilus --browser ~/Examples'
-alias my-open-tmp='open -a Finder /tmp || nautilus --browser /tmp'
-alias my-open-dot='open -a Finder . || nautilus --browser .'
+alias c='cd'
+alias cd-downloads='cd ~/Downloads'
+alias cd-documents='cd ~/Documents/'
+alias cd-txt='cd ~/Documents/txt/'
+alias cd-devsetup='cd $DEVSETUP'
+alias cd-projects='cd ~/Projects'
+alias cd-vmass='cd ~/Projects/vmass'
+# TODO use functions for feature detection
+alias open-examples='open -a Finder ~/Examples || nautilus --browser ~/Examples'
+alias open-tmp='open -a Finder /tmp || nautilus --browser /tmp'
+alias open-dot='open -a Finder . || nautilus --browser .'
 
 # [http]
-alias my-http-get-with-status='curl -Li localhost:5000 2> /dev/null | grep -i HTTP'
-alias my-ip='ifconfig|grep -i -m1 "inet addr" | cut -d' ' -f12 | cut -d: -f2'
-alias my-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT'
+alias curl-get-with-status='curl -Li localhost:5000 2> /dev/null | grep -i HTTP'
+alias ifconfig-my-ip='ifconfig|grep -i -m1 "inet addr" | cut -d' ' -f12 | cut -d: -f2'
+alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT'
 
 # [git]
-alias my-git-ch='git cherry-pick'
-alias my-git-cc='git cherry-pick --continue'
-alias my-git-ca='git commit --amend'
-alias my-git-recent-files='git diff --name-only HEAD~10..HEAD'
-alias my-git-time-back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
+# > git config --global alias.co checkout # adds alias.  do these have any auto-complete?
+# https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
+# Note that g r<tab> already give you git autocomplete and already lists aliases
+# there has to be a way to do this will shell functions or something!
+alias git-list-aliases='git config --global --list | grep alias'
+
+alias git-ch='git cherry-pick'
+alias git-cc='git cherry-pick --continue'
+alias git-ca='git commit --amend'
+alias git-recent-files='git diff --name-only HEAD~10..HEAD'
+alias git-time-back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
 #
 # [virtualbox]
 # VBoxManage startvm vagrant --type headless

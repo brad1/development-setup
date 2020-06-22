@@ -1,4 +1,18 @@
 ------------------------------------------------------------------------------
+# auto method/arg log, trace log
+def log
+  calling_method = caller[0][/`.*'/][1..-2]
+  args = method(calling_method).parameters.map { |arg| arg[1].to_s }
+  require 'pry'
+  binding.pry
+  puts "Method #{calling_method} failed with " + args.map { |arg| "#{arg} = #{eval arg}" }.join(', ')
+end
+
+# Doesn't quite work b/c:
+# and 'eval' doesn't work when the vars are out of scope
+#[7] pry(main)> method(calling_method).parameters
+#=> [[:opt, :a], [:opt, :b]]
+------------------------------------------------------------------------------
 "hello".ljust(4)            #=> "hello"
 "hello".ljust(20)           #=> "hello               "
 "hello".ljust(20, '1234')   #=> "hello123412341234123"

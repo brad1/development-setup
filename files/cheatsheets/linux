@@ -1,3 +1,13 @@
+# rpm versions compares:
+rpmdev-sort
+rpmdev-vercmp
+
+# rpm file parsing
+rpm --queryformat "%{NAME} %{VERSION} %{RELEASE} %{ARCH}" -qp file.rpm
+
+# Error checking software selection
+cat /tmp/packaging.log | grep requires
+
 # list repositories
 yum -v repolist
 yum repolist
