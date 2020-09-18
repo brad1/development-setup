@@ -1,9 +1,14 @@
+am_I_in_ranger() {
+  ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
+}
+
 # temporary one-off
 lnb() {
   #files="$(find `pwd`/vipsched -type f -name \*cap\* | grep -v capybara | grep -v capabilities | grep -v vendor)"
-  files="$(ag -l ':class_name')"
-  mkdir -p links
-  for f in $(echo $files | xargs); do ln -sf "$f" links; done
+  #files="$(ag -l ':class_name')"
+  files="$(find `pwd`/vipsched -type f -name \*ldap\* | grep -v capybara | grep -v capabilities | grep -v vendor)"
+  mkdir -p ldap_links
+  for f in $(echo $files | xargs); do ln -sf "$f" ldap_links; done
 }
 
 # related: find `pwd`/vipsched -name \*cap\* | grep -v capybara | grep -v capabilities | grep -v vendor

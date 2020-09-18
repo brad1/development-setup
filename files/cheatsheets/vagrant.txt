@@ -1,0 +1,3 @@
+# neat trick for vagrant ssh:
+vagrant ssh-config > vagrant-ssh # save the config to a file
+ssh -F vagrant-ssh default       # run ssh with the file.

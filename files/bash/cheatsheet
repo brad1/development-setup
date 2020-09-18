@@ -1,3 +1,64 @@
+# file access times!
+ls -l --time=atime
+
+
+# printf justifications:
+# # although this is C, bash printf accepts same options.
+printf ("<%d> is not justified.\n", x);
+printf ("<%5d> is right-justified.\n", x);
+printf ("<%-5d> The minus sign makes it left-justified.\n", x);
+/* Demonstrate with strings. */
+printf ("'%s' is not justified.\n", y);
+printf ("'%10s' is right-justified.\n", y);
+printf ("'%-10s' is left-justified using a minus sign.\n", y);
+
+# detect interactive shell
+if [ -t 1 ] ; then echo terminal; else echo "not a terminal"; fi
+
+# ssh w/ expon. backoff until succeeds
+for i in $(seq 1 60) ; do
+  ssh -p5147 gear@192.168.1.2 && break
+  echo waiting: $((i * i))
+  sleep $((i * i))
+done
+
+# subshells!
+pstree -pls $$
+
+# for all tmux, and not just your stack:
+ps aux | grep -v grep | grep tmux | tail -n1 | awk '{print $2}'
+9103
+pstree -pls 9103
+systemd(1)───tmux: server(9103)─┬─zsh(9104)───vim(12998)
+                                ├─zsh(9375)
+                                ├─zsh(9609)
+                                ├─zsh(9763)
+                                ├─zsh(10182)
+                                └─zsh(11843)───ranger(11789)───zsh(11804)───pstree(24498)
+
+# Scraping the last bit of some command output:
+vagrant ssh --command ... | xargs | awk '{print $NF}'
+
+# Am I in a subshell?  this doesn't work with zsh
+#$ ( if [ "$$" -eq "$BASHPID" ]; then echo not subshell; else echo subshell; fi )
+#subshell
+#$   if [ "$$" -eq "$BASHPID" ]; then echo not subshell; else echo subshell; fi
+#not subshell
+#
+# kind of cheating, but:
+# echo $PPID # in a new shell session under tmux, expect a low number like 300.
+# echo $PPID # in a new shell started from ranger, expect a large number in the thousands.  WOrks in zsh too!
+
+# check if I am in a ranger subshell:
+ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
+ not 100%, but should be OK in development.
+
+
+# file timestamps
+stat -c %y *
+- or -
+date -r "$1" +%s
+
 # # # Misc # # #
 #
 cat msg.xml
@@ -16,7 +77,7 @@ curl -XPOST --data "$msg" http://127.0.0.1/....
 #
 
 
-#  print current method name 
+#  print current method name
 ${FUNCNAME[0]}
 
 # line-by-line file multiple delimieters:
@@ -39,7 +100,6 @@ ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment 'for i in $(seq
 ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment 'for i in $(seq 1 60); do (sleep 10; echo -n .; pgrep script.sh >/dev/null 2>&1 ) || break; done'
 ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment '! pgrep script.sh >/dev/null 2>&1'
 
-
 # one of my favorites
 # recursive diff
 find . -type f | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{print $2 " " $1 }'
@@ -50,6 +110,10 @@ find . -name post-\* | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{pri
 
 # find exec on fedora
 find . -user root -exec rm -rf {} +
+
+# find filenames
+find vendor/ -type f | args -L1 -I{} basename {}
+# stripping out version string from filename # | sort | sed -E 's/-[0-9]{1,2}.*//'
 
 # nonempty files
 find . -type f -name scratch -size +0

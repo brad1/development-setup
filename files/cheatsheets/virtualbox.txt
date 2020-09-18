@@ -1,6 +1,19 @@
 which VBoxManage
 /usr/local/bin/VBoxManage
 
+VBoxManage controlvm <vm name> screenshotpng screenshot.png
+    convert -colorspace gray -fill white -resize 600% -sharpen 0x2 screenshot.png screenshot.jpg
+    tesseract screenshot.jpg ocr > /dev/null
+    cat ocr.txt
+
+VBoxManage controlvm vmass7 keyboardputscancode ...
+'50' is scan code for 'DOWN' key and 1c is 'Enter'.
+https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+
+VBoxManage controlvm vmass7 keyboardputscancode 13 18 18 14 1c # try to login as root, end with enter
+VBoxManage controlvm vmass7 keyboardputscancode 13 18 18 14 1c # try to login as root
+
+
 VBoxManage list vms
 
 # headless examples:

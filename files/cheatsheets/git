@@ -2,6 +2,9 @@
 git branch -D branchname
 git checkout --track origin/branchname
 
+# missing/deleted file
+git log --full-history  -- myfile
+
 # restore a file
 git log file
 > abc123 <commit message of undesired change>

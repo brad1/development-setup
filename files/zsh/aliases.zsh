@@ -10,6 +10,13 @@
 
 # ps aux | grep -E 'ping|ha' | grep -v grep | awk '{ print $1 " " $2 " " substr($0, index($0,$11)) }'
 
+alias queue='(cd ~/Documents/txt/queues && vimf)'
+alias queues='queue'
+alias q='queue'
+
+# [subshells]
+alias ss-q='(cd ~/Documents/txt/queues && zsh)'
+
 # [edit]
 alias -s {cs,ts,html,json,md}=$EDITOR
 alias vimf='vim $(fzf)'
@@ -90,8 +97,9 @@ alias cat-zsh-aliases='cat $DEVSETUP/files/zsh/aliases.zsh | grep -o "^alias.*="
 # alias -s {ape,avi,flv,m4a,mkv,mov,mp3,mp4,mpeg,mpg,ogg,ogm,wav,webm}=mpv
 # alternate: echo 'employee_id=1234' | grep -oP 'employee_id=\K([0-9]+)'
 
-
 # [cheatsheets]
+alias cheatsheet-vagrant='vim $DEVSETUP/files/cheatsheets/vagrant.txt'
+alias cheatsheet-uefi='vim $DEVSETUP/files/cheatsheets/uefi.txt'
 alias cheatsheet-gitlab='vim $DEVSETUP/files/cheatsheets/gitlab.txt'
 alias cheatsheet-docker='vim $DEVSETUP/files/cheatsheets/docker.txt'
 alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'

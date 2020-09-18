@@ -1,3 +1,42 @@
+# process on port
+lsof -i :80
+
+# extract fingerprint from cert:
+openssl x509 -noout -fingerprint -[sha256|sha1|md5] -inform pem -in [certificate-file.crt]
+
+# find mutliple extension
+find . -type f \( -name "*.sh" -o -name "*.txt" \)
+
+# find cert fingerprints on system
+find /etc -type f \( -name "*.crt" -o -name "*.pem" \) > find.out 2>&1
+for fn in $(cat ./find.out) ; do
+  echo "$fn"
+  openssl x509 -noout -fingerprint -sha256 -inform pem -in "$fn"
+  echo
+done
+
+
+self signed cert with passphrase:
+openssl genrsa -des3 -out server.key 1024
+openssl req -new -key server.key -out server.csr
+openssl rsa -in server.key.org -out server.key # optional, remove passphrase
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+
+
+
+
+# systemd
+
+systemctl list-unit-files | grep enabled
+
+
+
+
+
+# linux programmer's guide!
+man 1 intro
+man 2 intro
+
 # silently kill child processes
 flask run --host=0.0.0.0 --port=9000 >/dev/null 2>&1 &
 pid="$!"

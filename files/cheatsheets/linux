@@ -1,3 +1,6 @@
+# list names of all rpms
+rpm -qa --qf "%{NAME}\n"
+
 # rpm versions compares:
 rpmdev-sort
 rpmdev-vercmp
