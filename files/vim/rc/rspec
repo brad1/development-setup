@@ -1,0 +1,6 @@
+abbrev rec receive( <Left>
+abbrev exp expect( <Left>
+abbrev all allow( <Left>
+abbrev and and_return( <Left>
+abbrev on once.
+abbrev wi with(

@@ -1,3 +1,54 @@
+shell-status() {
+  echo "date-time: $(date "+%D - %H:%M:%S")"
+  echo "user: $(whoami)"
+  echo "pwd: $(pwd)"
+  echo "subshells:"
+  pstree -ps $$
+  g st 2>/dev/null | grep 'On branch' > /tmp/shell-status-git && echo "git: $(cat /tmp/shell-status-git)"
+  echo "jobs: "
+  echo "------------------"
+  jobs
+  echo "------------------"
+}
+
+reload-aliases() {
+  source "$DEVSETUP/files/zsh/aliases.zsh"
+}
+
+reload-functions() {
+  source "$DEVSETUP/files/zsh/functions.zsh"
+}
+
+summarize-cheatsheet() {
+  cat "$DEVSETUP/files/cheatsheets/$1.txt" | grep context
+}
+
+cheatsheet-python() {
+  fn="$DEVSETUP/files/cheatsheets/python.txt"
+
+  if [ "$1" = "edit" ] ; then
+    vim "$fn"
+    return
+  fi
+
+  if [ "$1" = "sum" ] ; then
+    cat "$fn" | grep context
+    return
+  fi
+
+  echo "Usage: cheat-python <edit|sum>"
+
+}
+
+cdf() {
+  cd "$(find . -iname "$1" | head -n1)"
+}
+
+find-with() {
+  # better way!
+  find . -iname "*$1*" -not -path "./.git/*" -not -path "./release/*"
+}
+
 am_I_in_ranger() {
   ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
 }

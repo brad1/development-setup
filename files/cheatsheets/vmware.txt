@@ -1,0 +1,62 @@
+browse to https://hostname/ui (use backend creds)
+
+Upgrade path:
+https://interopmatrix.vmware.com/#/Upgrade?productId=1
+
+
+6.0 --> 6.7
+https://docs.vmware.com/en/VMware-vSphere/6.7/com.vmware.esxi.upgrade.doc/GUID-FE668788-1F32-4CB2-845C-5547DD59EB48.html
+
+6.7 --> 7.0
+https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.esxi.upgrade.doc/GUID-FE668788-1F32-4CB2-845C-5547DD59EB48.html
+
+# compatibility checker:
+https://flings.vmware.com/esxi-compatibility-checker#:~:text=The%20ESXi%20Compatibility%20Checker%20is,version%20needs%20to%20be%20upgraded.
+# seems like it was meant for windows!
+
+
+# CPU
+esxcli hardware cpu global get
+esxcli hardware cpu list
+[root@localhost:~] vim-cmd hostsvc/hosthardware > hosthardware
+[root@localhost:~] cat hosthardware | grep description
+https://www.vmware.com/resources/compatibility/detail.php?deviceCategory=cpu&productid=22&vcl=true
+ESXi 6.5 U3 - Do'h
+
+# HP:
+https://techlibrary.hpe.com/us/en/enterprise/servers/supportmatrix/vmware.aspx
+
+
+# manual way:
+esxcli system module list
+esxcli system module list | grep vmklinux # deprecated
+esxcfg-info # other stuff...
+# NIC list:
+esxcli network nic list |grep ^vm | awk '{print $1}'
+# send to:
+esxcli network nic get -n <name>
+.....
+
+# OUr server:
+[root@localhost:~] esxcli hardware platform get
+Platform Information
+   UUID: 0x34 0x33 0x38 0x34 0x37 0x34 0x53 0x55 0x45 0x31 0x31 0x30 0x4e 0x36 0x33 0x48
+   Product Name: ProLiant ML350 G6
+   Vendor Name: HP
+   Serial Number: USE110N63H
+   IPMI Supported: true
+
+# HP listing does not include above, G9 goes up to 6.5
+
+
+0000:03:04.0 14e4:1678 103c:703e vmkernel vmnic0
+0000:03:04.1 14e4:1678 103c:703e vmkernel vmnic1
+(1678 is for broadcom) These listed up to 6.7 U3
+
+8086:3a26 103c:330d
+IDE interface Mass storage controller: Intel Corporation ICH10 2 port SATA IDE Controller
+7.0 U2
+
+"103c:323a 103c:3245"
+HP : Smart Array P410i
+Listed 7.0 U2

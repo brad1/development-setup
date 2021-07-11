@@ -1,4 +1,47 @@
 ------------------------------------------------------------------------------
+context: pg_hba
+
+postgres=# SHOW hba_file;
+              hba_file
+-------------------------------------
+ /etc/postgresql/12/main/pg_hba.conf
+
+------------------------------------------------------------------------------
+context: user authentication workaround
+
+https://stackoverflow.com/questions/17443379/psql-fatal-peer-authentication-failed-for-user-dev
+
+psql -U user_name  -h 127.0.0.1 -d db_name
+
+where
+
+    -U is the database user name
+    -h is the hostname/IP of the local server, thus avoiding Unix domain sockets
+    -d is the database name to connect to
+
+This is then evaluated as a "network" connection by Postgresql rather than a Unix domain socket connection, thus not evaluated as a "local" connect as you might see in pg_hba.conf:
+
+local   all             all                                     peer
+
+------------------------------------------------------------------------------
+ALTER TABLE table_name
+ADD COLUMN new_column_name data_type constraint;
+ALTER TABLE customers
+ADD COLUMN contact_name VARCHAR NOT NULL;
+
+ALTER TABLE caps_alert_destinations ADD COLUMN is_current boolean NOT NULL DEFAULT TRUE;
+ALTER TABLE caps_alert_destinations DROP COLUMN is_current;
+
+# date + time + timezone
+ALTER TABLE caps_alert_destinations ADD COLUMN invalid_since timestamp with time zone;
+
+------------------------------------------------------------------------------
+# FATAL: db is shutting down etc
+# fast server shutdown:
+su - postgres -c "/usr/pgsql-12/bin/pg_ctl stop -m fast -D /mnt/database/data"
+
+
+------------------------------------------------------------------------------
 truncate hangs:
 select * from pg_catalog.pg_locks
 select * from pg_catalog.pg_stat_activity
@@ -7,7 +50,7 @@ select * from pg_catalog.pg_stat_activity
 [single user mode]
 sudo su -l postgres
 /usr/pgsql-12/bin/pg_ctl -D /path/to/database -l logfile start
-or 
+or
 /usr/pgsql-12/bin/postgres --single -D /path
 
 [table owner can't access tables]

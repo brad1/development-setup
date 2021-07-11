@@ -1,3 +1,10 @@
+# Bookmarks:
+# frequentuse, updatedaily
+
+
+
+
+
 # [new]
 #  Instead of this, I keep a permanent log of every shell command I ever typed and have a handy alias to keep through it.
 # It also keeps track of the directory a command was run from, so I can limit my search. That way if I ever want to get back into a project I was working on long ago, I can just grep for commands run from that directory.
@@ -8,11 +15,16 @@
 # in your ~/.bash_profile. You also may need to `mkdir "${HOME}/bash_logs_$(hostname)"`
 # I took this command from a Hacker News thread of the past. I don't have a link to it any more.
 
+alias rd='rdesktop -u user ipaddress'
+alias stack='pstree -s $$'
+
 # ps aux | grep -E 'ping|ha' | grep -v grep | awk '{ print $1 " " $2 " " substr($0, index($0,$11)) }'
 
+alias catf='cat $(fzf)'
 alias queue='(cd ~/Documents/txt/queues && vimf)'
 alias queues='queue'
 alias q='queue'
+
 
 # [subshells]
 alias ss-q='(cd ~/Documents/txt/queues && zsh)'
@@ -27,6 +39,7 @@ alias vimrc="vim $DEVSETUP/files/vim/vimrc"
 alias vim-open-modified='vim $(git status | grep modified | cut -f2 | cut -d" " -f4)'
 alias vim-tmp='vim ~/tmp/$(date "+%F-%T")'
 alias vim-clipboard='vim ~/Documents/txt/var/clipboard'
+alias vim-clipboard-2='vim ~/Documents/txt/clipboard/'
 alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
 alias vim-status='vim ~/Documents/txt/var/status'
 alias vim-known-hosts='vim ~/.ssh/known_hosts'
@@ -36,6 +49,9 @@ alias zsh-aliases='vim $DEVSETUP/files/zsh/aliases.zsh'
 alias zsh-functions='vim $DEVSETUP/files/zsh/functions.zsh'
 alias zshrc='vim $DEVSETUP/files/zsh/zshrc'
 #alias zshrc='vim ~/.zshrc'
+
+# [administration]
+alias dfh='df -h'
 
 # [packages/installation]
 alias download-remi='echo curl -LO https://rpms.remirepo.net/enterprise/remi-release-7.rpm'
@@ -50,6 +66,9 @@ alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
 alias find-list-files='find . -maxdepth 1 -type f'
 alias find-swap-files='find ~/Documents/txt -iname ".*.swp"'
 alias find-swap-files_remove='rm $(find-swap_files|xargs)'
+alias find-root-remove='find . -user root -exec rm -rf {} +'
+#alias find-checksum="find . -type f | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{print $2 " " $1 }'"
+
 
 # [run]
 alias run-apacheds='/opt/ApacheDirectoryStudio/ApacheDirectoryStudio'
@@ -63,6 +82,7 @@ alias cat-meminfo="cat /proc/meminfo | grep Total"
 alias cat-cpuinfo="cat /proc/cpuinfo"
 alias lspci-graphics="lspci -v|grep -i graphics"
 alias lspci-network="lspci -v|grep -i net"
+alias laptop-model="dmidecode | grep -A 9 'System Information' "
 
 # [vagrant]
 alias vgs="vagrant global-status"
@@ -73,6 +93,13 @@ alias vd="vagrant destroy"
 alias vsus="vagrant suspend"
 
 # [shell]
+alias st='shell-status'
+alias j='jobs'
+alias disable-touchpad='org.gnome.desktop.peripherals.touchpad send-events disabled'
+alias enable-touchpad='org.gnome.desktop.peripherals.touchpad send-events enabled'
+alias whereami='pstree -s $$'
+alias hist='history'
+alias hist-all='cat ~/.history.d/**/*'
 alias ff='echo make a function: <command> >/dev/null 2>&1 &' # maybe nohup?
 # related, see: xargs -P 10 -r -n 1 wget -nv # (xargs start commands in parallel)
 # maybe related: https://github.com/alexanderepstein/Bash-Snippets
@@ -97,12 +124,22 @@ alias cat-zsh-aliases='cat $DEVSETUP/files/zsh/aliases.zsh | grep -o "^alias.*="
 # alias -s {ape,avi,flv,m4a,mkv,mov,mp3,mp4,mpeg,mpg,ogg,ogm,wav,webm}=mpv
 # alternate: echo 'employee_id=1234' | grep -oP 'employee_id=\K([0-9]+)'
 
+# [pseudocode]
+alias psuedocode-gitlab='vim $DEVSETUP/files/pseudocode/gitlab.txt'
+
 # [cheatsheets]
+alias cheatsheet-make='vim $DEVSETUP/files/cheatsheets/make.txt'
+#alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'
+alias cheatsheet-django='vim $DEVSETUP/files/cheatsheets/django.txt'
+alias cheatsheet-vmware='vim $DEVSETUP/files/cheatsheets/vmware.txt'
+alias cheatsheet-ansible='vim $DEVSETUP/files/cheatsheets/ansible.txt'
+alias cheatsheet-ucarp='vim $DEVSETUP/files/cheatsheets/ucarp.txt'
+alias cheatsheet-rspec='vim $DEVSETUP/files/cheatsheets/rspec.txt'
 alias cheatsheet-vagrant='vim $DEVSETUP/files/cheatsheets/vagrant.txt'
 alias cheatsheet-uefi='vim $DEVSETUP/files/cheatsheets/uefi.txt'
 alias cheatsheet-gitlab='vim $DEVSETUP/files/cheatsheets/gitlab.txt'
 alias cheatsheet-docker='vim $DEVSETUP/files/cheatsheets/docker.txt'
-alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'
+#alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'
 alias cheatsheet-awk='vim $DEVSETUP/files/cheatsheets/awk.txt'
 alias cheatsheet-syslog='vim $DEVSETUP/files/cheatsheets/syslog.txt'
 alias cheatsheet-terminal='vim $DEVSETUP/files/cheatsheets/terminal.txt'
@@ -122,7 +159,7 @@ alias cheatsheet-rpm='vim $DEVSETUP/files/cheatsheets/linux-rpm'
 alias cheatsheet-network='vim $DEVSETUP/files/cheatsheets/network'
 alias cheatsheet-tmux='vim $DEVSETUP/files/tmux/cheatsheet'
 alias cheatsheet-ranger='echo S open shell in directory, c-h to show hidden files '
-alias cheatsheet-sed='vi $DEVSETUP/files/cheatsheets/sed'
+alias cheatsheet-sed='vi $DEVSETUP/files/cheatsheets/sed.txt'
 alias cheatsheet-php='vi $DEVSETUP/files/cheatsheets/php'
 alias cheatsheet-sql='vi $DEVSETUP/files/cheatsheets/sql'
 alias cheatsheet-git='vi $DEVSETUP/files/cheatsheets/git'
@@ -152,12 +189,48 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # Note that g r<tab> already give you git autocomplete and already lists aliases
 # there has to be a way to do this will shell functions or something!
 alias git-list-aliases='git config --global --list | grep alias'
+alias git-list-branch-moves="git reflog | grep -o 'moving from.*' | head -n25"
 
 alias git-ch='git cherry-pick'
 alias git-cc='git cherry-pick --continue'
 alias git-ca='git commit --amend'
+alias git-sq='git commit -m squash'
 alias git-recent-files='git diff --name-only HEAD~10..HEAD'
 alias git-time-back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
+
+
+
+# frequentuse
+alias dfh='df -h'
+alias vip='vagrant ssh bootstrap --no-tty --command "ip a"'
+alias vopen='xdg-open $(vip)' # TODO extract IP regex
+alias vssh='vagrant ssh bootstrap'
+
+# updatedaily
+# see unsorted and unknowns under each of these
+# need a way to "summarize", ie cat CS pipe grep context
+# maybe functions:
+# cheatsheet-python edit    <-- vim
+# cheatsheet-python summary <-- grep context
+#alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt' # + django
+alias cheatsheet-ansible='vim $DEVSETUP/files/cheatsheets/ansible.txt'
+alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
+alias cheatsheet-vim='vim $DEVSETUP/files/cheatsheets/vim.txt'
+#alias cheatsheet-bash='vim $DEVSETUP/files/bash/cheatsheet'
+alias cheatsheet-bash='vim $DEVSETUP/files/cheatsheets/bash.txt'
+#alias cheatsheet-tmux='vim $DEVSETUP/files/tmux/cheatsheet'
+# redirect and tail to watch other windows!
+# remember to use a circular workflow with open tmux windows: edit --> test --> build --> deploy --> clipboard etc
+alias cheatsheet-tmux='vim $DEVSETUP/files/cheatsheets/tmux.txt'
+#alias cheatsheet-ranger='echo S open shell in directory, c-h to show hidden files '
+alias cheatsheet-sed='vi $DEVSETUP/files/cheatsheets/sed.txt' # include regexes
+alias cheatsheet-git='vi $DEVSETUP/files/cheatsheets/git.txt'
+
+# TODO add clean() reset()
+alias cheatsheet-selenium='vi $DEVSETUP/files/cheatsheets/selenium.txt'
+
+
+
 #
 # [virtualbox]
 # VBoxManage startvm vagrant --type headless

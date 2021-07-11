@@ -1,3 +1,17 @@
+------------------------------------------------------------------------------
+context: plugin trouble
+
+vagrant plugin expunge
+vagrant plugin repair
+------------------------------------------------------------------------------
+
+
+
+
+# Make rsync space make targets... SO solution doesn't quite work
+      rsync__args: ["--filter=:- .gitignore",
+        "--verbose", "--rsync-path='sudo rsync'", "--archive", "--delete", "-z"]
+
 # neat trick for vagrant ssh:
 vagrant ssh-config > vagrant-ssh # save the config to a file
 ssh -F vagrant-ssh default       # run ssh with the file.

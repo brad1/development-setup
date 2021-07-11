@@ -1,0 +1,4 @@
+# Get info, see if it thinks its a primary or secondary
+kill -SIGUSR1 $(pgrep ucarp); grep -i ucarp.*info /var/log/messages | tail -n1
+
+

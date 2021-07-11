@@ -1,3 +1,4 @@
 map -r
 
-...
+stuck in shell at boot?
+type "exit" to get to "bios"

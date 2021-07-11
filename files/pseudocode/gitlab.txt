@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------
+context: fast intergration test of backend changes
+
+# Worker1:
+run once per minute
+- identify and cleanup VMs labeled as dirty
+- identify capacity and boot clean VMs w/ latest version of repo
+- update VMs that are out of date if master branch has been updated
+
+# Worker2: gitlab test job
+run on push
+- pull a VM to use
+- drop shell scripts onto it
+- run integration tests and extract results
+- label VM as dirty so it can be cleaned up
+
+requirements: service layer mutex.  flask app w/ no threading may suffice
+
+------------------------------------------------------------------------------
+

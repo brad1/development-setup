@@ -1,3 +1,140 @@
+------------------------------------------------------------------------------
+context: variable handling
+
+https://stackoverflow.com/questions/1305237/how-to-list-variables-declared-in-script-in-bash
+------------------------------------------------------------------------------
+context: read input to drop into a command
+
+while : ; do
+  read pkg
+  echo $pkg
+  rpm -qa $pkg
+  if [ "$pkg" = "quit" ] ; then
+    break
+  fi
+done
+------------------------------------------------------------------------------
+context: args from list file
+
+xargs git branch -D < /tmp/list-of-branches
+------------------------------------------------------------------------------
+context: brakcet checks
+
+
+## Check if $var is set using ! i.e. check if expr is false ##
+[ ! -z "$var" ] || echo "Empty"
+[ -z "$var" ] && echo "Empty"
+------------------------------------------------------------------------------
+context: unknowns
+
+echo $?
+
+------------------------------------------------------------------------------
+context: last pid
+
+echo $!
+
+------------------------------------------------------------------------------
+context: my pid
+
+echo $$
+
+
+------------------------------------------------------------------------------
+context: example code
+
+# ------------------------------------------------------------------------------
+#
+# change server date
+date -s "19 APR 2012 11:14:00"
+
+# bash escape # inside a string:
+cat vmass-selenium-all-links.modified| grep "localhost:8080/[^\#]"
+
+
+# cool, safe loop:
+timeout 45 bash -c -- 'while ! grep -qs "control.$pid.*LICENSE" /var/log/application.log ; do sleep 1; done'
+
+# Prevent ssh session hangs:
+running_remotely() {
+  pstree -s $$ | grep -qs sshd
+}
+if running_remotely ; then
+  exit 0
+fi
+
+
+# ls trick instead of find -type f:
+ls -R /path | awk '
+/:$/&&f{s=$0;f=0}
+/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}
+NF&&f{ print s"/"$0 }'
+
+
+# Find latest modification under a directory:
+find . -printf "%T@ %Tc %p\n" | sort -n
+
+find . -type f -printf '%T@ %p\n' \
+| sort -n | tail -1 | cut -f2- -d" "
+
+# unix seconds
+date +%s
+
+# read file, preserve whitespace
+while IFS= read line; do echo ":$line:"; done < file
+while IFS= read -r line; do echo ":${line:0:1}:"; done < file
+while IFS= read -r line; do
+  if [ "${line:0:1}" = " " ] ; then
+    echo "caught a space@"
+  fi
+done < file
+
+
+# timestamp by second
+ls -l --time-style=full-iso . | awk '{print $6 " "  $7 "   " $9}'
+# 2021-01-22 13:02:54.229473799   appInsights-nodeAIF-444c3af9-8e69-4462-ab49-4191e6ad1916
+# 2021-01-19 16:33:04.486738508   appInsights-nodeAIF-d9b70cd4-b9f9-4d70-929b-a071c400b217
+# 2021-01-25 10:40:28.092133423   mozilla_brad0
+# 2021-01-25 09:30:58.434024034   qtsingleapp-zoom-3e8
+# 2021-01-15 09:31:47.419702220   qtsingleapp-zoom-3e8-lockfile
+# 2021-01-15 11:53:58.076694517   Slack
+
+
+
+# split by space
+cut -d' ' -f1 <<< "$string" # print first work
+IFS=' ' read -r -a array <<< "$string" # split into an array
+
+# new stuff
+https://stackoverflow.com/questions/2336977/can-a-shell-script-indicate-that-its-lines-be-loaded-into-memory-initially
+https://stackoverflow.com/questions/2285403/how-to-make-shell-scripts-robust-to-source-being-changed-as-they-run
+
+
+#
+# substitution
+echo "${var//search/replace}"
+pth=/var/log
+echo ${pth//\//-}
+-var-log
+# advanced, strip leading char
+tmp="${pth//\//-}"; echo "${tmp:1}"
+var-log
+
+# strip out chars
+myString="${myString:1}"
+
+
+# try until it works:
+for i in $(seq 1 10); do sleep 10 && vagrant ssh backend && break; done
+# try until it breaks:
+for i in $(seq 1 10); do sleep 10 && vagrant ssh backend || break; done
+
+
+# strip quotes
+temp="${opt%\"}"
+temp="${temp#\"}"
+echo "$temp"
+
 # file access times!
 ls -l --time=atime
 
@@ -211,6 +348,9 @@ for i in $(seq 1 12); do bundle exec rspec spec || break; done
 # arrays
 dirs[0] = '/'
 dirs[1] = '/home'
+all=(1 2 4 8)
+for i in "${all[@]}" ; do
+echo $i; done
 
 # find/exec on mac
 find . -type f -exec wc -l {} \;

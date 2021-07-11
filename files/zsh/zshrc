@@ -47,7 +47,16 @@ bindkey -M vicmd v edit-command-line
 
 # TMU, this means that:
 #   sessions append to global history, but only on exit, and do not replaced the history
-unsetopt inc_append_history
-setopt share_history
-setopt APPEND_HISTORY
+#unsetopt inc_append_history
+#setopt share_history
+#setopt APPEND_HISTORY
 # # # # #
+
+# history per open terminal... why isn't this standard?
+mkdir -p "${HOME}/.history.d"
+#export HISTFILE="${HOME}/.history.d/history-"`uname -n`"-"`id -nu`"-"`tty|cut -c6-`
+if ! [ -z "$CHF" ] ;  then
+  export HISTFILE="${HOME}/.history.d/${CHF}"
+#else
+# export HISTFILE="${HOME}/.history.d/history-"`uname -n`"-"`id -nu`""`tty|sed 's/\//-/g'`
+fi

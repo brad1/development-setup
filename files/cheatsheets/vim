@@ -1,3 +1,22 @@
+------------------------------------------------------------------------------
+context: unknowns
+
+how to cat the contents of the currently open file out to shell
+
+------------------------------------------------------------------------------
+context: config examples
+
+# try recursive macros
+qa
+<stuff>
+@a
+a
+
+@a <--- repeated macro
+
+gqq # for automatic work wrap!
+
+
 :set textwidth=80
 -> then, position cursor, then gq} to wrap paragraph to the right width
 

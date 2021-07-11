@@ -1,3 +1,309 @@
+------------------------------------------------------------------------------
+context: external drive mount
+
+sudo fdisk -l
+sudo mkdir /media/seagate
+sudo mount /dev/sdb1 /media/seagate
+# unless it is already ntfs...
+
+sudo parted /dev/sdb # or sgdisk if using GPT
+>
+(parted) print
+Model: Seagate Ultra Touch HDD (scsi)
+Disk /dev/sdb: 1000GB
+Sector size (logical/physical): 512B/4096B
+Partition Table: msdos
+Disk Flags:
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  1000GB  1000GB  primary
+
+(parted) rm 1
+(parted) quit
+>
+
+
+sudo parted /dev/sdb
+>
+...
+(parted) print
+...
+Number  Start  End  Size  Type  File system  Flags
+...
+(parted) mkpart primary ext4
+Start? 1049kB
+End? 1000GB
+(parted)
+(parted) print
+...
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  1000GB  1000GB  primary  ext4         lba
+ >
+
+sudo mkfs -t ext4 /dev/sdb1
+
+
+------------------------------------------------------------------------------
+context: ruby certs
+
+vagrant@ubuntu-focal:~$ ruby -ropenssl -e 'p OpenSSL::X509::DEFAULT_CERT_DIR'
+"/usr/local/compiled/ssl/certs"
+vagrant@ubuntu-focal:~$ ruby -ropenssl -e 'p OpenSSL::X509::DEFAULT_CERT_FILE'
+"/usr/local/compiled/ssl/cert.pem"
+
+override works on ubuntu:
+SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt gem install bundler
+
+------------------------------------------------------------------------------
+context: add user typical
+
+useradd -m username # create default homedir
+------------------------------------------------------------------------------
+context: ram usage
+
+ps -e -o pid,vsz,comm= | sort -n -k 2
+------------------------------------------------------------------------------
+context: errors
+
+
+multipathd[651]: sda: failed to get udev uid: Invalid argument
+multipathd[651]: sda: failed to get sysfs uid: Invalid argument
+multipathd[651]: sda: failed to get sgio uid: No such file or directo
+
+# vmware
+disk.EnableUUID = "TRUE"
+------------------------------------------------------------------------------
+context: virtualization and containerization
+
+https://github.com/firecracker-microvm/firecracker
+- 50k lines of Rust to QEMU's 1.4 MIL!
+- no displays, USB, BIOS, other bloat.
+
+------------------------------------------------------------------------------
+context: hardware info
+
+dmidecode
+cat /proc/meminfo | less
+------------------------------------------------------------------------------
+context: users
+
+usermod -a -G wheel user
+------------------------------------------------------------------------------
+context: router discovery
+
+# Doesn't work:
+rdisc listens on the ALL_HOSTS (224.0.0.1) multicast address (or receive_address provided it is given)
+
+# Use temporarily:
+sudo arp-scan [--interface=eth1] --localnet [--numeric --quiet --ignoredups]
+lists all IPs on the local network, including the gateway.
+
+or, using a bash loop, ping each IP on the local subnet...
+or use netcat?
+------------------------------------------------------------------------------
+context: C library version mismatch
+
+fun one!
+
+libc.so.6: version 'GLIBC_2.14' not found (require by <exe>)
+
+repro with:
+/sbin/<exe>
+- OR -
+ldd /sbin/<exe>
+
+Fix:
+ldd -v /sbin/<exe> | grep 'not found'
+- OR -
+ldd -v /sbin/<exe> | grep '2.14'
+
+objdump -T /sbin/<exe> | grep memcpy
+
+add to src.c:
+asm (".symver memcpy, memcpy@GLIBC_2.2.5");
+
+recompile, then:
+
+objdump -T /sbin/<exe> | grep memcpy
+to confirm symbol version is right, or just run the EXE to see that it doesn't crash
+
+
+------------------------------------------------------------------------------
+context: docker from docker repos
+
+sudo yum install -y yum-utils
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum install docker-ce docker-ce-cli containerd.io
+------------------------------------------------------------------------------
+context: PackageKit
+
+sudo pkcon refresh force -c -1
+------------------------------------------------------------------------------
+context: systemd journaling examples
+
+journalctl --disk-usage
+/var/log/journal
+
+/etc/systemd/journald.conf
+example:
+SystemMaxUse=50M
+
+sudo systemctl kill --kill-who=main --signal=SIGUSR2 systemd-journald.service
+sudo systemctl restart systemd-journald.service
+
+------------------------------------------------------------------------------
+context: disk usage
+
+journalctl --disk-usage
+sudo du -sh * | sort -[r]h # and walk away
+
+sudo pkcon refresh force -c -1 # reduced /var/cache/PackageKit from 3.3G to 1.2
+------------------------------------------------------------------------------
+context: security scans
+
+look out for:
+Nginx SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share
+
+------------------------------------------------------------------------------
+context: quick syslog
+
+logger -i -t install.sh -p local6.info "log message"
+------------------------------------------------------------------------------
+context: rsync typical sync
+
+# folder
+rsync -azr --delete -e "ssh -i /home/rsync/.ssh/id_rsa -p <port> -o StrictHostKeyChecking=no" --rsync-path="sudo rsync" "$DIR" "rsync@$ip:$DIR"
+
+
+
+------------------------------------------------------------------------------
+context: ubuntu repository add
+
+sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu bionic main'
+sudo apt update
+sudo apt install -y python-mysqldb
+#
+yes, this works on focal as well as bionic...
+
+------------------------------------------------------------------------------
+context: ubuntu versions
+
+current latest release:
+Ubuntu 20.04.2 LTS Focal Fossa Changes February 4, 2021 April 2025 April 2030
+
+V agrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+end
+
+
+------------------------------------------------------------------------------
+context: os version (ubuntu etc)
+
+cat /etc/*release*
+
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=18.04
+DISTRIB_CODENAME=bionic
+DISTRIB_DESCRIPTION="Ubuntu 18.04.3 LTS"
+NAME="Ubuntu"
+VERSION="18.04.3 LTS (Bionic Beaver)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 18.04.3 LTS"
+VERSION_ID="18.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+
+ls /etc/*release*
+/etc/lsb-release  /etc/os-release
+
+------------------------------------------------------------------------------
+context: dhcpv6
+TLDR; Always use DNS.  AAAA records.
+------------------------------------------------------------------------------
+context: dhcp overview
+https://docs.oracle.com/cd/E19120-01/open.solaris/819-3000/dhcp-overview-3/index.html
+
+DHCPDISCOVER --> UDP limited broadcast address 255.255.255.255
+LBA is only a dest address, never a src
+in contrast to a directed broadcast:
+192.168.0.2 --> 192.168.1.255 --> 192.168.1.0/24
+directed broadcasts are passed by router to another subnet when feature is not turned off.
+------------------------------------------------------------------------------
+context: dhcp dhclient exit hook reasons
+
+http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.utilities%2Ftopic%2Fd%2Fdhclient-script.html
+https://linux.die.net/man/8/dhclient-script
+
+try running:
+
+dhclient -v eth0
+
+to try dhcp discovery etdc
+------------------------------------------------------------------------------
+context: IP address aliasing (untested)
+
+#IP Aliasing
+
+DEVICE="eth0:0"
+BOOTPROTO="static"
+HWADDR=20:89:84:c8:12:8a
+NM_CONTROLLED="no"
+ONBOOT="yes"
+TYPE="Ethernet"
+IPADDR=192.168.0.108
+NETMASK=255.255.255.0
+GATEWAY=192.168.0.1
+DNS1=8.8.8.8
+DNS1=8.8.4.4
+------------------------------------------------------------------------------
+context: systemd log for a service
+journalctl -u name-of-unit [-b]
+
+-b means just for this boot!
+------------------------------------------------------------------------------
+context: docker cleanup
+
+sudo docker rmi $(sudo docker images | grep "none" | awk '/ / { print $3 }') || true
+sudo docker rmi $(sudo docker images --filter "dangling=true" -q --no-trunc) || true
+sudo docker rm $(sudo docker ps -qa --no-trunc --filter "status=exited")     || true
+
+# careful
+sudo docker image prune --all
+# instead, browse through:
+docker image list
+# then:
+docker image remove <?>
+# then, cleanup dangling images with commands above
+
+------------------------------------------------------------------------------
+context: disk space
+
+df -h              # find full volume
+du -sh * | sort -h # find big folder
+du -sh [^h]*       # skip slow folder starting with 'h'
+
+------------------------------------------------------------------------------
+context: unknowns
+
+how to use:
+abrt-cli list
+get rid of syslog broadcasts (ex. vipsched reset)
+
+------------------------------------------------------------------------------
+context: code examples
+
+# s
+systemctl status
+- like pstree
+
 # process on port
 lsof -i :80
 

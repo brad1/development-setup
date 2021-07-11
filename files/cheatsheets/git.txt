@@ -1,3 +1,53 @@
+------------------------------------------------------------------------------
+context: show full diffs
+
+git <diff|show> -U10000 # max number of lines, pick a large one
+------------------------------------------------------------------------------
+context: git branch pruning
+
+git remote prune origin prunes tracking branches not on the remote.
+git branch --merged lists branches that have been merged into the current branch.
+xargs git branch -d deletes branches listed on standard input.
+
+To give yourself the opportunity to edit the list before deleting branches, you could do the following in one line:
+git branch --merged >/tmp/merged-branches && \
+  vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches
+
+------------------------------------------------------------------------------
+context: partial cherry-pick
+
+
+git cherry-pick -n <commit>
+"no commit", so edit before picking
+------------------------------------------------------------------------------
+
+# find checked out branches:
+git reflog | grep 'checkout: moving from master' | head -n 20
+
+# git blame, show whole commit matching a pattern
+git show $(git blame 06_firmware_upgrade.sh | grep 'see above' | awk '{print $1}')
+
+# split commmit
+git rebase -i HEAD~5
+> use 'e' for edit
+git reset HEAD^
+git add [-a -u] # basically add everything back
+git reset HEAD <filepath> to unstage
+git commit
+git add # another file
+git commit # second split out commit!
+git rebase --continue
+
+# merge conflict
+git pull -X theirs
+If you're already in conflicted state...
+git checkout --theirs path/to/file
+
+
+# list commit authors and dates, can be useful for pulling only new commits
+# out of a branch that was not rebased properly
+git log --pretty=format:"%h%x09%an%x09%ad%x09%s"
+
 # delete and recreate remote branch
 git branch -D branchname
 git checkout --track origin/branchname

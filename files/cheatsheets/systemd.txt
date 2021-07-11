@@ -1,3 +1,10 @@
+------------------------------------------------------------------------------
+links:
+https://stackoverflow.com/questions/35200232/how-to-launch-a-process-outside-a-systemd-control-group
+https://superuser.com/questions/1405656/how-to-attach-background-process-to-systemctl-services-cgroup
+https://www.freedesktop.org/software/systemd/man/systemd.kill.html
+------------------------------------------------------------------------------
+
 [Unit]
 Description=My Miscellaneous Service
 After=network.target

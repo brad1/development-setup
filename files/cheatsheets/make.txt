@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+context: exporting variables for use in helper scripts
+
+works exactly the same as bash
+------------------------------------------------------------------------------
+context: set environment variable in makefile
+
+export CAP_EXPORT_CSV_FILEPATH=./cap-export.csv
+
+This can also be done per-target
+
+
+------------------------------------------------------------------------------
+context: stop make from running when run as a privileged user.
+polluting a project with root-owned files means unprivileged builds may not work after.
+------------------------------------------------------------------------------
+.PHONY: guard-root
+guard-root:
+ifeq ($(shell id -u),0)
+    $(error DO NOT run make as root)
+endif
+
+.PHONY: update
+update: guard-root 64bit
+------------------------------------------------------------------------------
+
+
+
+

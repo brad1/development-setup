@@ -1,3 +1,18 @@
+------------------------------------------------------------------------------
+context: opposite of xargs
+
+$ printf "%s\n" 35 53 102 342
+35
+53
+102
+342
+
+not exactly....
+
+echo "string1 string1" | xargs -n 1 echo
+------------------------------------------------------------------------------
+
+
 strings <filename> # pull out strings
 awk
 perl

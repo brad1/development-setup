@@ -1,4 +1,142 @@
 ------------------------------------------------------------------------------
+context: CBVTestCase post in json (django testing)
+
+request = RequestFactory().post('/', data=postdata, content_type='application/json')
+response = self.post(License, request=request, header=header)
+------------------------------------------------------------------------------
+context: html
+
+import html
+print(html.unescape('&pound;682m'))
+------------------------------------------------------------------------------
+context: mock method on an object of a type
+def test_export_response_indicates_ready(api_client, data, mocker):
+    mocker.patch.object(CapsListView, 'export_all_sent_messages')
+------------------------------------------------------------------------------
+context: django unknowns
+Model creation:
+SomeObjects.objects.all() --> query set to read out of DB
+opposite, writing a new object to DB
+------------------------------------------------------------------------------
+context: django responses
+    data = {
+        'name': 'Vitor',
+        'location': 'Finland',
+        'is_active': True,
+        'count': 28
+    }
+    return JsonResponse(data)
+------------------------------------------------------------------------------
+context: files
+
+# touch
+with open('hello.txt', 'w+') as outFile:
+  outFile.write('text')
+
+# read
+obj = open('hello.txt', 'r')
+str = obj.read()
+------------------------------------------------------------------------------
+context: heredoc
+
+itext="""string
+string
+{place}"""
+print(text.format(place='here'))
+------------------------------------------------------------------------------
+context: NOOP
+
+"pass" in python instead of break or continue
+------------------------------------------------------------------------------
+context: skipping and iterables
+
+next(reader, None)
+for data in reader:
+   list.append(data)
+# this skips the first one.  alternative to "next()" is slicing:
+
+return list[1:] # same result
+
+------------------------------------------------------------------------------
+context: "is" and "any"
+
+if variable is None:
+
+any([0,False]) # False
+any([0,True])  # True
+any([1,False]) # True
+
+I think "any" is "is" for iterables.
+------------------------------------------------------------------------------
+context: asserts
+
+E       assert 3 == 4
+E        +  where 3 = f()
+
+test_assert1.py:6: AssertionError
+------------------------------------------------------------------------------
+context: null check
+if variable is None:
+if variable is not None:
+
+------------------------------------------------------------------------------
+context: append
+list.append(itme) # as opposed to list << item
+------------------------------------------------------------------------------
+context: pytest, expects, matchers:
+https://expects.readthedocs.io/en/stable/matchers.html
+https://github.com/jaimegildesagredo/expects
+------------------------------------------------------------------------------
+context: csv
+
+https://docs.python.org/3/library/csv.html#reader-objects
+
+>>> import csv
+>>> with open('export.csv') as csvfile:
+...     reader = csv.reader(csvfile)
+...     for row in reader:
+...         print(', '.join(row))
+------------------------------------------------------------------------------
+context: open a file
+    def export_all_sent_messages(self, filepath):
+        with open(filepath, "w+") as csvfile:
+
+------------------------------------------------------------------------------
+class Object:
+    class_attribute = "CA" # Class attribute, must get a value, its the same for every instance
+
+    def __init__(self, name, age):
+        self.name = name # instance attribute, same as a class member
+        self.age = age
+
+# instanciate with: Object()
+
+------------------------------------------------------------------------------
+contxt: variable defaults
+if vara is None:
+  vara = 'value'
+------------------------------------------------------------------------------
+context: pytest
+@pytest.mark.skip(reason="cap review not merged yet")
+------------------------------------------------------------------------------
+context: pytest test names
+os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+------------------------------------------------------------------------------
+context: filesystem
+
+import os
+path = '/path/to/file'
+isFile = os.path.isfile(path)
+isFile = os.path.isdir(path)
+
+
+
+# foreach
+for val in array:
+    print(val)
+
+
+------------------------------------------------------------------------------
 # log method we are in:
 def autolog(message):
     "Automatically log the current function details."

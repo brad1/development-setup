@@ -1,0 +1,65 @@
+# ansible galaxy:
+ansible-galaxy install chusiang.testlink
+ansible-galaxy list --roles-path=/home/vagrant/.ansible/roles
+
+# ansible run command from the docs
+ansible all -i vyos.example.net, -c ansible.netcommon.network_cli -u my_vyos_user -k -m vyos.vyos.vyos_facts -e ansible_network_os=vyos.vyos.vyos
+
+
+
+
+
+
+# See:
+    ANSIBLE_CONFIG (an environment variable)
+    ansible.cfg (in the current directory)
+    .ansible.cfg (in the home directory)
+    /etc/ansible/ansible.cfg
+
+try: pipelining = True
+
+
+
+# vagrant env var injection:
+  if $ansible
+    config.vm.provision :ansible do |ansible|
+      ansible.playbook = "infrastructure/playbooks/development-tools.yml"
+      ansible.groups = { "all:vars" => { "gitlab_tag" => $gitlab_tag } } if $gitlab_tag
+    end
+  end
+
+# environment variables
+- hosts: dev
+  tasks:
+    - name: Echo my_env_var
+      shell: "echo $MY_ENV_VARIABLE"
+      environment:
+        MY_ENV_VARIABLE: whatever_value
+
+# stat/registers
+
+- name: ruby rpm exists?
+  stat:
+    path: /rpmbuild/RPMS/x86_64/ruby-2.6.2-1.el7.x86_64.rpm
+  register: ruby_rpm
+
+
+- name: rpmbuild and ruby build dependencies
+  when: not ruby_rpm.stat.exists
+  become: yes
+  yum:
+    state: present
+    name:
+      - rpm-build
+
+- name: register ruby installed
+  ignore_errors: yes
+  shell: "rpm -qa | grep -qs ruby"
+  register: ruby_installed
+
+- name : install ruby
+  become: yes
+  when: not ruby_installed.rc == 0
+  shell:
+    cmd: yum install -y /rpmbuild/RPMS/x86_64/ruby*rpm
+

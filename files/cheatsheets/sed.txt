@@ -1,3 +1,10 @@
+# grep, replacement for group capture:
+grep -oP 'foo \K\w+(?= bar)' test.txt
+# where \K means everything prior is an "anchor"
+
+# replace a line:
+sed -i '/TEXT_TO_BE_REPLACED/c\This line is removed by the admin.' /tmp/foo
+
 # add a line:
 sed -i '9i text' FILE
 
