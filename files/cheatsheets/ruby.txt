@@ -1,4 +1,15 @@
 ------------------------------------------------------------------------------
+context: global methods
+
+
+
+2.2.0 :002 > method(:puts).receiver
+ => main
+
+2.2.0 :003 > method(:puts).owner
+ => Kernel
+
+------------------------------------------------------------------------------
 # auto method/arg log, trace log
 def log
   calling_method = caller[0][/`.*'/][1..-2]

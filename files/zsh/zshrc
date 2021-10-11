@@ -4,25 +4,6 @@
 #export TERM="xterm-256color" at the top of your ~/.zshrc is sufficient.
 export TERM="xterm-256color"
 
-clear
-
-alias_prefixes=$(cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o "^alias [^\-]*-.*=" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs)
- echo "
-   Ctrl-H: Home              ranger
-   Ctrl-K: Up a directory    set -o vi # followed by ESC then:
-                              '/' to reverse search shell history, or:
-                                bindkey \"^R\" history-incremental-search-backward
-                              'v' to edit.
-
-  aliases:
-  $alias_prefixes
-"
-
-# if screenfetch is here, call it first, discarded warnings
-# which screenfetch >/dev/null 2>/dev/null && screenfetch 2>/dev/null
-# shows apple logo and some stats
-
-# end Splash page!!! ############
 
 INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
 
@@ -60,3 +41,23 @@ if ! [ -z "$CHF" ] ;  then
 #else
 # export HISTFILE="${HOME}/.history.d/history-"`uname -n`"-"`id -nu`""`tty|sed 's/\//-/g'`
 fi
+
+
+clear
+
+ echo "
+   Ctrl-H: Home              ranger
+   Ctrl-K: Up a directory    set -o vi # followed by ESC then:
+                              '/' to reverse search shell history, or:
+                                bindkey \"^R\" history-incremental-search-backward
+                              'v' to edit.
+
+  aliases:
+  $(list-aliases)
+"
+
+# if screenfetch is here, call it first, discarded warnings
+# which screenfetch >/dev/null 2>/dev/null && screenfetch 2>/dev/null
+# shows apple logo and some stats
+
+# end Splash page!!! ############

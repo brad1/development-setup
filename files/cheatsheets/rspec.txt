@@ -4,3 +4,21 @@ expect_any_instance_of(Object).to receive(:select).ordered.and_raise()
 
 # stub/mock global methods
 allow_any_instance_of(Object).to receive(:start_in_thread).and_yield
+
+2.2.0 :002 > method(:puts).receiver
+ => main
+
+2.2.0 :003 > method(:puts).owner
+ => Kernel
+
+# example
+describe FirstStart do
+
+  context "#exec" do
+    context "when item is" do
+      it "returns false" do
+      end
+    end
+  end
+end
+

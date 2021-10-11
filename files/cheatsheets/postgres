@@ -1,4 +1,11 @@
 ------------------------------------------------------------------------------
+context: returns
+
+  $sql            = "INSERT INTO table (name) VALUES ('$name') RETURNING id";
+  ....
+    $id             = $r['id'];
+
+------------------------------------------------------------------------------
 context: pg_hba
 
 postgres=# SHOW hba_file;

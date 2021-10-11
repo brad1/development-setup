@@ -197,3 +197,10 @@ $ ...
 $ deactivate # think 'rvm use system'
 see also: pip install virtualenvwrapper
 ------------------------------------------------------------------------------
+
+
+
+format strings
+>>> name = ""
+>>> age = 74
+>>> f"Hello, {name}. You are {age}."

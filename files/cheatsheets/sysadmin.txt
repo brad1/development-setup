@@ -1,4 +1,60 @@
 ------------------------------------------------------------------------------
+context: solo ansible run
+
+ansible-playbook --connection=local -i inventory.yml /root/playbooks/production.yml
+
+where inventory.yml:
+all:
+  hosts:
+    localhost
+------------------------------------------------------------------------------
+context: disk EFI, dd
+
+# copy 2047 sector chunk
+# skip the first one, so read once from 2048
+# expect to see "EFI" pop up in there.  yields 1MB of data
+sudo dd if=/dev/sda of=hidden-data-after-mbr count=2047 skip=1
+
+# wipe a disk
+sudo dd if=/dev/zero bs=1M of=/dev/sda
+
+------------------------------------------------------------------------------
+context: firewall
+
+iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp --dport 8081 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+
+firewall-cmd --zone=public --permanent --add-port=8081/tcp
+firewall-cmd --reload
+
+------------------------------------------------------------------------------
+context: C
+
+tip:  use clang's __builtin_dump_struct and instead of printf
+------------------------------------------------------------------------------
+context: cgroups
+
+cat /proc/<pid>/cgroup
+------------------------------------------------------------------------------
+context: kill signals
+
+kill -L
+------------------------------------------------------------------------------
+context: ttys
+
+ps aux | awk '{print $7}' | grep -v "?" |sort | uniq | grep -v TTY
+------------------------------------------------------------------------------
+context: wireless devices
+
+rfkill - tool for enabling and disabling wireless devices
+and pulseaudio-module-bluetooth
+hciconfig
+
+------------------------------------------------------------------------------
+context: curl debug
+
+curl localhost:2225 --trace-ascii asdf.txt
+------------------------------------------------------------------------------
 context: external drive mount
 
 sudo fdisk -l
@@ -88,6 +144,7 @@ cat /proc/meminfo | less
 context: users
 
 usermod -a -G wheel user
+getent passwd # list users
 ------------------------------------------------------------------------------
 context: router discovery
 

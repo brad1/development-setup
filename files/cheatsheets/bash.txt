@@ -1,4 +1,18 @@
 ------------------------------------------------------------------------------
+context: recorder
+
+for i in $(seq -f "%03g" 1 900)
+do
+	systemctl status control > data/$i 2>/dev/null
+  sleep 1
+done
+
+# easier to sort for md5sum output etc
+------------------------------------------------------------------------------
+context: increment
+
+i=$((i+1))
+------------------------------------------------------------------------------
 context: variable handling
 
 https://stackoverflow.com/questions/1305237/how-to-list-variables-declared-in-script-in-bash
@@ -139,7 +153,7 @@ echo "$temp"
 ls -l --time=atime
 
 
-# printf justifications:
+# printf justifications: (padding)
 # # although this is C, bash printf accepts same options.
 printf ("<%d> is not justified.\n", x);
 printf ("<%5d> is right-justified.\n", x);

@@ -2,10 +2,23 @@
 # frequentuse, updatedaily
 
 
+alias awkf='awk -F ":"' # custom field separator
+alias awkf='awk "{print}"' # basically cat
+alias awkf='awk "{print $0}"' # same
 
+alias list-aliases="cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o \"^alias [^\-]*-.*=\" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs"
+alias edit-zshrc='$EDITOR ~/.zshrc'
+alias edit-pending='vim /var/brad/pending.list'
+alias canidothis='file="$(fzf)"; echo $file'
+alias linkf='file="$(fzf)"; echo $file; ln -sf "$file"'
 
+# [using]
+#alias vsbc='vagrant ssh bootstrap --no-tty --command "make rspec" '
+alias vsbc='vagrant ssh bootstrap --no-tty --command "make -C vipsched/ruby rspec" '
+#alias vip='vagrant ssh bootstrap --no-tty --command "ip a"'
+alias vip='vagrant ssh ubuntu --no-tty --command "ip a"'
+alias vscp='vagrant scp ubuntu:~/file .'
 
-# [new]
 #  Instead of this, I keep a permanent log of every shell command I ever typed and have a handy alias to keep through it.
 # It also keeps track of the directory a command was run from, so I can limit my search. That way if I ever want to get back into a project I was working on long ago, I can just grep for commands run from that directory.
 # Not only that, but I can use it to cd to directories quickly. So if I was working under a huge p 10 level deep directory path, I have a alias that will match a string and cd into the last matching path in the permanent history file.
@@ -45,8 +58,10 @@ alias vim-status='vim ~/Documents/txt/var/status'
 alias vim-known-hosts='vim ~/.ssh/known_hosts'
 alias zsh-sources='vim $DEVSETUP/files/zsh/sources.zsh'
 alias zsh-controls='vim $DEVSETUP/files/zsh/functions.zsh'
+# TODO autoreload these
 alias zsh-aliases='vim $DEVSETUP/files/zsh/aliases.zsh'
 alias zsh-functions='vim $DEVSETUP/files/zsh/functions.zsh'
+alias zsh-variables='vim $DEVSETUP/files/zsh/variables.zsh'
 alias zshrc='vim $DEVSETUP/files/zsh/zshrc'
 #alias zshrc='vim ~/.zshrc'
 
@@ -94,6 +109,7 @@ alias vsus="vagrant suspend"
 
 # [shell]
 alias st='shell-status'
+alias r='ranger'
 alias j='jobs'
 alias disable-touchpad='org.gnome.desktop.peripherals.touchpad send-events disabled'
 alias enable-touchpad='org.gnome.desktop.peripherals.touchpad send-events enabled'
@@ -190,6 +206,8 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # there has to be a way to do this will shell functions or something!
 alias git-list-aliases='git config --global --list | grep alias'
 alias git-list-branch-moves="git reflog | grep -o 'moving from.*' | head -n25"
+alias git-rebase-abort-force='rm -rf .git/rebase-apply'
+alias git-folder-compare='git diff master..yourbranch path/to/folder'
 
 alias git-ch='git cherry-pick'
 alias git-cc='git cherry-pick --continue'
@@ -202,7 +220,6 @@ alias git-time-back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n
 
 # frequentuse
 alias dfh='df -h'
-alias vip='vagrant ssh bootstrap --no-tty --command "ip a"'
 alias vopen='xdg-open $(vip)' # TODO extract IP regex
 alias vssh='vagrant ssh bootstrap'
 

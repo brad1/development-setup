@@ -1,14 +1,108 @@
+# # # # # # #
+# Local variables
+#
+
+
+fp_copied_paths=/var/brad/buffer.list
+
+#
+#
+# # # # # # #
+
+paste-paths() {
+  while read item; do
+    cp -r "$item" .
+  done <$fp_copied_paths
+  rm $fp_copied_paths
+}
+
+list-copied-paths() {
+  cat $fp_copied_paths 2>/dev/null
+}
+
+# could also just copy files to /tmp/tmp1/
+# then re-copy to final destination, cleanup tmp1
+copy-path() {
+  path-of $1 >> $fp_copied_paths
+}
+
+path-of() {
+  echo `pwd`/$1
+}
+
+git-branch() {
+  git checkout -b "$1"
+  echo "$1" >> /var/brad/branches.list
+}
+
+git-branches-list() {
+  cat /var/brad/branches.list
+}
+
+git-branches-edit() {
+  vim /var/brad/branches.list
+}
+
+# subshell variable data
+# (stickied snippets)
+sub-var() {
+  mkdir -p /var/brad
+  lastpwd="$(pwd)"
+  cd /var/brad
+  /usr/bin/zsh
+  cd $lastpwd 
+}
+
+set-vi-mode() {
+   set -o vi
+   echo "vi mode enabled."
+   echo "'/' to reverse search shell history, or:"
+   echo 'bindkey "^R" history-incremental-search-backward'
+   echo "then 'v' to edit."
+}
+
+unset-vi-mode() {
+   set +o vi
+   echo "vi mode disabled"
+}
+
+
 shell-status() {
   echo "date-time: $(date "+%D - %H:%M:%S")"
   echo "user: $(whoami)"
   echo "pwd: $(pwd)"
-  echo "subshells:"
-  pstree -ps $$
-  g st 2>/dev/null | grep 'On branch' > /tmp/shell-status-git && echo "git: $(cat /tmp/shell-status-git)"
+  echo "subshells: $(pstree -ps $$)"
+
+  # in zsh shell banner
+  #g st 2>/dev/null | grep 'On branch' > /tmp/shell-status-git && echo "git: $(cat /tmp/shell-status-git)"
+
+  echo
+  echo "other shells:"
+
+  pid="$(pgrep -x 'tmux: server')"
+  pstree -p "$pid"
+  pid="$(pgrep 'gnome-terminal')"
+  pstree -p "$pid"
+
+# pwdx or lsof -p or readlind -e /proc/PID/pwd
+# to show all dirs in use
+
+
+  echo "shellopts: "
+  set -o|egrep -w "(vi|emacs)"
+  echo ' '
   echo "jobs: "
   echo "------------------"
   jobs
   echo "------------------"
+
+  df -h | grep fedora
+
+  # slow!
+  # vagrant status >/tmp/vagrant-status 2>/dev/null && echo "vagrant: $(grep bootstrap /tmp/vagrant-status)"
+
+  # better, still slow and too verbose
+  # vagrant global-status
 }
 
 reload-aliases() {

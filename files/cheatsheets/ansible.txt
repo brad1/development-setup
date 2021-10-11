@@ -1,3 +1,12 @@
+------------------------------------------------------------------------------
+context: ansible variables per OS
+
+# notice hosts is not "all"
+
+- hosts: webservers
+  vars:
+    http_port: 80
+------------------------------------------------------------------------------
 # ansible galaxy:
 ansible-galaxy install chusiang.testlink
 ansible-galaxy list --roles-path=/home/vagrant/.ansible/roles
