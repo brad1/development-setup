@@ -1,4 +1,13 @@
 ------------------------------------------------------------------------------
+context: ca certs
+
+>>> import ssl
+>>> print(ssl.get_default_verify_paths())
+urllib2.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:618)>
+
+response = urllib2.urlopen('https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm')
+
+------------------------------------------------------------------------------
 context: CBVTestCase post in json (django testing)
 
 request = RequestFactory().post('/', data=postdata, content_type='application/json')

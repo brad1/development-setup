@@ -1,4 +1,29 @@
 ------------------------------------------------------------------------------
+context: File the filesystem inside a partition
+
+fsck -N /dev/sda1
+file -sL /dev/sda1
+parted -l
+lsblk -f
+blkid /dev/sda1
+cfdisk
+cat /etc/mtab
+cat /proc/mounts
+------------------------------------------------------------------------------
+context: find curl's ca cert path
+
+strace curl -LO https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm 2> strace.out
+
+------------------------------------------------------------------------------
+context: xargs tricks (-I)
+
+substitution
+echo "file1 file2 file3" | xargs -t -I % sh -c '{ touch %; ls -l %; }
+------------------------------------------------------------------------------
+context: systemd reset failed
+
+systemctl reset-failed <service name>
+------------------------------------------------------------------------------
 context: solo ansible run
 
 ansible-playbook --connection=local -i inventory.yml /root/playbooks/production.yml
@@ -28,7 +53,7 @@ firewall-cmd --zone=public --permanent --add-port=8081/tcp
 firewall-cmd --reload
 
 ------------------------------------------------------------------------------
-context: C
+context: C printf __builtin_dump_struct
 
 tip:  use clang's __builtin_dump_struct and instead of printf
 ------------------------------------------------------------------------------
@@ -143,6 +168,7 @@ cat /proc/meminfo | less
 ------------------------------------------------------------------------------
 context: users
 
+useradd -m user
 usermod -a -G wheel user
 getent passwd # list users
 ------------------------------------------------------------------------------
@@ -216,6 +242,7 @@ context: disk usage
 
 journalctl --disk-usage
 sudo du -sh * | sort -[r]h # and walk away
+du -cshx / # limit to root filesystem/partition
 
 sudo pkcon refresh force -c -1 # reduced /var/cache/PackageKit from 3.3G to 1.2
 ------------------------------------------------------------------------------

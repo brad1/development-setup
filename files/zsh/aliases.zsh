@@ -6,6 +6,7 @@ alias awkf='awk -F ":"' # custom field separator
 alias awkf='awk "{print}"' # basically cat
 alias awkf='awk "{print $0}"' # same
 
+alias print-date="date +'%m-%d-%Y'"
 alias list-aliases="cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o \"^alias [^\-]*-.*=\" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs"
 alias edit-zshrc='$EDITOR ~/.zshrc'
 alias edit-pending='vim /var/brad/pending.list'
@@ -159,7 +160,7 @@ alias cheatsheet-docker='vim $DEVSETUP/files/cheatsheets/docker.txt'
 alias cheatsheet-awk='vim $DEVSETUP/files/cheatsheets/awk.txt'
 alias cheatsheet-syslog='vim $DEVSETUP/files/cheatsheets/syslog.txt'
 alias cheatsheet-terminal='vim $DEVSETUP/files/cheatsheets/terminal.txt'
-alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
+#alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
 alias cheatsheet-systemd='vim $DEVSETUP/files/cheatsheets/systemd.txt'
 alias cheatsheet-ruby='vim $DEVSETUP/files/cheatsheets/ruby.txt'
 alias cheatsheet-bundler='vim $DEVSETUP/files/cheatsheets/bundler.txt'
@@ -231,7 +232,7 @@ alias vssh='vagrant ssh bootstrap'
 # cheatsheet-python summary <-- grep context
 #alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt' # + django
 alias cheatsheet-ansible='vim $DEVSETUP/files/cheatsheets/ansible.txt'
-alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
+#alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
 alias cheatsheet-vim='vim $DEVSETUP/files/cheatsheets/vim.txt'
 #alias cheatsheet-bash='vim $DEVSETUP/files/bash/cheatsheet'
 alias cheatsheet-bash='vim $DEVSETUP/files/cheatsheets/bash.txt'

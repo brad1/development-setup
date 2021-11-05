@@ -1,4 +1,8 @@
 ------------------------------------------------------------------------------
+context: links to bunch of matching files
+
+find ../platform -name \*sh | xargs -L 1 ln -sf
+------------------------------------------------------------------------------
 context: recorder
 
 for i in $(seq -f "%03g" 1 900)

@@ -1,4 +1,15 @@
 ------------------------------------------------------------------------------
+context: datamapper
+
+# good luck!
+class StnA
+    include DataMapper::Resource
+
+    property :id,       Serial, :key => true
+    property :datetime, DateTime
+    property :stna_kW,  Integer
+
+------------------------------------------------------------------------------
 context: global methods
 
 

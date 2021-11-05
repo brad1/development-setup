@@ -76,14 +76,6 @@ shell-status() {
   # in zsh shell banner
   #g st 2>/dev/null | grep 'On branch' > /tmp/shell-status-git && echo "git: $(cat /tmp/shell-status-git)"
 
-  echo
-  echo "other shells:"
-
-  pid="$(pgrep -x 'tmux: server')"
-  pstree -p "$pid"
-  pid="$(pgrep 'gnome-terminal')"
-  pstree -p "$pid"
-
 # pwdx or lsof -p or readlind -e /proc/PID/pwd
 # to show all dirs in use
 
@@ -96,7 +88,24 @@ shell-status() {
   jobs
   echo "------------------"
 
+  echo
+  echo -n "other shells: "
+
+  #pid="$(pgrep -x 'tmux: server')"
+  #pstree -p "$pid"
+  pid="$(pgrep 'gnome-terminal')"
+  pstree -p "$pid" | grep -Eo 'gnome-terminal-..[0-9]+\)' | xargs
+  echo
+
+
+  echo "Disk usage: --------------------"
   df -h | grep fedora
+  echo
+
+  # network info:
+  echo 'IP addresses: ---------------------'
+  echo "wlo1 eno1" | xargs -n1 ip addr show | awk '/inet / {print $2}'
+  echo
 
   # slow!
   # vagrant status >/tmp/vagrant-status 2>/dev/null && echo "vagrant: $(grep bootstrap /tmp/vagrant-status)"
@@ -117,8 +126,8 @@ summarize-cheatsheet() {
   cat "$DEVSETUP/files/cheatsheets/$1.txt" | grep context
 }
 
-cheatsheet-python() {
-  fn="$DEVSETUP/files/cheatsheets/python.txt"
+cheatsheet() {
+  fn="$DEVSETUP/files/cheatsheets/$2.txt"
 
   if [ "$1" = "edit" ] ; then
     vim "$fn"
@@ -130,8 +139,21 @@ cheatsheet-python() {
     return
   fi
 
-  echo "Usage: cheat-python <edit|sum>"
+  if [ "$1" = "print" ] ; then
+    cat "$fn" | grep -A 15 "context.*$3"
+    return
+  fi
 
+  echo "Usage: cheat-$2 <edit|sum|print>"
+
+}
+
+cheat-python() {
+  cheatsheet "$1" "python" "$2"
+}
+
+cheat-sysadmin() {
+  cheatsheet "$1" "sysadmin" "$2"
 }
 
 cdf() {
