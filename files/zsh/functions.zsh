@@ -9,6 +9,13 @@ fp_copied_paths=/var/brad/buffer.list
 #
 # # # # # # #
 
+browse-journal() {
+  (
+    cd ~/Documents/txt/archive/journal
+    ranger
+  )
+}
+
 paste-paths() {
   while read item; do
     cp -r "$item" .
@@ -50,7 +57,7 @@ sub-var() {
   lastpwd="$(pwd)"
   cd /var/brad
   /usr/bin/zsh
-  cd $lastpwd 
+  cd $lastpwd
 }
 
 set-vi-mode() {
@@ -66,6 +73,27 @@ unset-vi-mode() {
    echo "vi mode disabled"
 }
 
+prompt-journal() {
+  datestr="$(date +'%m-%d-%Y')"
+  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
+  if ! [[ -e "$jpath" ]] ; then
+    echo 'no journal entry... make one? (y/n)'
+    read var
+    if [[ "$var" = "y" ]] ; then
+      open-journal
+    fi
+  else
+    # print out the last thing I was doing
+    cat "$jpath/start" | tail -n15
+  fi
+}
+
+open-journal() {
+  datestr="$(date +'%m-%d-%Y')"
+  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
+  mkdir -p $jpath
+  vim "$jpath/start"
+}
 
 shell-status() {
   echo "date-time: $(date "+%D - %H:%M:%S")"
@@ -80,31 +108,35 @@ shell-status() {
 # to show all dirs in use
 
 
-  echo "shellopts: "
-  set -o|egrep -w "(vi|emacs)"
-  echo ' '
+  #echo "shellopts: "
+  #echo "{"
+  #set -o|egrep -w "(vi|emacs)" | awk '{print "    " $0}'
+  #echo "}"
   echo "jobs: "
-  echo "------------------"
-  jobs
-  echo "------------------"
+  echo "{"
+  jobs | awk '{print "    " $0}'
+  echo "}"
 
-  echo
-  echo -n "other shells: "
+  #echo
+  #echo -n "other shells: "
 
   #pid="$(pgrep -x 'tmux: server')"
   #pstree -p "$pid"
-  pid="$(pgrep 'gnome-terminal')"
-  pstree -p "$pid" | grep -Eo 'gnome-terminal-..[0-9]+\)' | xargs
-  echo
+  #pid="$(pgrep 'gnome-terminal')"
+  #stree -p "$pid" | grep -Eo 'gnome-terminal-..[0-9]+\)' | xargs
+  #cho
 
 
-  echo "Disk usage: --------------------"
-  df -h | grep fedora
-  echo
+  echo "Disk usage:"
+  echo '{'
+  df -h | grep fedora | awk '{ print "    " $0 }'
+  echo '}'
 
   # network info:
-  echo 'IP addresses: ---------------------'
-  echo "wlo1 eno1" | xargs -n1 ip addr show | awk '/inet / {print $2}'
+  echo 'IP addresses:'
+  echo '{'
+  echo "wlo1 eno1" | xargs -n1 ip addr show | awk '/inet / {print "    " $2}'
+  echo '}'
   echo
 
   # slow!
@@ -112,6 +144,8 @@ shell-status() {
 
   # better, still slow and too verbose
   # vagrant global-status
+
+  prompt-journal
 }
 
 reload-aliases() {
@@ -148,12 +182,26 @@ cheatsheet() {
 
 }
 
+# TODO factor these out
+
+cheat-postgres() {
+  cheatsheet "$1" "postgres" "$2"
+}
+
 cheat-python() {
   cheatsheet "$1" "python" "$2"
 }
 
 cheat-sysadmin() {
   cheatsheet "$1" "sysadmin" "$2"
+}
+
+cheat-sed() {
+  cheatsheet "$1" "sed" "$2"
+}
+
+cheat-bash() {
+  cheatsheet "$1" "bash" "$2"
 }
 
 cdf() {

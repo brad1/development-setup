@@ -111,6 +111,13 @@ context: open a file
         with open(filepath, "w+") as csvfile:
 
 ------------------------------------------------------------------------------
+context: read all lines in a file
+
+with open(filepath, "r") as textfile:
+        lines = textfile.readlines()
+        print(lines)
+
+------------------------------------------------------------------------------
 class Object:
     class_attribute = "CA" # Class attribute, must get a value, its the same for every instance
 

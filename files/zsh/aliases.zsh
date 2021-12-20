@@ -2,6 +2,9 @@
 # frequentuse, updatedaily
 
 
+alias b-journal='browse-journal'
+
+
 alias awkf='awk -F ":"' # custom field separator
 alias awkf='awk "{print}"' # basically cat
 alias awkf='awk "{print $0}"' # same
@@ -205,6 +208,7 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
 # Note that g r<tab> already give you git autocomplete and already lists aliases
 # there has to be a way to do this will shell functions or something!
+alias git-compare-master='git log master... --oneline; git log master... --oneline|wc -l'
 alias git-list-aliases='git config --global --list | grep alias'
 alias git-list-branch-moves="git reflog | grep -o 'moving from.*' | head -n25"
 alias git-rebase-abort-force='rm -rf .git/rebase-apply'

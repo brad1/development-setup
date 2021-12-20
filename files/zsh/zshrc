@@ -45,6 +45,9 @@ fi
 
 clear
 
+echo '------------------------------------------------------------------------------'
+echo '------------------------------------------------------------------------------'
+
  echo "
    Ctrl-H: Home              ranger
    Ctrl-K: Up a directory    set -o vi # followed by ESC then:
@@ -55,6 +58,12 @@ clear
   aliases:
   $(list-aliases)
 "
+
+echo '------------------------------------------------------------------------------'
+echo '------------------------------------------------------------------------------'
+echo
+
+st
 
 # if screenfetch is here, call it first, discarded warnings
 # which screenfetch >/dev/null 2>/dev/null && screenfetch 2>/dev/null

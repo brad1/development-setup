@@ -1,4 +1,23 @@
 ------------------------------------------------------------------------------
+context: bash substring example
+
+STR='GNU/Linux is an operating system'
+SUB='Linux'
+if [[ "$STR" == *"$SUB"* ]]; then
+  echo "It's there."
+fi
+------------------------------------------------------------------------------
+context: check for empty directory
+
+if [ -z "$(ls -A $filepath 2>/dev/null)" ]; then
+  echo "$filepath is empty"
+fi
+
+if [ -z "$(ls $filepath 2>/dev/null)" ]; then
+  echo "$filepath is empty of non-hidden files"
+fi
+
+------------------------------------------------------------------------------
 context: links to bunch of matching files
 
 find ../platform -name \*sh | xargs -L 1 ln -sf
@@ -36,7 +55,7 @@ context: args from list file
 
 xargs git branch -D < /tmp/list-of-branches
 ------------------------------------------------------------------------------
-context: brakcet checks
+context: bracket checks, empty variable
 
 
 ## Check if $var is set using ! i.e. check if expr is false ##

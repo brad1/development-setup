@@ -1,4 +1,81 @@
 ------------------------------------------------------------------------------
+context: virtualbox errors
+
+command: ["import", "/home/brad/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf", "--vsys", "0", "--vmname", "vmass7_1637262441554_20283", "--vsys", "0", "--unit", "13", "--disk", "/home/brad/VirtualBox VMs/vmass7_1637262441554_20283/box-disk001.vmdk"]
+Stderr: 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Interpreting /home/brad/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf...
+OK.
+0%...
+Progress state: NS_ERROR_INVALID_ARG
+VBoxManage: error: Appliance import failed
+VBoxManage: error: Code NS_ERROR_INVALID_ARG (0x80070057) - Invalid argument value (extended info not available)
+VBoxManage: error: Context: "RTEXITCODE handleImportAppliance(HandlerArg*)" at line 1118 of file VBoxManageAppliance.cpp
+
+solution: no disk space!
+
+------------------------------------------------------------------------------
+context: openssh ciphers key exchange kex macs
+
+# to test
+sshd -t && echo pass
+sshd -T | grep "\(ciphers\|macs\|kexalgorithms\)"
+
+------------------------------------------------------------------------------
+context: find URL for certificate issuer root CA
+
+centos:
+echo |  openssl s_client -connect gitlab.valcom.com:443 > /tmp/gitlab.cert 2>/dev/null
+openssl x509 -noout -text -in /tmp/gitlab.cert | grep 'CA Issuers'
+cd /etc/pki/ca-trust/source/anchors/ # debian, /usr/local/share/ca-certificates/
+wget "http://certificates.godaddy.com/repository/gdig2.crt" # comes from the 'grep' above
+update-ca-trust
+gitlab-runner restart # if needed
+
+ubuntu:
+same, but:
+instead of ../anchors/, use /usr/local/share/ca-certificates/
+instead of update-ca-trust, use update-ca-certificates
+instead of gdig2.crt (root CA cert), use gd_bundle-g2.crt
+
+still works!
+
+multiple certs:
+find . -name gitlab.valcom.com.crt | xargs -I ARGS sh -c '{ openssl x509 -noout -text -in ARGS | grep -i issuer; }'
+
+centos:
+trust list <---- basically dumps: /etc/pki/tls/certs/ca-bundle.crt
+
+https://www.ssls.com/knowledgebase/how-to-install-an-ssl-certificate-on-a-nginx-server/
+
+------------------------------------------------------------------------------
+context: password hash salt
+
+printf 'root' | openssl passwd -6 -salt 'FhcddHFVZ7ABA4Gi' -stdin
+$6$FhcddHFVZ7ABA4Gi$9l4yURWASWe8xEa1jzI0bacVLvhe3Yn4/G3AnU11K3X0yu/mICVRxfo6tZTB2noKljlIRzjkVZPocdf63MtzC0
+
+printf 'ubuntu' | openssl passwd -6 -salt 'FhcddHFVZ7ABA4Gi' -stdin
+$6$FhcddHFVZ7ABA4Gi$9ME1/XEiFHYx8Qh01w6CPqZZE7EDSf2tOc9Ugs89beYrUMyCyCxXzyBovoRwjN/6ipRnxCKeG/3PmJb1zvMAp/
+   |______________| <-- note that the salt is embedded in the hash
+
+
+
+
+
+
+------------------------------------------------------------------------------
+context: expire, openssl, Check SSL certificate expiration
+
+DOM="www.nixcraft.com"
+PORT="443"
+openssl s_client -servername $DOM -connect $DOM:$PORT \
+| openssl x509 -noout -dates
+
+------------------------------------------------------------------------------
+context: cloud-init autoinstaller user-data merge
+tags: cloud-init autoinstaller user-data merge
+
+/var/log/installer/audoinstall-user-data.log
+------------------------------------------------------------------------------
 context: File the filesystem inside a partition
 
 fsck -N /dev/sda1
