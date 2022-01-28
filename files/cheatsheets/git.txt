@@ -1,4 +1,8 @@
 ------------------------------------------------------------------------------
+context: scroll through MR commits
+
+git log master... --oneline | awk '{print $1}' | xargs -n1 git show --name-only
+------------------------------------------------------------------------------
 context: show full diffs
 
 git <diff|show> -U10000 # max number of lines, pick a large one

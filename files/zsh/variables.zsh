@@ -13,4 +13,5 @@ export TMPDIR=/tmp
 # TODO: refactor to a list file or symlinks (persistance) w/ function to modify
 export ACTIVE_PROJECTS="~/Projects/vmass ~/Projects/_1_builds/vmass-integration-test"
 
-export docker_job_image='vmass7.1'
+#no longer required
+#export docker_job_image='vmass7.1'

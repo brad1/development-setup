@@ -1,3 +1,6 @@
+# duplicate a line that matches a pattern and modify it on next line
+sed -n 'p; s/thing1/thing2/p'
+
 # grep, replacement for group capture:
 grep -oP 'foo \K\w+(?= bar)' test.txt
 # where \K means everything prior is an "anchor"

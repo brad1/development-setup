@@ -9,6 +9,10 @@ fp_copied_paths=/var/brad/buffer.list
 #
 # # # # # # #
 
+cp-from-downloads() {
+  cp ~/Downloads/vmass*$1*bin ~/Projects/vmass
+}
+
 browse-journal() {
   (
     cd ~/Documents/txt/archive/journal
@@ -183,6 +187,10 @@ cheatsheet() {
 }
 
 # TODO factor these out
+
+cheat-git() {
+  cheatsheet "$1" "git" "$2"
+}
 
 cheat-postgres() {
   cheatsheet "$1" "postgres" "$2"

@@ -1,4 +1,46 @@
 ------------------------------------------------------------------------------
+context: env
+
+#!/usr/bin/env -S perl -w -T
+
+------------------------------------------------------------------------------
+context: dhcp discovery failure
+
+/etc/sysctl.conf
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+> sysctl -p
+
+ifup enp0s3 # failures hard, don't worry
+kill dhclient
+dhclient -v enp0s3
+
+------------------------------------------------------------------------------
+context: install godaddy cert bundle to centos7
+
+cp gd_bundle-g2.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust
+------------------------------------------------------------------------------
+context: lvm shrink etc (assume xfs, small amount of data)
+
+cp -r /home /home-backup
+umount /home
+lvremove /dev/mapper/centos-home
+lvcreate -L 5G -n home centos
+mkfs.xfs /dev/mapper/centos-home
+mount /dev/mapper/centos-home /home
+mv /home-backup/* /home
+ez!
+
+# grow / to fill: assume no vmware, using the space freed above
+echo 1 > /sys/block/sda/device/rescan # maybe don't need this either
+lvextend -l +100%FREE /dev/centos/root
+
+
+
+
+
+------------------------------------------------------------------------------
 context: virtualbox errors
 
 command: ["import", "/home/brad/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf", "--vsys", "0", "--vmname", "vmass7_1637262441554_20283", "--vsys", "0", "--unit", "13", "--disk", "/home/brad/VirtualBox VMs/vmass7_1637262441554_20283/box-disk001.vmdk"]
