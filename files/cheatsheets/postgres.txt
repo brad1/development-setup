@@ -1,7 +1,26 @@
 ------------------------------------------------------------------------------
+context: SQL script cheatsheet:
+
+
+------------------------------------------------------------------------------
+context: do I have foreign key constraings:
+
+\d+ <tablename>
+\dt+ <tablename> # what does this do?
+------------------------------------------------------------------------------
+context: ask where config files are
+
+psql -Upostgres -c "SHOW hba_file"
+psql -Upostgres -c "SHOW config_file"
+------------------------------------------------------------------------------
 context: pg_dump examples
 
 pg_dump --schema-only --tables <tablename>
+pg_dump <tablename> > pg_dump.txt
+
+dropdb -Uvipsched vip_db
+createdb -Uvipsched vip_db
+psql -Uvipsched vip_db < pg_dump.txt
 ------------------------------------------------------------------------------
 context: Host-based Access Configuration (pg_hba.conf):
 

@@ -49,6 +49,7 @@ alias ss-q='(cd ~/Documents/txt/queues && zsh)'
 # [edit]
 alias -s {cs,ts,html,json,md}=$EDITOR
 alias vimf='vim $(fzf)'
+alias vim-work-zshrc='vim ~/Projects/sandbox/zshrc'
 alias vim-exe='vim $FN && chmod +x $FN'
 alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
 alias vim-queue='cd ~/Documents/txt/var; vim queue; cd -'

@@ -1,4 +1,45 @@
 ------------------------------------------------------------------------------
+context: find newest file in a directory
+
+# no 'awk' because print $2 did not work in  a makefile
+find . -type f  -printf '%T+ %p\n' | sort | head -n1 | cut -d' ' -f2
+------------------------------------------------------------------------------
+context: loop till fail
+
+for i in $(seq 1 12); do make ipc-test-ubuntu || break; done
+------------------------------------------------------------------------------
+context: try ssh ports
+
+function try_a_port() {
+  echo "Trying port $port..."
+  timeout $tmt ssh -i .vagrant/machines/ubuntu/virtualbox/private_key -p$port vagrant@localhost ":" && return
+  rval=$?
+  port="$(($port+1))"
+  return $rval
+}
+
+function find_good_port() {
+  tmt=2
+
+  for i in $(seq 1 3)
+  do
+    port=2224
+    try_a_port && return
+    try_a_port && return
+    tmt="$(($tmt+1))"
+  done
+
+}
+
+find_good_port
+
+ssh -i .vagrant/machines/ubuntu/virtualbox/private_key -p$port vagrant@localhost
+
+------------------------------------------------------------------------------
+context: exec and redirect
+
+https://stackoverflow.com/questions/8756535/conditional-redirection-in-bash
+------------------------------------------------------------------------------
 context: bash substring example
 
 STR='GNU/Linux is an operating system'

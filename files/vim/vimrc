@@ -116,8 +116,11 @@ let g:ctrlp_working_path_mode = ''
 " annoying in practice, off by default w/ a toggle might be good
 " set foldmethod=syntax "syntax|indent|manual|marker
 
-set path=$PWD/** " for gf
-set path=~/Documents/vim/** " for gf
+" huh?
+"set path=$PWD/** " for gf
+"set path=~/Documents/vim/** " for gf
+
+set path=.
 
 :set mouse=i
 
@@ -126,6 +129,10 @@ set smartindent
 set tabstop=2
 set shiftwidth=2
 set expandtab
+filetype plugin indent on
+" Use tables for .sh files
+"autocmd FileType * call Tabstyle_auto()
+autocmd FileType sh setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 
 set nowrap
 
@@ -150,3 +157,4 @@ endif
 " every other multiple-file editor on the planet. You can have edited buffers
 " that aren't visible in a window somewhere.
 set hidden
+

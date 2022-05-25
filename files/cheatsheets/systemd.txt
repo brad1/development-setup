@@ -1,4 +1,23 @@
 ------------------------------------------------------------------------------
+context: manual
+
+man systemd.directives
+------------------------------------------------------------------------------
+
+context: reload propogation!
+
+# postgresql@.service # clustering!
+[Unit]
+ReloadPropogatedFrom=postgresql.service
+
+# postgresql.service
+[Service]
+type=oneshot
+ExecStart=/bin/true
+ExecReload=/bin/true
+RemainAfterExit=on
+
+------------------------------------------------------------------------------
 context: reset failure circuit breaker
 
 systemctl reset-failed <service name>

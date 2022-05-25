@@ -1,4 +1,8 @@
 ------------------------------------------------------------------------------
+context: scroll through one file's history of commits
+
+fn='web/php/classes/event.php' bash -c "git log --reverse --format='%H' -- \$fn | xargs -n1 -ISUB git show SUB -- \$fn"
+------------------------------------------------------------------------------
 context: scroll through MR commits
 
 git log master... --oneline | awk '{print $1}' | xargs -n1 git show --name-only

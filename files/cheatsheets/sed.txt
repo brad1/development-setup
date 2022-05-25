@@ -1,49 +1,63 @@
-# duplicate a line that matches a pattern and modify it on next line
-sed -n 'p; s/thing1/thing2/p'
+------------------------------------------------------------------------------
+context: count non-empty lines
 
-# grep, replacement for group capture:
+grep -c '.' file
+------------------------------------------------------------------------------
+context: change a line
+
+sed -i "/^IFACE=/ c IFACE=$IFACE" $FN
+------------------------------------------------------------------------------
+context: duplicate a line that matches a pattern and modify it on next line
+
+sed -n 'p; s/thing1/thing2/p'
+------------------------------------------------------------------------------
+context: grep, replacement for group capture:
+
 grep -oP 'foo \K\w+(?= bar)' test.txt
 # where \K means everything prior is an "anchor"
-
-# replace a line:
+------------------------------------------------------------------------------
+context:  replace a line:
 sed -i '/TEXT_TO_BE_REPLACED/c\This line is removed by the admin.' /tmp/foo
-
-# add a line:
+------------------------------------------------------------------------------
+context: add a line
 sed -i '9i text' FILE
+------------------------------------------------------------------------------
+context: remove a line
 
-# remove a line:
 if [ "$checksum" = "e3e846d113b32a09d979534472a0f833" ] ; then
   sed -i '279,281d;286d' $ifupeth # just rip out the offending lines
 fi
+------------------------------------------------------------------------------
+context:  Increment template log statements:
 
-# Increment template log statements:
 FN=get_network_info.sh
 for i in $(seq 1 100); do
   sed -i "0,/0000/ s/0000/$i/g" $FN # 0, substitutes the first match only
   grep -q "echo '0000'" $FN || break
 done
-
-# Handy basename alternative
+------------------------------------------------------------------------------
+context: Handy basename alternative
 find /path/to/files -type f | grep bin | sed 's!.*/!!'
-
-# add text
+------------------------------------------------------------------------------
+context: add text
 sed '/unix/ a "Add a new line"' file.txt
-
-# change a line
-sed -i "/^IFACE=/ c IFACE=$IFACE" $FN
-
-# warning:
-sed -i WILL overwrite a symlink!
+------------------------------------------------------------------------------
+context:  idempotent inplace test:
 
 # idempotent inplace test:
 sed -i 's/a/aa/g ; s/b/bb/g' target.txt && cat target.txt && cp target.txt.bak target.txt
 sed -i 's|/a/path|/another/path|g' # for using filepaths!
+------------------------------------------------------------------------------
+context: Wrap the match
+sed 's/string/"&"/' sed.txt
+------------------------------------------------------------------------------
 
+
+# warning:
+sed -i WILL overwrite a symlink!
 # delete
 sed '/^u/d' file
 
-
-#sed 's/string/"&"/' sed.txt           # Wrap the match
 sed -i '' ...                         # OSX
 
 

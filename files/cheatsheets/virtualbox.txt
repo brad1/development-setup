@@ -1,6 +1,13 @@
 which VBoxManage
 /usr/local/bin/VBoxManage
 
+# import/export
+VBoxManage export "vmass_ubuntu_1644607634270_12019" -o ubuntu.ova
+VBoxManage import /home/gitlab-runner/ubuntu.ova
+VBoxManage modifyvm 519f0e62-a9d9-42e0-8522-5c32ff15e891 --natpf1 "guestssh,tcp,,2229,,5147"
+VBoxManage startvm 519f0e62-a9d9-42e0-8522-5c32ff15e891 --type=headless
+
+
 VBoxManage controlvm <vm name> screenshotpng screenshot.png
     convert -colorspace gray -fill white -resize 600% -sharpen 0x2 screenshot.png screenshot.jpg
     tesseract screenshot.jpg ocr > /dev/null

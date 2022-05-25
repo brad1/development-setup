@@ -1,3 +1,26 @@
+------------------------------------------------------------------------------
+context: folding and marks
+
+m + a-z or A-Z
+
+dma - delete that mark
+'a  - jump
+`a  - jump
+          - yes, you can jump between files
+:marks - list marks
+
+easy folds:
+
+zf26<down>
+to collapse 26 lines
+zd (deletion)
+zM collapse all
+zR reveal all
+
+try:
+set foldmarker
+------------------------------------------------------------------------------
+
 Ctrl-R " to paste into the vim commmand line
 
 :66,70s/^/#

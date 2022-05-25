@@ -1,4 +1,77 @@
 ------------------------------------------------------------------------------
+context: failed cron jobs
+
+Mar  8 02:01:01 localhost systemd: Started Session 16 of user root.
+Mar  8 02:01:02 localhost crond: postdrop: warning: unable to look up public/pickup: No such file or directory
+Mar  8 02:01:02 localhost systemd: Removed slice User Slice of root.
+
+see:
+/var/log/maillog
+
+fix:
+mkfifo /var/spool/postfix/public/pickup
+
+lookup mail ids:
+postqueue -p
+mailq
+
+check message:
+postcat -vq <id>
+
+that shows you the real reason for failure
+
+------------------------------------------------------------------------------
+context: cause of last reboot
+
+> last reboot
+------------------------------------------------------------------------------
+context: copy files from "find"
+
+find /tmp -type f  -exec cp {} . \;
+------------------------------------------------------------------------------
+context: delete files older than 4 weeks
+
+find . -mtime +28 -type f -exec rm {} +
+------------------------------------------------------------------------------
+context: disregard known hosts
+
+# override, still display warning
+ssh -o StrictHostKeyChecking=no
+
+# ???
+# may ignore completely
+ssh -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null 
+
+timeout ssh ...
+doesn't exactly behave this way, why?
+
+------------------------------------------------------------------------------
+context: Sudo: unable to resolve host
+
+add:
+127.0.0.1 hostname OR
+127.0.1.1 hostname to
+/etc/hosts
+
+127.0.1.1 was seen on ubuntu.... read further
+from: "Debian than ubuntu choose to define 127.0.1.1 for mapping the ip of your host_name in case that you have no network"
+------------------------------------------------------------------------------
+context Trouble downloading packages list due to a "Hash sum mismatch" error
+
+# parts of solution:
+sudo apt-get clean # sudo rm -rf /var/lib/apt/lists/*   ?
+sudo apt-get update
+------------------------------------------------------------------------------
+context: port to PID
+
+sudo ss -lntp 'sport = :2224'
+
+------------------------------------------------------------------------------
+context: ntp
+
+tcpdump port 123
+tcpdump -i enp1s0 port 123
+------------------------------------------------------------------------------
 context: env
 
 #!/usr/bin/env -S perl -w -T
@@ -20,6 +93,10 @@ context: install godaddy cert bundle to centos7
 
 cp gd_bundle-g2.crt /etc/pki/ca-trust/source/anchors/
 update-ca-trust
+
+ubuntu:
+cp asdf /usr/local/share/ca-certificates/
+update-ca-certificates
 ------------------------------------------------------------------------------
 context: lvm shrink etc (assume xfs, small amount of data)
 

@@ -1,4 +1,21 @@
 ------------------------------------------------------------------------------
+context: ruby inspect method on mangled ROM subclasses
+
+    # TODO: improve "inspect"
+
+    # Special case, keep "inspect" from crashing with:
+    # <NoMethodError: undefined method `[]' for nil:NilClass> with backtrace:
+    # /share/vipsched/vendor/bundle/ruby/2.7.0/gems/dry-struct-1.4.0/lib/dry/struct.rb:196
+    def inspect
+      # Object.instance_method(:inspect).bind(self).call # ruby default
+      self.instance_variables.map {|e| [e, self.instance_variable_get(e)] }.to_s
+    end 
+------------------------------------------------------------------------------
+context:  find project install path from GEM
+
+root_dir = Pathname.new(File.dirname(Gem.bin_path('gemname', 'exename.rb'))).parent
+(root_dir + 'lib').to_s
+------------------------------------------------------------------------------
 context: datamapper
 
 # good luck!

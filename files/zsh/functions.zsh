@@ -77,26 +77,36 @@ unset-vi-mode() {
    echo "vi mode disabled"
 }
 
-prompt-journal() {
-  datestr="$(date +'%m-%d-%Y')"
-  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
-  if ! [[ -e "$jpath" ]] ; then
-    echo 'no journal entry... make one? (y/n)'
-    read var
-    if [[ "$var" = "y" ]] ; then
-      open-journal
-    fi
-  else
-    # print out the last thing I was doing
-    cat "$jpath/start" | tail -n15
-  fi
-}
+#prompt-journal() {
+#  datestr="$(date +'%m-%d-%Y')"
+#  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
+#  if ! [[ -e "$jpath" ]] ; then
+#    echo 'no journal entry... make one? (y/n)'
+#    read var
+#    if [[ "$var" = "y" ]] ; then
+#      open-journal
+#    fi
+#  else
+#    # print out the last thing I was doing
+#    cat "$jpath/start" | tail -n15
+#  fi
+#}
 
-open-journal() {
-  datestr="$(date +'%m-%d-%Y')"
-  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
-  mkdir -p $jpath
-  vim "$jpath/start"
+#open-journal() {
+#  datestr="$(date +'%m-%d-%Y')"
+#  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
+#  mkdir -p $jpath
+#  vim "$jpath/start"
+#}
+
+prompt-clipboard() {
+  if ! [[ -e ~/Documents/txt/var/.clipboard.swp ]] ; then
+    echo 'open clipboard? (y/n)'
+     read var
+     if [[ "$var" = "y" ]] ; then
+       vim-clipboard
+     fi
+  fi
 }
 
 shell-status() {
@@ -149,7 +159,8 @@ shell-status() {
   # better, still slow and too verbose
   # vagrant global-status
 
-  prompt-journal
+  #prompt-journal
+  prompt-clipboard
 }
 
 reload-aliases() {
@@ -187,6 +198,15 @@ cheatsheet() {
 }
 
 # TODO factor these out
+
+cheat-vim() {
+  cheatsheet "$1" "vim" "$2"
+}
+
+cheat-awk() {
+  cheatsheet "$1" "awk" "$2"
+}
+
 
 cheat-git() {
   cheatsheet "$1" "git" "$2"
