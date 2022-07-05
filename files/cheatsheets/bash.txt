@@ -216,6 +216,12 @@ echo "$temp"
 # file access times!
 ls -l --time=atime
 
+padding (better)
+for i in $(seq -f "%05g" 10 15)
+do
+  echo $i
+done
+
 
 # printf justifications: (padding)
 # # although this is C, bash printf accepts same options.

@@ -1,4 +1,15 @@
 ------------------------------------------------------------------------------
+context: monkeypatch wrap
+
+class Foo
+  old_bar = instance_method(:bar)
+
+  define_method(:bar) do
+    old_bar.bind(self).() + ' World'
+  end
+end
+
+-----------------------------------------------------------------------------
 context: ruby inspect method on mangled ROM subclasses
 
     # TODO: improve "inspect"
@@ -9,7 +20,7 @@ context: ruby inspect method on mangled ROM subclasses
     def inspect
       # Object.instance_method(:inspect).bind(self).call # ruby default
       self.instance_variables.map {|e| [e, self.instance_variable_get(e)] }.to_s
-    end 
+    end
 ------------------------------------------------------------------------------
 context:  find project install path from GEM
 

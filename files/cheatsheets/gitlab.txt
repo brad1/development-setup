@@ -1,4 +1,9 @@
 ------------------------------------------------------------------------------
+Failed repocheck
+/var/log/gitlab/gitlab-rails/repocheck.log
+/opt/gitlab/embedded/bin/git -C /var/opt/gitlab/git-data/repositories/@hashed/... commit-graph write
+for the project's hash value, see the project page in webui admin
+------------------------------------------------------------------------------
 https://docs.gitlab.com/ee/ci/variables/#gitlab-ciyml-defined-variables
 ------------------------------------------------------------------------------
 

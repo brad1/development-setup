@@ -51,6 +51,16 @@ nmap <F7> :split /opt/chef/cookbooks/development-setup/files/vim/cheatsheet<CR>
 nmap <F8> :jumps<CR>
 nmap <F9> :browse old<CR>
 
+" NO, does not show fzf prompt
+nmap <Leader>o :!vfzf <CR> :call GetDate()<CR>
+function! GetDate()
+"  let cmd = 'fzf > /tmp/.viminput'
+"  let dumb = system(cmd)
+  let cmd = 'cat /tmp/.viminput'
+  let result = system(cmd)
+  call setline(line('.'), result)
+endfunction
+
 "
 " leaders
 "
@@ -120,7 +130,8 @@ let g:ctrlp_working_path_mode = ''
 "set path=$PWD/** " for gf
 "set path=~/Documents/vim/** " for gf
 
-set path=.
+"set path=.
+set path=~/Projects/vmass
 
 :set mouse=i
 

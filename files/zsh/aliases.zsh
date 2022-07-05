@@ -48,6 +48,8 @@ alias ss-q='(cd ~/Documents/txt/queues && zsh)'
 
 # [edit]
 alias -s {cs,ts,html,json,md}=$EDITOR
+#alias vfzf='fzf > /tmp/.viminput'
+alias getviminput='cat /tmp/.viminput'
 alias vimf='vim $(fzf)'
 alias vim-work-zshrc='vim ~/Projects/sandbox/zshrc'
 alias vim-exe='vim $FN && chmod +x $FN'
@@ -209,6 +211,7 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
 # Note that g r<tab> already give you git autocomplete and already lists aliases
 # there has to be a way to do this will shell functions or something!
+alias gitf='git checkout $(git branch | fzf)'
 alias git-compare-master='git log master... --oneline; git log master... --oneline|wc -l'
 alias git-compare-master-inspect='git log master... --oneline | awk "{print \$1}" | xargs -n1 git show --name-only'
 alias git-list-aliases='git config --global --list | grep alias'
