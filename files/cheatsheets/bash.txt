@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------------
+context: cleanup old files
+find . -mtime +28 -type f -exec rm {} +
+sudo find . -user root -exec rm -rf {} +
+------------------------------------------------------------------------------
+context: path
+
+PATH=$PATH:~/opt/bin
+------------------------------------------------------------------------------
+context: treat variable as file
+
+grep select <<< "$line"
+------------------------------------------------------------------------------
 context: find newest file in a directory
 
 # no 'awk' because print $2 did not work in  a makefile
@@ -482,6 +494,11 @@ $(dont-execute-this)
 foo"bar"''
 END_HEREDOC
 )
+
+# plain heredoc
+cat << EOF
+  asdf
+EOF
 
 # default values in bash ksh?
 COMMIT1=$1

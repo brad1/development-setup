@@ -3,11 +3,34 @@
 #
 
 
-fp_copied_paths=/var/brad/buffer.list
+fp_copied_paths=/var/brad/copied-paths.list
 
 #
 #
 # # # # # # #
+
+#
+## expansion:
+# dump grep result to csv so that I can math w/ excel
+#
+
+gcof() {
+  git checkout $(git-branches-list | fzf)
+}
+
+gcobf() {
+  git checkout -b $(git-branches-list | fzf)
+}
+
+bash-builtins() {
+  man dirs
+}
+
+my-dirs() {
+  dest="$(cat /var/brad/lists/dirs.list | fzf)"
+  dest="${dest/#\~/$HOME}"
+  cd "$dest"
+}
 
 cp-from-downloads() {
   cp ~/Downloads/vmass*$1*bin ~/Projects/vmass
@@ -41,17 +64,35 @@ path-of() {
   echo `pwd`/$1
 }
 
+git-diff-master-summarize() {
+  git diff --stat master $(git branch --show-current)
+}
+
+git-diff-master() {
+  git diff master $(git branch --show-current)
+}
+
+vim-files-changed-in-branch() {
+  #                           #             #              # filter to avoid binaries
+  git diff $(git branch --show-current) master --name-only | > /tmp/asdf
+  vim $(cat /tmp/asdf | grep .\*.rb$ | fzf)
+}
+
+vim-files-modified () {
+  vim "$(git status --short | awk "{print \$2}" | fzf)"
+}
+
 git-branch() {
   git checkout -b "$1"
-  echo "$1" >> /var/brad/branches.list
+  echo "$1" >> /var/brad/lists/branches.list
 }
 
 git-branches-list() {
-  cat /var/brad/branches.list
+  cat /var/brad/lists/branches.list
 }
 
 git-branches-edit() {
-  vim /var/brad/branches.list
+  vim /var/brad/lists/branches.list
 }
 
 # subshell variable data
@@ -233,7 +274,7 @@ cheat-bash() {
 }
 
 cdf() {
-  cd "$(find . -iname "$1" | head -n1)"
+  cd "$(fzf)"
 }
 
 find-with() {
@@ -362,3 +403,64 @@ readme () {
 # vimm () {
 #  vim $(find . -name \*$1\*)
 #}
+#
+#
+function cd-vmass () {
+  cd ~/Projects/vmass
+}
+
+function copy-artifacts () {
+  cp ~/Downloads/artifacts* .
+}
+
+function du-ch () {
+  du -ch * | sort -h
+}
+
+function vimf () {
+  vim $(fzf)
+}
+
+function rmf () {
+  rm $(fzf)
+}
+
+function catf () {
+  cat $(fzf)
+}
+
+function linkf () {
+  ln -sf $(fzf)
+}
+
+
+# # # menu
+
+fzf-commands () {
+  cat /var/brad/lists/commands-fzf.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+git-commands () {
+  cat /var/brad/lists/commands-git.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+zsh-commands () {
+  cat /var/brad/lists/commands-zsh.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+auto () {
+  cat /var/brad/lists/commands.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+# aliases are weak!
+a () {
+  auto
+}

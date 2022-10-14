@@ -1,9 +1,11 @@
 # Bookmarks:
 # frequentuse, updatedaily
 
+# prompt for new journal entry?  automatic daily doesn't always make sense
+alias help='clear; shell-status; cat $DEVSETUP/files/help.txt'
+
 
 alias b-journal='browse-journal'
-
 
 alias awkf='awk -F ":"' # custom field separator
 alias awkf='awk "{print}"' # basically cat
@@ -14,7 +16,6 @@ alias list-aliases="cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.
 alias edit-zshrc='$EDITOR ~/.zshrc'
 alias edit-pending='vim /var/brad/pending.list'
 alias canidothis='file="$(fzf)"; echo $file'
-alias linkf='file="$(fzf)"; echo $file; ln -sf "$file"'
 
 # [using]
 #alias vsbc='vagrant ssh bootstrap --no-tty --command "make rspec" '
@@ -37,7 +38,14 @@ alias stack='pstree -s $$'
 
 # ps aux | grep -E 'ping|ha' | grep -v grep | awk '{ print $1 " " $2 " " substr($0, index($0,$11)) }'
 
-alias catf='cat $(fzf)'
+# [fzf]
+# alias cdf='cd "$(find . -type d -name )"'
+# needs to be a function
+# alias cdf='cd "$(fzf)"'
+# TODO:
+# https://github.com/junegunn/fzf.vim#installation
+# does this power control-P ?
+
 alias queue='(cd ~/Documents/txt/queues && vimf)'
 alias queues='queue'
 alias q='queue'
@@ -46,11 +54,14 @@ alias q='queue'
 # [subshells]
 alias ss-q='(cd ~/Documents/txt/queues && zsh)'
 
+
+# TODO:
+# https://github.com/junegunn/fzf.vim#installation
 # [edit]
 alias -s {cs,ts,html,json,md}=$EDITOR
 #alias vfzf='fzf > /tmp/.viminput'
 alias getviminput='cat /tmp/.viminput'
-alias vimf='vim $(fzf)'
+alias vimf-changed='vim $(git status --short | awk "{print \$2}" | fzf)'
 alias vim-work-zshrc='vim ~/Projects/sandbox/zshrc'
 alias vim-exe='vim $FN && chmod +x $FN'
 alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
@@ -115,6 +126,7 @@ alias vd="vagrant destroy"
 alias vsus="vagrant suspend"
 
 # [shell]
+# alias find . -mtime +28 -type f -exec rm {} +
 alias st='shell-status'
 alias r='ranger'
 alias j='jobs'
@@ -211,8 +223,11 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
 # Note that g r<tab> already give you git autocomplete and already lists aliases
 # there has to be a way to do this will shell functions or something!
+alias git-not-staged='git status --short | awk "{print \$2}" | fzf'
 alias gitf='git checkout $(git branch | fzf)'
-alias git-compare-master='git log master... --oneline; git log master... --oneline|wc -l'
+alias git-compare-files-with-master='git diff --name-only HEAD..origin/master'
+alias git-compare-diffs-with-master='git diff HEAD..origin/master'
+alias git-compare-commits-with-master='git log master... --oneline; git log master... --oneline|wc -l'
 alias git-compare-master-inspect='git log master... --oneline | awk "{print \$1}" | xargs -n1 git show --name-only'
 alias git-list-aliases='git config --global --list | grep alias'
 alias git-list-branch-moves="git reflog | grep -o 'moving from.*' | head -n25"
@@ -325,3 +340,4 @@ alias cheatsheet-selenium='vi $DEVSETUP/files/cheatsheets/selenium.txt'
 # alias my-git-update='git checkout master && git pull'
 # alias my-osx-ram='sysctl -a | grep hw.memsize'
 #alias my-vbox-screenshot-to-text='VBoxManage controlvm vmass screenshotpng screenshot.png && convert -colorspace gray -fill white -resize 600% -sharpen 0x2 screenshot.png screenshot.jpg && tesseract screenshot.jpg ocr && cat ocr.txt'
+

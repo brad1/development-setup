@@ -1,3 +1,4 @@
+TODO: consider merging w/ zsh-aliases
 ------------------------------------------------------------------------------
 context: scroll through one file's history of commits
 

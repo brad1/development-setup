@@ -1,8 +1,4 @@
-#WARNING! Your terminal appears to support fewer than 256 colors!
-#If your terminal supports 256 colors, please export the appropriate environment variable
-#_before_ loading this theme in your ~/.zshrc. In most terminal emulators, putting
-#export TERM="xterm-256color" at the top of your ~/.zshrc is sufficient.
-export TERM="xterm-256color"
+export TERM="xterm-256color" #WARNING! Your terminal appears to support fewer than 256 colors!
 
 
 INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
@@ -15,6 +11,7 @@ source $INCLUDE/oh-my-zsh.zsh
 
 # Include this instead when using .oh-my-zsh/custom
 source $INCLUDE/sources.zsh
+
 
 
 # Vi editing mode with visual mode.
@@ -43,7 +40,8 @@ if ! [ -z "$CHF" ] ;  then
 fi
 
 
-clear
+#TODO
+#clear
 
 echo '------------------------------------------------------------------------------'
 echo '------------------------------------------------------------------------------'

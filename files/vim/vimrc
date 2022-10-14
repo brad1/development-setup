@@ -2,6 +2,10 @@
 "
 " source /opt/chef/cookbooks/development-setup/files/vim/rc/experimental
 " source /opt/chef/cookbooks/development-setup/files/vim/rc/rspec
+"
+
+" TODO:
+" https://github.com/junegunn/fzf.vim#installation
 
 
 " move me "
@@ -50,6 +54,9 @@ nmap <F6> :!open -a TextEdit %:p<CR>
 nmap <F7> :split /opt/chef/cookbooks/development-setup/files/vim/cheatsheet<CR>
 nmap <F8> :jumps<CR>
 nmap <F9> :browse old<CR>
+
+" control chord note:
+" <C-w><C-=> " while holding control, w then =
 
 " NO, does not show fzf prompt
 nmap <Leader>o :!vfzf <CR> :call GetDate()<CR>
