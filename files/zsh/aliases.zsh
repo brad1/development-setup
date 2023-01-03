@@ -74,6 +74,7 @@ alias vim-clipboard-2='vim ~/Documents/txt/clipboard/'
 alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
 alias vim-status='vim ~/Documents/txt/var/status'
 alias vim-known-hosts='vim ~/.ssh/known_hosts'
+alias vim-hosts='sudo vim /etc/hosts'
 alias zsh-sources='vim $DEVSETUP/files/zsh/sources.zsh'
 alias zsh-controls='vim $DEVSETUP/files/zsh/functions.zsh'
 # TODO autoreload these

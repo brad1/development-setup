@@ -64,6 +64,10 @@ path-of() {
   echo `pwd`/$1
 }
 
+git-backup-branch() {
+  git checkout -b $(git branch --show-current)-backup_$(date +'%m-%d-%Y')
+}
+
 git-diff-master-summarize() {
   git diff --stat master $(git branch --show-current)
 }
@@ -184,7 +188,7 @@ shell-status() {
 
   echo "Disk usage:"
   echo '{'
-  df -h | grep fedora | awk '{ print "    " $0 }'
+  df -h 2>/dev/null | grep fedora | awk '{ print "    " $0 }'
   echo '}'
 
   # network info:
@@ -407,6 +411,10 @@ readme () {
 #
 function cd-vmass () {
   cd ~/Projects/vmass
+}
+
+function cd-recent () {
+  cd "$(dirs|xargs -n1|fzf|sed 's/~/\/home\/brad/')"
 }
 
 function copy-artifacts () {
