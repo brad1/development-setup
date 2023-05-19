@@ -14,6 +14,18 @@ fp_copied_paths=/var/brad/copied-paths.list
 # dump grep result to csv so that I can math w/ excel
 #
 
+# <context>-<object>-<verb>
+# shell-vbox-list
+procs-vbox-list() {
+  echo "try: ps aux | grep -i vboxman"
+}
+
+
+archive() {
+  # consider prompting for archive reason, tack onto beginning of file
+  mv "$1" "$ARCHIVE"
+}
+
 gcof() {
   git checkout $(git-branches-list | fzf)
 }

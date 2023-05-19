@@ -1,4 +1,19 @@
 ------------------------------------------------------------------------------
+rsa private key vs openssh private key:
+ssh-keygen -t rsa
+ssh-keygen -m PEM -t rsa # for me this force rsa private key
+------------------------------------------------------------------------------
+users and groups:
+useradd
+groups <username>
+sudo usermod -a -G examplegroup exampleusername
+------------------------------------------------------------------------------
+context: yum one of the configured repositories failed
+
+yum repolist
+yum install ffmpeg --installroot='/root/ffmpeg-install-root/' --disablerepo=* --enablerepo epel
+
+------------------------------------------------------------------------------
 context: failed cron jobs
 
 Mar  8 02:01:01 localhost systemd: Started Session 16 of user root.
