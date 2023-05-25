@@ -4,6 +4,7 @@
 
 
 fp_copied_paths=/var/brad/copied-paths.list
+jobsd=/var/brad/login-splash-jobs
 
 #
 #
@@ -38,6 +39,7 @@ bash-builtins() {
   man dirs
 }
 
+# Consider replacing with ranger persistent bookmarks
 my-dirs() {
   dest="$(cat /var/brad/lists/dirs.list | fzf)"
   dest="${dest/#\~/$HOME}"
@@ -166,6 +168,12 @@ prompt-clipboard() {
   fi
 }
 
+function start_long_running_process {
+    local job_name=$1
+    /path/to/your/script_$job_name.sh > ~/background_jobs/${job_name}_output.txt &
+    echo $! > ~/background_jobs/${job_name}_pid.txt
+}
+
 shell-status() {
   echo "date-time: $(date "+%D - %H:%M:%S")"
   echo "user: $(whoami)"
@@ -210,14 +218,27 @@ shell-status() {
   echo '}'
   echo
 
+  mkdir -p /var/brad/login-splash-jobs
+
   # slow!
   # vagrant status >/tmp/vagrant-status 2>/dev/null && echo "vagrant: $(grep bootstrap /tmp/vagrant-status)"
 
   # better, still slow and too verbose
-  # vagrant global-status
+  echo -n "Checking vagrant VMs...   "
+  vagrant global-status --prune >$jobsd/vagrant-global-status-prune.log 2>&1 &
 
-  #prompt-journal
-  prompt-clipboard
+  echo -n "Timing search for TODOs...   "
+  (
+    date
+    cd "$PRIMARY_PROJECT"
+    grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,\*venv,\*java,\*vendor,\*server_env,\*node_modules,\*dist,\*release} -r "TODO" . 
+    # TODO fix this if it gets too slow
+    #grep -r "TODO" "$PRIMARY_PROJECT"
+    date
+  ) > $jobsd/grep-todo.log 2>&1 &
+
+  # prompt-journal
+  # prompt-clipboard
 }
 
 reload-aliases() {
