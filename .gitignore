@@ -8,3 +8,10 @@ files/bin/pry
 files/bin/rubocop
 files/bin/ruby-parse
 files/bin/ruby-rewrite
+files/bin/httparty
+files/bin/rackup
+files/bin/resque
+files/bin/resque-web
+files/bin/sidekiq
+files/bin/sidekiqmon
+files/bin/tilt
