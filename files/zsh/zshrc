@@ -43,24 +43,24 @@ fi
 #TODO
 #clear
 
-echo '------------------------------------------------------------------------------'
-echo '------------------------------------------------------------------------------'
-
- echo "
-   Ctrl-H: Home              ranger
-   Ctrl-K: Up a directory    set -o vi # followed by ESC then:
-                              '/' to reverse search shell history, or:
-                                bindkey \"^R\" history-incremental-search-backward
-                              'v' to edit.
-
-  aliases:
-  $(list-aliases)
-"
-
-echo '------------------------------------------------------------------------------'
-echo '------------------------------------------------------------------------------'
-echo
-
+#echo '------------------------------------------------------------------------------'
+#echo '------------------------------------------------------------------------------'
+#
+# echo "
+#   Ctrl-H: Home              ranger
+#   Ctrl-K: Up a directory    set -o vi # followed by ESC then:
+#                              '/' to reverse search shell history, or:
+#                                bindkey \"^R\" history-incremental-search-backward
+#                              'v' to edit.
+#
+#  aliases:
+#  $(list-aliases)
+#"
+#
+#echo '------------------------------------------------------------------------------'
+#echo '------------------------------------------------------------------------------'
+#echo
+#
 st
 
 # if screenfetch is here, call it first, discarded warnings

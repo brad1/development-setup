@@ -10,6 +10,26 @@
 
 " move me "
 
+" Use with:
+" print("DEBUG: ") for example
+" function! NumberedDebug()
+"     let g:count = 0
+"     :g/DEBUG:/s/\(DEBUG: \)/\=submatch(1) . g:count/ | let g:count += 1
+" endfunction
+
+" Bind to a key, for example <leader>d
+" nnoremap <leader>z :call NumberedDebug()<CR>
+
+let g:debug_count = 1
+
+function! InsertDebugStatement()
+    execute "normal! oecho \"DEBUG: " . g:debug_count . "\"\<Esc>"
+    let g:debug_count += 1
+endfunction
+
+" ## leader-z (\z) :  increment DEBUG: strings
+nnoremap <leader>z :call InsertDebugStatement()<CR>
+
 " This might make sense to toggle when enabling line numbers.
 " when mouse mode is disabled, you can copy/paste to system keyboard,
 " but with line numbers enabled they will be captured too.

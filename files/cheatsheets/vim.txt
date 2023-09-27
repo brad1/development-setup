@@ -1,4 +1,9 @@
 ------------------------------------------------------------------------------
+context: my custom stuff
+
+z <-- use to increment debug statements
+
+------------------------------------------------------------------------------
 context: folding and marks
 
 m + a-z or A-Z

@@ -21,6 +21,35 @@ procs-vbox-list() {
   echo "try: ps aux | grep -i vboxman"
 }
 
+# run in one tmux tab to keep the task separate and tracked
+# expand
+build-portal() {
+    export HISTFILE=$HOME/.build_portal_history
+}
+
+# run in one tmux tab to keep the task separate and tracked
+# expand
+git-portal() {
+    export HISTFILE=$HOME/.git_portal_history
+}
+
+debug=0  # set to 1 for debugging output
+
+cdd () {
+    if (( $debug )); then
+        echo "Searching for directory '$1'..."
+    fi
+    target=$(timeout 2 find . -type d \( -name ".git" -o -name "release" \) -prune -o -name $1 -print -quit 2> /dev/null)
+    if [[ -z $target ]]
+    then
+        echo "Directory '$1' not found or operation timed out."
+    else
+        cd $target
+        if (( $debug )); then
+            echo "Changed directory to '$target'."
+        fi
+    fi
+}
 
 archive() {
   # consider prompting for archive reason, tack onto beginning of file
@@ -37,13 +66,6 @@ gcobf() {
 
 bash-builtins() {
   man dirs
-}
-
-# Consider replacing with ranger persistent bookmarks
-my-dirs() {
-  dest="$(cat /var/brad/lists/dirs.list | fzf)"
-  dest="${dest/#\~/$HOME}"
-  cd "$dest"
 }
 
 cp-from-downloads() {
@@ -220,8 +242,34 @@ shell-status() {
 
   mkdir -p /var/brad/login-splash-jobs
 
+  # tmux sessions
+  echo 'Tmux sessions:'
+  echo '{'
+  tmux ls
+  echo '}'
+  echo
+
+  echo "To change this, see run zsh-functions and see 'shell-status'"
+
+  echo
+  echo
+  echo
+
+  echo "Outstanding Solveables:"
+  ls /var/brad/solveables/
+
+  echo
+  echo
+  echo
+
+  # don't run jobs at every new terminal
+  return
+
   # slow!
   # vagrant status >/tmp/vagrant-status 2>/dev/null && echo "vagrant: $(grep bootstrap /tmp/vagrant-status)"
+
+  # suppress job complete messages, does this belong here?
+  # set +m
 
   # better, still slow and too verbose
   echo -n "Checking vagrant VMs...   "
@@ -239,6 +287,8 @@ shell-status() {
 
   # prompt-journal
   # prompt-clipboard
+  
+  echo "To change this, see run zsh-functions and see 'shell-status'"
 }
 
 reload-aliases() {
@@ -484,9 +534,7 @@ fzf-commands () {
 }
 
 git-commands () {
-  cat /var/brad/lists/commands-git.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
-  $command
+  $(cat /var/brad/lists/commands-git.list|fzf)
 }
 
 zsh-commands () {
@@ -501,7 +549,84 @@ auto () {
   $command
 }
 
+# Main menu
+
+shell-status2() {
+  echo "press 'a' for a command menu"
+  echo "press 's' to connect to a server"
+  echo "press 'd' to select a bookmarked directory" # consider using ranger bookmarks going forward
+  echo "press 'f' to edit these lists"
+  echo
+  echo "press 'gg' for git commands"
+  echo "press 'h' to edit hostfile"
+  echo
+  echo "press 'j' "
+  echo "press 'k' ..."
+  echo "press 'l' ..."
+  echo
+  echo "press 'e' to edit a pinned file"
+  echo "press 'c' to cheatsheets"
+  echo "press 'o' for open-interpreter"
+}
+
+vim-usage() {
+  # TODO inspired by make usage
+  # grep ~/.vimrc for ## and display results
+  grep '##' ~/.vimrc
+}
+
+
 # aliases are weak!
 a () {
   auto
+}
+
+s () {
+  echo "Use: sshf for valcom servers"
+  echo "Use: ssh-gitlab-web for gitlab"
+  #ssh brad@$(cat /var/brad/lists/servers.txt | fzf)'
+
+}
+
+d () {
+  dest="$(cat /var/brad/lists/dirs.list | fzf)"
+  dest="${dest/#\~/$HOME}"
+  cd "$dest"
+}
+
+f () {
+   $EDITOR /var/brad/lists/$(ls /var/brad/lists|fzf)
+}
+
+# already used by git
+#g () {
+#   $view /var/brad/running-lists/$(ls /var/brad/running-lists|fzf)
+#}
+
+gh () {
+  $(cat /var/brad/lists/commands-git.list|fzf)
+}
+
+h () {
+  # Move to 'j', fix the full filepath displaying
+  # view $(echo /var/brad/running-lists/*.list|fzf)
+  sudo vim /etc/hosts
+}
+
+e () {
+  file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
+  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
+  $EDITOR $evaluated_path
+}
+
+c () {
+  file_path=$(cat /var/brad/lists/cheatsheets.list|fzf)
+  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
+  $EDITOR $evaluated_path
+}
+
+o () {
+  oi_dir="/home/brad/Projects/_projects-research/open_interpreter"
+  gnome-terminal --tab -- bash -c "cd '$oi_dir' && . ./init.sh; exec bash"
+
 }

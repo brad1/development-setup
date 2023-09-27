@@ -4,7 +4,6 @@
 # prompt for new journal entry?  automatic daily doesn't always make sense
 alias help='clear; shell-status; cat $DEVSETUP/files/help.txt'
 
-
 alias b-journal='browse-journal'
 
 alias awkf='awk -F ":"' # custom field separator
@@ -12,12 +11,17 @@ alias awkf='awk "{print}"' # basically cat
 alias awkf='awk "{print $0}"' # same
 
 alias print-date="date +'%m-%d-%Y'"
-alias list-aliases="cat /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh | grep -o \"^alias [^\-]*-.*=\" | cut -d' ' -f2 | cut -d'-' -f1 | sort | uniq | xargs"
-alias edit-zshrc='$EDITOR ~/.zshrc'
 alias edit-pending='vim /var/brad/pending.list'
 alias canidothis='file="$(fzf)"; echo $file'
 
-# [using]
+# check GPG packet on a bin file
+# head -c 4 FILENAME | hexdump -C
+# chat says: 00000000  85 1f 95 03                                       |....|
+#            00000000  85 01 0C 03    # hex equivalent of below
+# I saw:     00000000  205 001 \f 003 # octal
+# gpg v3 indicated by last part
+
+# [using] TODO: add to shell splash?
 #alias vsbc='vagrant ssh bootstrap --no-tty --command "make rspec" '
 alias vsbc='vagrant ssh bootstrap --no-tty --command "make -C vipsched/ruby rspec" '
 #alias vip='vagrant ssh bootstrap --no-tty --command "ip a"'
@@ -73,15 +77,7 @@ alias vim-clipboard='vim ~/Documents/txt/var/clipboard'
 alias vim-clipboard-2='vim ~/Documents/txt/clipboard/'
 alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
 alias vim-status='vim ~/Documents/txt/var/status'
-alias vim-known-hosts='vim ~/.ssh/known_hosts'
-alias vim-hosts='sudo vim /etc/hosts'
-alias zsh-sources='vim $DEVSETUP/files/zsh/sources.zsh'
-alias zsh-controls='vim $DEVSETUP/files/zsh/functions.zsh'
 # TODO autoreload these
-alias zsh-aliases='vim $DEVSETUP/files/zsh/aliases.zsh'
-alias zsh-functions='vim $DEVSETUP/files/zsh/functions.zsh'
-alias zsh-variables='vim $DEVSETUP/files/zsh/variables.zsh'
-alias zshrc='vim $DEVSETUP/files/zsh/zshrc'
 #alias zshrc='vim ~/.zshrc'
 
 # [administration]
@@ -96,6 +92,8 @@ alias install-rvm='\curl -sSL https://get.rvm.io | bash -s stable --ruby'
 # [find/list/git]
 alias ls-merges-last-10='git log --oneline | grep Merge | head -n10'
 alias ls-changed-files='git diff --name-only HEAD HEAD~1'
+# for dir in $(find . -type d); do echo $(ls -p $dir | grep -v / | wc -l) $dir; done | sort -nr
+alias find-largest-dir="for dir in \$(find . -type d); do echo \$(ls -p \$dir | grep -v / | wc -l) \$dir; done | sort -nr | head -n 1"
 alias find-largest='find . -type f | xargs du -sh  | sort -rn | head -n25'
 alias find-list-files='find . -maxdepth 1 -type f'
 alias find-swap-files='find ~/Documents/txt -iname ".*.swp"'
@@ -128,7 +126,8 @@ alias vsus="vagrant suspend"
 
 # [shell]
 # alias find . -mtime +28 -type f -exec rm {} +
-alias st='shell-status'
+# alias st='shell-status'
+alias st='shell-status2'
 alias r='ranger'
 alias j='jobs'
 alias disable-touchpad='org.gnome.desktop.peripherals.touchpad send-events disabled'
@@ -163,52 +162,14 @@ alias cat-zsh-aliases='cat $DEVSETUP/files/zsh/aliases.zsh | grep -o "^alias.*="
 # [pseudocode]
 alias psuedocode-gitlab='vim $DEVSETUP/files/pseudocode/gitlab.txt'
 
-# [cheatsheets]
-alias cheatsheet-make='vim $DEVSETUP/files/cheatsheets/make.txt'
-#alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'
-alias cheatsheet-django='vim $DEVSETUP/files/cheatsheets/django.txt'
-alias cheatsheet-vmware='vim $DEVSETUP/files/cheatsheets/vmware.txt'
-alias cheatsheet-ansible='vim $DEVSETUP/files/cheatsheets/ansible.txt'
-alias cheatsheet-ucarp='vim $DEVSETUP/files/cheatsheets/ucarp.txt'
-alias cheatsheet-rspec='vim $DEVSETUP/files/cheatsheets/rspec.txt'
-alias cheatsheet-vagrant='vim $DEVSETUP/files/cheatsheets/vagrant.txt'
-alias cheatsheet-uefi='vim $DEVSETUP/files/cheatsheets/uefi.txt'
-alias cheatsheet-gitlab='vim $DEVSETUP/files/cheatsheets/gitlab.txt'
-alias cheatsheet-docker='vim $DEVSETUP/files/cheatsheets/docker.txt'
-#alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt'
-alias cheatsheet-awk='vim $DEVSETUP/files/cheatsheets/awk.txt'
-alias cheatsheet-syslog='vim $DEVSETUP/files/cheatsheets/syslog.txt'
-alias cheatsheet-terminal='vim $DEVSETUP/files/cheatsheets/terminal.txt'
-#alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
-alias cheatsheet-systemd='vim $DEVSETUP/files/cheatsheets/systemd.txt'
-alias cheatsheet-ruby='vim $DEVSETUP/files/cheatsheets/ruby.txt'
-alias cheatsheet-bundler='vim $DEVSETUP/files/cheatsheets/bundler.txt'
-alias cheatsheet-virtualbox='vim $DEVSETUP/files/cheatsheets/virtualbox.txt'
-alias cheatsheet-postgres='vim $DEVSETUP/files/cheatsheets/postgres'
-alias cheatsheet-vim='vim $DEVSETUP/files/cheatsheets/vim'
-alias cheatsheet-qwerty='cat $DEVSETUP/files/cheatsheets/qwerty'
-alias cheatsheet-zsh='vim $DEVSETUP/files/zsh/cheatsheet'
-alias cheatsheet-bash='vim $DEVSETUP/files/bash/cheatsheet'
-alias cheatsheet-unix='vim $DEVSETUP/files/cheatsheets/bash_commands'
-alias cheatsheet-rhel='vim $DEVSETUP/files/cheatsheets/linux'
-alias cheatsheet-rpm='vim $DEVSETUP/files/cheatsheets/linux-rpm'
-alias cheatsheet-network='vim $DEVSETUP/files/cheatsheets/network'
-alias cheatsheet-tmux='vim $DEVSETUP/files/tmux/cheatsheet'
-alias cheatsheet-ranger='echo S open shell in directory, c-h to show hidden files '
-alias cheatsheet-sed='vi $DEVSETUP/files/cheatsheets/sed.txt'
-alias cheatsheet-php='vi $DEVSETUP/files/cheatsheets/php'
-alias cheatsheet-sql='vi $DEVSETUP/files/cheatsheets/sql'
-alias cheatsheet-git='vi $DEVSETUP/files/cheatsheets/git'
-alias cheatsheet-markdown='vi $DEVSETUP/files/cheatsheets/markdown'
-
 # [locations]
-alias c='cd'
-alias cd-downloads='cd ~/Downloads'
-alias cd-documents='cd ~/Documents/'
-alias cd-txt='cd ~/Documents/txt/'
+## instead, use pinned dirs
+#alias cd-downloads='cd ~/Downloads'
+#alias cd-documents='cd ~/Documents/'
+#alias cd-txt='cd ~/Documents/txt/'
 alias cd-devsetup='cd $DEVSETUP'
-alias cd-projects='cd ~/Projects'
-alias cd-vmass='cd ~/Projects/vmass'
+#alias cd-projects='cd ~/Projects'
+#alias cd-vmass='cd ~/Projects/vmass'
 # TODO use functions for feature detection
 alias open-examples='open -a Finder ~/Examples || nautilus --browser ~/Examples'
 alias open-tmp='open -a Finder /tmp || nautilus --browser /tmp'
@@ -224,9 +185,11 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
 # Note that g r<tab> already give you git autocomplete and already lists aliases
 # there has to be a way to do this will shell functions or something!
+alias git-cherrypick-branch="git log master..2694-django-allow-ha-vip --oneline | awk '{print $1}' | tac | xargs -I {} git cherry-pick {}"
 alias gsno='git show --name-only'
 alias git-not-staged='git status --short | awk "{print \$2}" | fzf'
 alias gitf='git checkout $(git branch | fzf)'
+# Note: these are obsolete and backwards
 alias git-compare-files-with-master='git diff --name-only HEAD..origin/master'
 alias git-compare-diffs-with-master='git diff HEAD..origin/master'
 alias git-compare-commits-with-master='git log master... --oneline; git log master... --oneline|wc -l'
@@ -247,34 +210,8 @@ alias git-time-back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n
 
 
 # frequentuse
-alias dfh='df -h'
 alias vopen='xdg-open $(vip)' # TODO extract IP regex
 alias vssh='vagrant ssh bootstrap'
-
-# updatedaily
-# see unsorted and unknowns under each of these
-# need a way to "summarize", ie cat CS pipe grep context
-# maybe functions:
-# cheatsheet-python edit    <-- vim
-# cheatsheet-python summary <-- grep context
-#alias cheatsheet-python='vim $DEVSETUP/files/cheatsheets/python.txt' # + django
-alias cheatsheet-ansible='vim $DEVSETUP/files/cheatsheets/ansible.txt'
-#alias cheatsheet-sysadmin='vim $DEVSETUP/files/cheatsheets/sysadmin.txt'
-alias cheatsheet-vim='vim $DEVSETUP/files/cheatsheets/vim.txt'
-#alias cheatsheet-bash='vim $DEVSETUP/files/bash/cheatsheet'
-alias cheatsheet-bash='vim $DEVSETUP/files/cheatsheets/bash.txt'
-#alias cheatsheet-tmux='vim $DEVSETUP/files/tmux/cheatsheet'
-# redirect and tail to watch other windows!
-# remember to use a circular workflow with open tmux windows: edit --> test --> build --> deploy --> clipboard etc
-alias cheatsheet-tmux='vim $DEVSETUP/files/cheatsheets/tmux.txt'
-#alias cheatsheet-ranger='echo S open shell in directory, c-h to show hidden files '
-alias cheatsheet-sed='vi $DEVSETUP/files/cheatsheets/sed.txt' # include regexes
-alias cheatsheet-git='vi $DEVSETUP/files/cheatsheets/git.txt'
-
-# TODO add clean() reset()
-alias cheatsheet-selenium='vi $DEVSETUP/files/cheatsheets/selenium.txt'
-
-
 
 #
 # [virtualbox]
