@@ -1,0 +1,96 @@
+# ----- ADVANCED PYTHON -----
+
+# ----- STRING -----
+"hello".rjust(10), "hello".ljust(10), "hello".center(10)
+"text".encode('utf-8'), "encoded_text".decode('utf-8')
+"hello".zfill(10)
+
+# ----- LIST -----
+list.copy(), list.count(x), [1, 2, 3] + [4, 5, 6], list.clear()
+
+# ----- DICTIONARY -----
+dict.update(new_dict), dict.pop('key'), dict.popitem()
+
+# ----- SET -----
+set.difference(set2), set.symmetric_difference(set2), set.update(set2)
+set.isdisjoint(set2), set.issubset(set2), set.issuperset(set2)
+
+# ----- ITERABLES -----
+map(function, iterable), filter(function, iterable)
+from itertools import combinations, permutations
+combinations([1,2,3], 2), permutations([1,2,3], 2)
+
+# ----- FUNCTIONAL PROGRAMMING -----
+from functools import partial, reduce, wraps
+
+partial(func, *args, **kwargs)
+reduce(lambda x, y: x*y, [1,2,3,4,5])
+
+# ----- DECORATORS -----
+def decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        pass  # logic before
+        result = func(*args, **kwargs)
+        pass  # logic after
+        return result
+    return wrapper
+
+# ----- GENERATORS -----
+def generator_function():
+    yield "value"
+
+gen = (x for x in range(10))
+
+# ----- CONTEXT MANAGERS -----
+from contextlib import contextmanager
+
+@contextmanager
+def context_func():
+    # setup
+    yield 
+    # teardown
+
+# ----- THREADING -----
+import threading
+
+def worker_function():
+    pass
+
+thread = threading.Thread(target=worker_function)
+thread.start(), thread.join()
+
+# ----- MULTIPROCESSING -----
+from multiprocessing import Process, Pool
+
+def worker_function():
+    pass
+
+process = Process(target=worker_function)
+process.start(), process.join()
+
+# ----- NUMPY -----
+np.arange(start, stop, step), np.linspace(start, stop, num)
+np.sum(array, axis=0), np.mean(array), np.median(array)
+np.var(array), np.std(array), np.min(array), np.max(array)
+np.unique(array)
+
+# ----- PANDAS -----
+df.tail(), df.sample(n), df.drop(columns=[]), df.dropna(), df.fillna(value)
+df.groupby('column'), df.pivot(index='col1', columns='col2', values='col3')
+df.merge(df2, on='column', how='inner'), df.concat([df1, df2], axis=0)
+
+# ----- MATPLOTLIB -----
+import matplotlib.pyplot as plt
+plt.plot(x, y), plt.scatter(x, y), plt.hist(data)
+plt.xlabel('Label'), plt.ylabel('Label'), plt.title('Title')
+
+# ----- SCIKIT-LEARN -----
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# ----- REGULAR EXPRESSIONS -----
+import re
+re.match(pattern, string), re.search(pattern, string)
+re.findall(pattern, string), re.split(pattern, string), re.sub(pattern, replace, string)
+

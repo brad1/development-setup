@@ -1,3 +1,6 @@
+VBoxManage list runningvms
+VBoxManage showvminfo
+
 which VBoxManage
 /usr/local/bin/VBoxManage
 

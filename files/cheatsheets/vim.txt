@@ -1,65 +1,182 @@
-------------------------------------------------------------------------------
-context: my custom stuff
+=== NAVIGATION ===
+h - move left
+j - move down
+k - move up
+l - move right
+w - move to start of next word
+b - move to start of current/previous word
+e - move to end of word
+0 - move to start of line
+^ - move to first non-blank character of line
+$ - move to end of line
+gg - move to start of file
+G - move to end of file
+<number>G - move to line number <number>
+% - move to matching parenthesis/bracket
+H - move to top of screen
+M - move to middle of screen
+L - move to bottom of screen
+CTRL+f - page forward
+CTRL+b - page backward
+CTRL+u - half page up
+CTRL+d - half page down
+:marks - list all the marks
+'[mark] - jump to the start of the line of mark '[mark]
+`[mark] - jump to cursor position of mark '[mark]
 
-z <-- use to increment debug statements
+=== EDITING ===
+i - insert before cursor
+I - insert at beginning of line
+a - insert after cursor
+A - insert at end of line
+o - open line below
+O - open line above
+cw - change word
+cc - change line
+C - change from cursor to end of line
+s - substitute character
+S - substitute entire line
+x - delete character
+X - delete character before cursor
+dd - delete line
+D - delete to end of line
+yy - yank/copy line
+yw - yank/copy word
+p - paste after cursor
+P - paste before cursor
+u - undo
+CTRL+r - redo
+. - repeat last command
+r[character] - replace current char with [character]
+~ - switch case of character
 
-------------------------------------------------------------------------------
-context: folding and marks
+=== VISUAL MODE ===
+v - start visual mode
+V - select lines
+CTRL+v - select blocks
+y - yank/copy selected text
+d - delete selected text
+c - change selected text
+> - shift right
+< - shift left
 
-m + a-z or A-Z
+=== SEARCH & REPLACE ===
+/[pattern] - search for pattern
+?[pattern] - search backward for pattern
+n - next match
+N - previous match
+:%s/[search]/[replace]/g - replace all occurrences
+:%s/[search]/[replace]/gc - confirm before replacing
 
-dma - delete that mark
-'a  - jump
-`a  - jump
-          - yes, you can jump between files
-:marks - list marks
+=== WINDOWS & TABS ===
+:split or CTRL+s - horizontal split
+:vsplit or CTRL+v - vertical split
+CTRL+w+h/j/k/l - move to window
+CTRL+w+H/J/K/L - move window
+CTRL+w+= - equalize window sizes
+CTRL+w+w - cycle through windows
+:tabnew or :tabn - new tab
+gt - go to next tab
+gT - go to previous tab
+:tabmove [number] - move tab to position [number]
 
-easy folds:
+=== FILES & BUFFERS ===
+:e [path/file] - open file
+:w - save/write
+:q - quit
+:q! - quit without saving
+:wq or :x or ZZ - write and quit
+:bn - next buffer
+:bp - previous buffer
+:bd - delete buffer
+:ls - list buffers
 
-zf26<down>
-to collapse 26 lines
-zd (deletion)
-zM collapse all
-zR reveal all
+=== MISCELLANEOUS ===
+:set number - show line numbers
+:set nonumber - hide line numbers
+:set clipboard=unnamedplus - use system clipboard
+:set paste - enable paste mode
+:set nopaste - disable paste mode
+:vmap <C-c> "+y - map CTRL+c to yank to system clipboard
+:vmap <C-v> "+p - map CTRL+v to paste from system clipboard
+:help [topic] - open help for topic
 
-try:
-set foldmarker
-------------------------------------------------------------------------------
 
-Ctrl-R " to paste into the vim commmand line
+# # # Advanced section # # # #
 
-:66,70s/^/#
+=== NAVIGATION ===
+zt - scroll current line to top of window
+zz - scroll current line to middle of window
+zb - scroll current line to bottom of window
+CTRL+o - jump back to previous location
+CTRL+i - jump forward to next location
+* - search for word under cursor
+# - search backward for word under cursor
+g; - move to position of last change in current buffer
 
-use F8 and F9 for recent jumps and files
+=== EDITING ===
+gi - go to last insert mode
+J - join current line with next
+:g/^$/d - delete all empty lines
+CTRL+a - increment number under cursor
+CTRL+x - decrement number under cursor
+gx - open URL under cursor
 
-=-p #reformat inside paragraph
+=== VISUAL MODE ===
+U - convert selection to uppercase
+u - convert selection to lowercase
+:’<,’>s/[search]/[replace]/g - replace within selection
 
-di( #delete inside parens
+=== FOLDING ===
+zf - create fold
+zo - open fold
+zO - open all nested folds
+zc - close fold
+zM - close all folds in file
+zR - open all folds in file
+zd - delete fold at cursor
+zE - erase all folds
+:’<,’>fold - fold selected lines
 
-Ctrl-w-<h|j|k|l> #navigate splits up-down-left-right
+=== MACROS ===
+q[register] - start recording macro
+q - stop recording macro
+@[register] - play macro
+@@ - replay last macro
 
-Ctrl-(N/P)
-- autocomplete from current buffer while inserting
-Ctrl-X Ctrl-f
-- filepath autocomplete
+=== MARKS & JUMPS ===
+m[letter] - set mark at current position
+‘[letter] - jump to start of line of mark
+`[letter] - jump to exact position of mark
+:marks - list all marks
+:changes - list change history
 
-HML - allign cursor to top,middle,bottom of screen
-zz = shift current line to middle of screen
-zt =                       top of screen
-zb =                       bottom of screen
+=== COMMAND-LINE ===
+:![command] - execute shell command
+:r![command] - read output of shell command into buffer
+CTRL+r [register] - insert content of register in command line
 
-:x or ZZ save and quit
+=== SESSIONS ===
+:mksession [filename] - save current session
+:source [filename] - restore session from file
 
-ctags - Ctrl-]    after /usr/local/Cellar/ctags/5.8_1/bin/ctags -R
-        Ctrl-w ] to open target in new window
+=== AUTOCOMMANDS ===
+:au [event] [pattern] [command] - set an autocommand
+:autocmd! - remove all autocommands
 
-[Control][b] - Move back one full screen
-[Control][f] - Move forward
-(use d and u to go 1/2 screen)
+=== WINDOWS ===
+CTRL+w+s or :sp [file] - split window horizontally
+CTRL+w+v or :vsp [file] - split window vertically
+CTRL+w+r - rotate windows
+CTRL+w+o - close other windows, keep only current
 
-:set foldmethod=syntax
-zr to zoom in all folds, zR goes all the way
-zm to zoom out all folds, zM foes all the way
-zo - zoom in at cursor, zO goes all the way
-zc zoom out at cursor, zC goes all the way
+=== PLUGINS (generic) ===
+:PlugInstall - commonly used to install plugins (depends on plugin manager)
+:PlugUpdate - commonly used to update plugins (depends on plugin manager)
+
+=== MISC ===
+:set spell - enable spell checking
+:set nospell - disable spell checking
+z= - suggest spellings for word under cursor
+:checkhealth - check system for potential problems (Neovim)
 

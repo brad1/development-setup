@@ -185,6 +185,7 @@ alias iptables-open-80='iptables -I INPUT 5 -i eth0 -p tcp --dport 80 -m state -
 # https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
 # Note that g r<tab> already give you git autocomplete and already lists aliases
 # there has to be a way to do this will shell functions or something!
+alias git-count-file-changes="git log --pretty=format: --name-only -- . | sort | uniq -c | sort -nr" # replace . with a dir
 alias git-cherrypick-branch="git log master..2694-django-allow-ha-vip --oneline | awk '{print $1}' | tac | xargs -I {} git cherry-pick {}"
 alias gsno='git show --name-only'
 alias git-not-staged='git status --short | awk "{print \$2}" | fzf'

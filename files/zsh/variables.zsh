@@ -5,7 +5,8 @@ export SAVEHIST=100000
 
 # export EXTERNAL_DRIVE=/run/media/brad/63c96aca-03db-4d1e-9baa-3f950b3d8897/
 
-export DEVSETUP=/opt/chef/cookbooks/development-setup
+#deprecated
+#export DEVSETUP=/opt/chef/cookbooks/development-setup
 export PATH=$DEVSETUP/files/bin:$PATH
 export PATH=~/.local/bin:$PATH # for tmuxp, etc from pip
 

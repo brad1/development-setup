@@ -9,6 +9,7 @@
 
 
 " move me "
+set clipboard=unnamedplus " system clipboard "
 
 " Use with:
 " print("DEBUG: ") for example
@@ -23,7 +24,8 @@
 let g:debug_count = 1
 
 function! InsertDebugStatement()
-    execute "normal! oecho \"DEBUG: " . g:debug_count . "\"\<Esc>"
+    "execute "normal! oecho \"DEBUG: " . g:debug_count . "\"\<Esc>"
+    execute "normal! oconsole.log('DEBUG: " . g:debug_count . "');\<Esc>"
     let g:debug_count += 1
 endfunction
 

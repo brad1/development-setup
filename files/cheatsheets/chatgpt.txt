@@ -1,0 +1,54 @@
+[custom instructions menu]
+- Follow output instructions exactly and provide no extraneous commentary.
+- Ask one clarifying question before responding.
+  - Ask one clarifying question if it necessary to prevent a poor response.
+  - Ask as many clarifying questions as necessary to provide a <meaningful or actionable> answer.
+
+[custom instructions (about me)]
+I am a devops engineer.  I use CentOS and Ubuntu. I often code in ruby, bash, django and reactjs.  By default, I use postgres for my database.  For CICD, I use gitlab.
+I am a computer engineer.  I need to learn more about the latest tech including LLMs.
+
+[useful promptlets]
++ Output: Stick to 3 main points.  Each point should consist of a description, one clarifying detail [, and lastly, a pitfall or caveat when appropriate.]
+? Think outside the box, we may have to adjust my system.
++ Clarify.  I can <blah blah> but only if <bar bar>?  What is different about <bar bar> that enables <blah blah>?
+  * I can delete the basebox for a VM, but only if it is not running?  What is different about the VM in stopped state that enables deletion of its baseline?
++ Explain why it solves the problem.
++ System:  I want you to ask me questions until you can faithfully meet the output criteria.
+
+[Useful prompts]
+My goal is to learn more about <topic> through narrowly focused discussion.
+please engage me in a dialogue about <topic>.  The subject is <subject>
+System:  [minimal temparature, minimal tokens.]  Responses should consist of a short response to my prompt followed by a question.  Keep it as concise as possible.
+This helps to make sure that the dialogue is relevant to me.
+
+[Running prompts]
+- synopsis: Present a system of rules, then ask for help getting over a problem.
+- once a solution is identified, replace the problem in the prompt with the rule and keep rolling!
+- example: https://chat.openai.com/share/667afa31-39bc-4212-9ff5-fb211e6e4d90
+
+------------------------------------------------------------------------------
+Rules:
+------------------------------------------------------------------------------
+
+I need suggestions for a problem.
+
+I have a CICD setup that uses vagrant for
+simplicity.  The way it works, I have a single gitlab-runner whose purpose is
+to deploy software to a virtual machine.   The way it does this is to select
+one of eight folders that already has a virtual machine running, at which point
+the folder is marked as "claimed" using a lockfile.  The runner is not allowed
+to run concurrently in order to prevent races.
+------------------------------------------------------------------------------
+problem:
+------------------------------------------------------------------------------
+
+"vagrant box remove my_app --force"
+------------------------------------------------------------------------------
+solution: (replaces the problem in the running prompt!)
+------------------------------------------------------------------------------
+The vagrant basebox is updated nightly. The runner picks up a job that builds a
+new basebox, shuts down all VMs, imports the basebox, then boots all VMs back
+up.
+------------------------------------------------------------------------------
+

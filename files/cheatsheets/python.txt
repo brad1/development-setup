@@ -1,222 +1,111 @@
-------------------------------------------------------------------------------
-context: ca certs
+# ----- BASICS -----
+print("Hello, World!") 
+x = 5  # variable assignment
 
->>> import ssl
->>> print(ssl.get_default_verify_paths())
-urllib2.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:618)>
+# ----- DATA TYPES -----
+int, float, str, bool, list, tuple, dict, set
 
-response = urllib2.urlopen('https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm')
+# ----- NUMERIC OPERATIONS -----
+x + y, x - y, x * y, x / y, x % y, x ** y, x // y
 
-------------------------------------------------------------------------------
-context: CBVTestCase post in json (django testing)
+# ----- STRING -----
+"hello".capitalize(), "HELLO".lower(), "hello".upper()
+"hello world".split(), " ".join(["hello", "world"])
+"hello".replace("h", "H"), "hello".startswith("he"), "hello".endswith("lo")
+"    whitespace   ".strip()
 
-request = RequestFactory().post('/', data=postdata, content_type='application/json')
-response = self.post(License, request=request, header=header)
-------------------------------------------------------------------------------
-context: html
+# ----- LIST -----
+[1, 2, 3], list.append(x), list.remove(x), list.insert(i, x)
+list.index(x), list.pop(i), list.sort(), list.reverse()
 
-import html
-print(html.unescape('&pound;682m'))
-------------------------------------------------------------------------------
-context: mock method on an object of a type
-def test_export_response_indicates_ready(api_client, data, mocker):
-    mocker.patch.object(CapsListView, 'export_all_sent_messages')
-------------------------------------------------------------------------------
-context: django unknowns
-Model creation:
-SomeObjects.objects.all() --> query set to read out of DB
-opposite, writing a new object to DB
-------------------------------------------------------------------------------
-context: django responses
-    data = {
-        'name': 'Vitor',
-        'location': 'Finland',
-        'is_active': True,
-        'count': 28
-    }
-    return JsonResponse(data)
-------------------------------------------------------------------------------
-context: files
+# ----- TUPLE -----
+(1, 2, 3)
 
-# touch
-with open('hello.txt', 'w+') as outFile:
-  outFile.write('text')
+# ----- DICTIONARY -----
+{'a': 1, 'b': 2}, dict.keys(), dict.values(), dict.items()
+dict.get('a'), dict['a'], dict.setdefault('c', 3)
 
-# read
-obj = open('hello.txt', 'r')
-str = obj.read()
-------------------------------------------------------------------------------
-context: heredoc
+# ----- SET -----
+{1, 2, 3}, set.add(x), set.remove(x), set1.union(set2), set1.intersection(set2)
 
-itext="""string
-string
-{place}"""
-print(text.format(place='here'))
-------------------------------------------------------------------------------
-context: NOOP
+# ----- CONTROL FLOW -----
+# if-elif-else
+if x < y:
+    pass
+elif x > y:
+    pass
+else:
+    pass
 
-"pass" in python instead of break or continue
-------------------------------------------------------------------------------
-context: skipping and iterables
+# for loop
+for i in range(5):
+    pass
 
-next(reader, None)
-for data in reader:
-   list.append(data)
-# this skips the first one.  alternative to "next()" is slicing:
+for k, v in dictionary.items():
+    pass
 
-return list[1:] # same result
+# while loop
+while x > 0:
+    pass
 
-------------------------------------------------------------------------------
-context: "is" and "any"
+# ----- FUNCTIONS -----
+def function_name(parameter1, parameter2=default_value):
+    return
 
-if variable is None:
+# lambda function
+lambda x: x + 1
 
-any([0,False]) # False
-any([0,True])  # True
-any([1,False]) # True
+# ----- LIST COMPREHENSION -----
+[x**2 for x in range(10) if x % 2 == 0]
 
-I think "any" is "is" for iterables.
-------------------------------------------------------------------------------
-context: asserts
+# ----- EXCEPTIONS -----
+try:
+    pass
+except ExceptionType as e:
+    pass
+finally:
+    pass
 
-E       assert 3 == 4
-E        +  where 3 = f()
+# ----- FILE HANDLING -----
+with open("filename.txt", "r") as file:
+    content = file.read()
 
-test_assert1.py:6: AssertionError
-------------------------------------------------------------------------------
-context: null check
-if variable is None:
-if variable is not None:
+# ----- MODULES -----
+import math
+from os import path
 
-------------------------------------------------------------------------------
-context: append
-list.append(itme) # as opposed to list << item
-------------------------------------------------------------------------------
-context: pytest, expects, matchers:
-https://expects.readthedocs.io/en/stable/matchers.html
-https://github.com/jaimegildesagredo/expects
-------------------------------------------------------------------------------
-context: csv
+# ----- OBJECT-ORIENTED PROGRAMMING -----
+class ClassName:
+    def __init__(self, attribute):
+        self.attribute = attribute
 
-https://docs.python.org/3/library/csv.html#reader-objects
+    def method(self):
+        pass
 
->>> import csv
->>> with open('export.csv') as csvfile:
-...     reader = csv.reader(csvfile)
-...     for row in reader:
-...         print(', '.join(row))
-------------------------------------------------------------------------------
-context: open a file
-    def export_all_sent_messages(self, filepath):
-        with open(filepath, "w+") as csvfile:
+# ----- COMMON METHODS AND FUNCTIONS -----
+len(list), type(var), isinstance(var, Type)
 
-------------------------------------------------------------------------------
-context: read all lines in a file
+# ----- MISC -----
+input("Enter value:"), range(start, stop, step)
 
-with open(filepath, "r") as textfile:
-        lines = textfile.readlines()
-        print(lines)
+# ----- NUMPY (if needed) -----
+import numpy as np
+np.array([1,2,3]), np.zeros((2,2)), np.ones((3,3)), np.eye(3)
+array.shape, array.dtype, array.reshape(2,3)
+np.dot(a,b), np.cross(a,b), np.linalg.inv(matrix)
 
-------------------------------------------------------------------------------
-class Object:
-    class_attribute = "CA" # Class attribute, must get a value, its the same for every instance
-
-    def __init__(self, name, age):
-        self.name = name # instance attribute, same as a class member
-        self.age = age
-
-# instanciate with: Object()
-
-------------------------------------------------------------------------------
-contxt: variable defaults
-if vara is None:
-  vara = 'value'
-------------------------------------------------------------------------------
-context: pytest
-@pytest.mark.skip(reason="cap review not merged yet")
-------------------------------------------------------------------------------
-context: pytest test names
-os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-------------------------------------------------------------------------------
-context: filesystem
-
-import os
-path = '/path/to/file'
-isFile = os.path.isfile(path)
-isFile = os.path.isdir(path)
+# ----- PANDAS (if needed) -----
+import pandas as pd
+pd.DataFrame(data, columns=[])
+df.head(), df.describe(), df.info(), df['column'], df.iloc[0]
 
 
+# ----- To expand this:
 
-# foreach
-for val in array:
-    print(val)
+You are a python expert.  I want you to write me a python cheatsheet.  It
+should include code statements only, be in plaintext format.  It will be
+searchable, so it can be in maximum detail.
 
-
-------------------------------------------------------------------------------
-# log method we are in:
-def autolog(message):
-    "Automatically log the current function details."
-    import inspect, logging
-    # Get the previous frame in the stack, otherwise it would
-    # be this function!!!
-    func = inspect.currentframe().f_back.f_code
-    # Dump the message + the name of this function to the log.
-    logging.debug("%s: %s in %s:%i" % (
-        message,
-        func.co_name,
-        func.co_filename,
-        func.co_firstlineno
-    ))
-------------------------------------------------------------------------------
-import ipdb; ipdb.set_trace() # standin for binding.pry
-------------------------------------------------------------------------------
-Example: environment setup with python36 and pip:
-sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm
-sudo yum install -y python3 python36-django
-curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
-python3 get-pip.py
-pip install psycopg2-binary # or psycopg2, to compile the module locally
-------------------------------------------------------------------------------
-
-
-------------------------------------------------------------------------------
-Example: pipenv is like bundler, use to DL dependencies and create a
-virtual env
-pip install --user pipenv
-If you need to update PATH, see: python -m site --user-base
-for ex: ~/.local/bin
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-Example: pipenv usage
-$ cd project_folder
-$ pipenv install requests
-$ ls Pipfile
-  # like Gemfile.lock? ^
-Use with:
-```python
-import requests
-response = requests.get('https://httpbin.org/ip')
-print('Your IP is {0}'.format(response.json()['origin']))
-```
-pipenv run python main.py # think `bundle exec`
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-Example: virtualenv
-$ pip install virtualenv
-$ virtualenv --version
-$ cd project_folder
-$ virtualenv venv
-$ "" --no-site-packages # no system packages! virtualenv 1.7 + does this by default
-$ ...
-$ deactivate # think 'rvm use system'
-see also: pip install virtualenvwrapper
-------------------------------------------------------------------------------
-
-
-
-format strings
->>> name = ""
->>> age = 74
->>> f"Hello, {name}. You are {age}."
+Perfect!  Now print me a plaintext list, list only, of the above sections.  We will use these for iterating...
+>
+Perfect!  Now a more advanced one for strings

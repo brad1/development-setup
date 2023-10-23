@@ -279,7 +279,7 @@ shell-status() {
   (
     date
     cd "$PRIMARY_PROJECT"
-    grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,\*venv,\*java,\*vendor,\*server_env,\*node_modules,\*dist,\*release} -r "TODO" . 
+    grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,\*venv,\*java,\*vendor,\*server_env,\*node_modules,\*dist,\*release} -r "TODO" .
     # TODO fix this if it gets too slow
     #grep -r "TODO" "$PRIMARY_PROJECT"
     date
@@ -287,7 +287,7 @@ shell-status() {
 
   # prompt-journal
   # prompt-clipboard
-  
+
   echo "To change this, see run zsh-functions and see 'shell-status'"
 }
 
@@ -361,7 +361,7 @@ cheat-bash() {
 }
 
 cdf() {
-  cd "$(fzf)"
+  cd "$(find . -type d | fzf)"
 }
 
 find-with() {
@@ -551,13 +551,14 @@ auto () {
 
 # Main menu
 
-shell-status2() {
+#shell-status2() {
+shell-status2-bak() {
   echo "press 'a' for a command menu"
   echo "press 's' to connect to a server"
   echo "press 'd' to select a bookmarked directory" # consider using ranger bookmarks going forward
   echo "press 'f' to edit these lists"
   echo
-  echo "press 'gg' for git commands"
+  echo "press 'gh' for git commands"
   echo "press 'h' to edit hostfile"
   echo
   echo "press 'j' "
@@ -567,6 +568,34 @@ shell-status2() {
   echo "press 'e' to edit a pinned file"
   echo "press 'c' to cheatsheets"
   echo "press 'o' for open-interpreter"
+  echo
+  echo "press 'co' contexts"
+}
+
+#splash_screen() {
+shell-status2() {
+    # Clear the screen
+    clear
+
+    # Set some formatting
+    local line="+------------------------+------------------------+"
+    local format="| %-22s | %-22s |"
+
+    # Print the layout using formatted printf statements
+    echo $line
+    printf "$format\n" "'a' command menu" "'gh' git commands"
+    printf "$format\n" "'s' connect to server" "'h' edit hostfile"
+    printf "$format\n" "'d' bookmarked dir" "'j' ..."
+    printf "$format\n" "'f' edit lists" "'k' ..."
+    echo $line
+    printf "$format\n" "'e' edit pinned file" "'l' ..."
+    printf "$format\n" "'c' cheatsheets" "'o' open-interpreter"
+    printf "$format\n" "'co' contexts" ""
+    echo $line
+
+    echo
+    echo 'New commands to try:'
+    echo '    exa'
 }
 
 vim-usage() {
@@ -588,6 +617,7 @@ s () {
 
 }
 
+# consider replacing with 'cdargs' or 'z' or 'autojump'
 d () {
   dest="$(cat /var/brad/lists/dirs.list | fzf)"
   dest="${dest/#\~/$HOME}"
@@ -613,6 +643,7 @@ h () {
   sudo vim /etc/hosts
 }
 
+# consider replacing with 'autojump'
 e () {
   file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
   evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
@@ -620,13 +651,34 @@ e () {
 }
 
 c () {
-  file_path=$(cat /var/brad/lists/cheatsheets.list|fzf)
-  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
-  $EDITOR $evaluated_path
+  fn=$(cd /opt/chef/cookbooks/development-setup/files/cheatsheets/; ls | fzf)
+  # from cheatsheets.list ?
+  # evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
+  $EDITOR /opt/chef/cookbooks/development-setup/files/cheatsheets/$fn
 }
 
 o () {
   oi_dir="/home/brad/Projects/_projects-research/open_interpreter"
   gnome-terminal --tab -- bash -c "cd '$oi_dir' && . ./init.sh; exec bash"
 
+}
+
+p () {
+   echo "python3 manage.py showmigrations"
+   echo "python3 manage.py migrate database 0040_file_name_handling"
+   echo "ln -sf /opt/vmass/server_api"
+}
+
+
+co () {
+  pth=/var/brad/contexts
+  fn=$(ls $pth|fzf)
+  fp=$pth/$fn
+  echo "Opening $fn, press enter within 2 seconds to cat instead."
+  if read -t 2; then
+    #cat "$fp"
+    bat "$fp"
+  else
+    $EDITOR "$fp"
+  fi
 }

@@ -1,0 +1,96 @@
+# ----- BASIC FILE OPERATIONS -----
+# Reading a file
+with open('filename.txt', 'r') as file:
+    content = file.read()
+
+# Writing to a file
+with open('filename.txt', 'w') as file:
+    file.write('Hello, World!')
+
+# Appending to a file
+with open('filename.txt', 'a') as file:
+    file.write('Appended text.')
+
+# Reading lines from a file
+with open('filename.txt', 'r') as file:
+    for line in file:
+        print(line.strip())
+
+# ----- BINARY FILES -----
+# Reading a binary file
+with open('filename.bin', 'rb') as file:
+    data = file.read()
+
+# Writing to a binary file
+with open('filename.bin', 'wb') as file:
+    file.write(b'Binary data')
+
+# ----- FILE AND DIRECTORY OPERATIONS USING OS -----
+import os
+
+os.rename('oldname.txt', 'newname.txt')  # Rename file
+os.remove('filename.txt')  # Delete file
+os.mkdir('new_directory')  # Make new directory
+os.rmdir('directory_name')  # Remove directory (only if empty)
+os.listdir('.')  # List files in current directory
+os.getcwd()  # Get current working directory
+os.chdir('path/to/change')  # Change directory
+
+# ----- PATH OPERATIONS USING OS.PATH -----
+os.path.join('folder', 'file.txt')  # Join paths
+os.path.exists('filename.txt')  # Check if file exists
+os.path.isdir('folder_name')  # Check if path is a directory
+os.path.isfile('filename.txt')  # Check if path is a file
+os.path.basename('/path/to/file.txt')  # Get file name from path
+os.path.dirname('/path/to/file.txt')  # Get directory from path
+os.path.split('/path/to/file.txt')  # Split path into folder and file
+
+# ----- PATH OPERATIONS USING PATHLIB (modern alternative) -----
+from pathlib import Path
+
+p = Path('.')
+p.glob('*.txt')  # Iterate over text files in current directory
+p.is_dir()  # Check if path is a directory
+p.is_file()  # Check if path is a file
+p.resolve()  # Absolute path
+p.parent  # Parent directory
+p.name  # File name
+p.suffix  # File extension
+
+# ----- WORKING WITH CSV FILES -----
+import csv
+
+# Reading CSV
+with open('file.csv', mode ='r')as file:
+    csvFile = csv.reader(file)
+    for lines in csvFile:
+        print(lines)
+
+# Writing CSV
+with open('file.csv', mode ='w', newline='')as file:
+    writer = csv.writer(file)
+    writer.writerow(['column1', 'column2'])
+    writer.writerow(['data1', 'data2'])
+
+# ----- WORKING WITH JSON FILES -----
+import json
+
+# Reading JSON
+with open('file.json', 'r') as file:
+    data = json.load(file)
+
+# Writing JSON
+with open('file.json', 'w') as file:
+    json.dump(data, file, indent=4)
+
+# ----- WORKING WITH PICKLE (Serializing objects) -----
+import pickle
+
+# Pickling an object
+with open('file.pkl', 'wb') as file:
+    pickle.dump(object, file)
+
+# Unpickling an object
+with open('file.pkl', 'rb') as file:
+    object = pickle.load(file)
+

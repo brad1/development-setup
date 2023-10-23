@@ -1,4 +1,8 @@
 ------------------------------------------------------------------------------
+context: LDAPS
+
+openssl s_client -connect your.ldap.server:636
+------------------------------------------------------------------------------
 rsa private key vs openssh private key:
 ssh-keygen -t rsa
 ssh-keygen -m PEM -t rsa # for me this force rsa private key

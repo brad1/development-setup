@@ -1,74 +1,235 @@
-------------------------------------------------------------------------------
-context: ansible variables per OS
+# ANSIBLE CHEATSHEET
 
-# notice hosts is not "all"
+## BASIC COMMANDS
+ansible --version                           # Check Ansible version
+ansible all -m ping                         # Ping all hosts in the default inventory
+ansible-playbook playbook.yml               # Run a playbook
 
-- hosts: webservers
-  vars:
-    http_port: 80
-------------------------------------------------------------------------------
-# ansible galaxy:
-ansible-galaxy install chusiang.testlink
-ansible-galaxy list --roles-path=/home/vagrant/.ansible/roles
+## INVENTORY
+ansible-inventory --list                    # List inventory hosts
+ansible-inventory --graph                   # Show inventory hosts in a graph format
 
-# ansible run command from the docs
-ansible all -i vyos.example.net, -c ansible.netcommon.network_cli -u my_vyos_user -k -m vyos.vyos.vyos_facts -e ansible_network_os=vyos.vyos.vyos
+## AD-HOC COMMANDS
+ansible all -m shell -a 'echo hello'        # Execute shell command on all hosts
+ansible all -m command -a 'uptime'          # Execute command module on all hosts
+ansible all -m copy -a 'src=/src dest=/dest'# Copy files to all hosts
+ansible all -m file -a 'path=/path state=directory'  # Ensure directory exists
 
+## MODULES
+ansible all -m setup                        # Gather facts about hosts
+ansible all -m yum -a 'name=httpd state=present'    # Install httpd using yum
+ansible all -m apt -a 'name=nginx state=present'   # Install nginx using apt
 
+## VARIABLES
+ansible-playbook playbook.yml -e 'var=value'        # Override variable during playbook execution
 
-
-
-
-# See:
-    ANSIBLE_CONFIG (an environment variable)
-    ansible.cfg (in the current directory)
-    .ansible.cfg (in the home directory)
-    /etc/ansible/ansible.cfg
-
-try: pipelining = True
-
-
-
-# vagrant env var injection:
-  if $ansible
-    config.vm.provision :ansible do |ansible|
-      ansible.playbook = "infrastructure/playbooks/development-tools.yml"
-      ansible.groups = { "all:vars" => { "gitlab_tag" => $gitlab_tag } } if $gitlab_tag
-    end
-  end
-
-# environment variables
-- hosts: dev
+## PLAYBOOKS
+---
+- hosts: all
   tasks:
-    - name: Echo my_env_var
-      shell: "echo $MY_ENV_VARIABLE"
-      environment:
-        MY_ENV_VARIABLE: whatever_value
+    - name: Ensure nginx is installed
+      apt:
+        name: nginx
+        state: present
 
-# stat/registers
+## ROLES
+ansible-galaxy init role-name               # Create a new role structure
 
-- name: ruby rpm exists?
-  stat:
-    path: /rpmbuild/RPMS/x86_64/ruby-2.6.2-1.el7.x86_64.rpm
-  register: ruby_rpm
+## ROLE STRUCTURE
+role-name/
+├── defaults/
+│   └── main.yml
+├── files/
+├── handlers/
+│   └── main.yml
+├── meta/
+│   └── main.yml
+├── tasks/
+│   └── main.yml
+├── templates/
+├── tests/
+│   ├── inventory
+│   └── test.yml
+└── vars/
+    └── main.yml
+
+## CONDITIONALS
+---
+- hosts: all
+  tasks:
+    - name: Install httpd on CentOS
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+## LOOPS
+---
+- hosts: all
+  tasks:
+    - name: Install multiple packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - nginx
+        - git
+
+## HANDLERS
+---
+- hosts: all
+  tasks:
+    - name: Copy nginx config
+      copy:
+        src: /src
+        dest: /dest
+      notify: Restart nginx
+  handlers:
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+## VAULT
+ansible-vault create secret.yml             # Create an encrypted file
+ansible-vault edit secret.yml               # Edit an encrypted file
+ansible-vault view secret.yml               # View an encrypted file
+ansible-vault encrypt secret.yml            # Encrypt a file
+ansible-vault decrypt secret.yml            # Decrypt a file
+ansible-playbook --ask-vault-pass playbook.yml      # Run a playbook with a vault password prompt
+
+## DEBUGGING
+---
+- hosts: all
+  tasks:
+    - name: Display variable
+      debug:
+        var: ansible_distribution
 
 
-- name: rpmbuild and ruby build dependencies
-  when: not ruby_rpm.stat.exists
-  become: yes
-  yum:
-    state: present
-    name:
-      - rpm-build
 
-- name: register ruby installed
-  ignore_errors: yes
-  shell: "rpm -qa | grep -qs ruby"
-  register: ruby_installed
 
-- name : install ruby
-  become: yes
-  when: not ruby_installed.rc == 0
-  shell:
-    cmd: yum install -y /rpmbuild/RPMS/x86_64/ruby*rpm
+# ADVANCED ANSIBLE CHEATSHEET
+
+## ADVANCED AD-HOC COMMANDS
+ansible all -B 3600 -P 0 -a '/sbin/reboot'    # Asynchronous reboot of all hosts
+ansible all -m shell -a 'echo hello' --become # Execute as sudo
+
+## LIMITS & PATTERNS
+ansible-playbook playbook.yml --limit 'web*'  # Run playbook for hosts with name starting with 'web'
+ansible-playbook playbook.yml --tags "setup"  # Only run tasks tagged with 'setup'
+ansible-playbook playbook.yml --skip-tags "debug" # Skip tasks tagged with 'debug'
+
+## REGISTER & CONDITIONAL EXECUTION
+---
+- hosts: all
+  tasks:
+    - name: Check if file exists
+      stat:
+        path: /etc/file.conf
+      register: result
+    - name: Display message if file exists
+      debug:
+        msg: "File exists"
+      when: result.stat.exists
+
+## LOOPING WITH DICTS & LISTS
+---
+- hosts: all
+  vars:
+    users:
+      - alice
+      - bob
+  tasks:
+    - name: Add multiple users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ users }}"
+
+## ERROR HANDLING
+---
+- hosts: all
+  tasks:
+    - name: This might fail
+      command: /bin/false
+      ignore_errors: yes
+
+## DYNAMIC INVENTORY
+ansible all -i ec2.py -m ping                 # Ping all EC2 instances using a dynamic inventory script
+
+## INCLUDES & IMPORTS
+---
+- hosts: all
+  tasks:
+    - include_tasks: tasks_to_include.yml
+
+## DELEGATE & LOCAL ACTIONS
+---
+- hosts: all
+  tasks:
+    - name: Copy file from one remote host to another
+      fetch:
+        src: /src/on/remote
+        dest: /localpath/
+        flat: yes
+    - name: Upload file from local to another remote
+      copy:
+        src: /localpath
+        dest: /dest/on/remote
+      delegate_to: another.remote.host
+
+## ASYNC & POLLING
+---
+- hosts: all
+  tasks:
+    - name: Start long running process
+      command: /usr/bin/long-running-process
+      async: 600
+      poll: 10
+
+## STRATEGY
+---
+- hosts: all
+  strategy: free  # Let hosts run as fast as they can, don't wait for others
+  tasks:
+    - ...
+
+## ASSERT & FAILED_WHEN
+---
+- hosts: all
+  tasks:
+    - name: Check if system load is below threshold
+      command: uptime
+      register: system_load
+      failed_when: "'load average: 5' in system_load.stdout"
+
+    - name: Ensure version file exists
+      assert:
+        that:
+          - "'version' in ansible_facts.files"
+
+## CALLBACK PLUGINS & LOGGING
+export ANSIBLE_LOG_PATH=./ansible.log
+export ANSIBLE_CALLBACK_WHITELIST=timer,profile_tasks
+
+## BLOCKS
+---
+- hosts: all
+  tasks:
+    - block:
+        - ...
+      rescue:
+        - ...
+      always:
+        - ...
+
+## JINJA2 TEMPLATING
+---
+- hosts: all
+  tasks:
+    - name: Deploy a template
+      template:
+        src: /path/to/template.j2
+        dest: /path/to/destination
 

@@ -1,193 +1,181 @@
-------------------------------------------------------------------------------
-context: SQL script cheatsheet:
+-- DATABASE OPERATIONS --
+CREATE DATABASE dbname;
+DROP DATABASE dbname;
+
+-- USER & PRIVILEGES --
+CREATE USER username WITH PASSWORD 'password';
+DROP USER username;
+GRANT ALL PRIVILEGES ON DATABASE dbname TO username;
+REVOKE ALL PRIVILEGES ON DATABASE dbname FROM username;
+ALTER USER username WITH PASSWORD 'newpassword';
+
+-- CONNECT TO A DATABASE --
+\c dbname
+
+-- TABLE OPERATIONS --
+CREATE TABLE tablename (
+    column1 datatype1 PRIMARY KEY,
+    column2 datatype2,
+    ...
+);
+DROP TABLE tablename;
+ALTER TABLE tablename ADD COLUMN columnname datatype;
+ALTER TABLE tablename DROP COLUMN columnname;
+ALTER TABLE tablename RENAME COLUMN oldname TO newname;
+ALTER TABLE tablename RENAME TO newtablename;
+
+-- INDEXES --
+CREATE INDEX indexname ON tablename(columnname);
+DROP INDEX indexname;
+
+-- INSERTING DATA --
+INSERT INTO tablename(column1, column2, ...) VALUES(value1, value2, ...);
+
+-- UPDATING DATA --
+UPDATE tablename SET column1 = value1, column2 = value2 WHERE condition;
+
+-- DELETING DATA --
+DELETE FROM tablename WHERE condition;
+
+-- QUERYING DATA --
+SELECT column1, column2 FROM tablename WHERE condition;
+SELECT column1, column2 FROM tablename WHERE condition ORDER BY column1 ASC|DESC;
+SELECT column1, column2 FROM tablename WHERE condition LIMIT number;
+SELECT COUNT(*) FROM tablename WHERE condition;
+
+-- JOINING TABLES --
+SELECT t1.column1, t2.column2 
+FROM table1 t1 
+JOIN table2 t2 ON t1.common_column = t2.common_column;
+
+-- AGGREGATION FUNCTIONS --
+SELECT AVG(columnname) FROM tablename;
+SELECT SUM(columnname) FROM tablename;
+SELECT MIN(columnname) FROM tablename;
+SELECT MAX(columnname) FROM tablename;
+
+-- TRANSACTION CONTROL --
+BEGIN;
+COMMIT;
+ROLLBACK;
+
+-- SEQUENCES --
+CREATE SEQUENCE seqname;
+DROP SEQUENCE seqname;
+SELECT nextval('seqname');
+
+-- BACKUP & RESTORE --
+pg_dump dbname -f backup.sql
+psql dbname < backup.sql
+
+-- LISTING --
+\l          -- List all databases
+\dt         -- List all tables in the current database
+\dn         -- List all schemas
+\du         -- List all users
+
+-- VIEWS --
+CREATE VIEW viewname AS SELECT column1, column2 FROM tablename WHERE condition;
+DROP VIEW viewname;
+
+-- DATE/TIME FUNCTIONS --
+SELECT NOW();
+SELECT CURRENT_DATE;
+SELECT CURRENT_TIME;
+SELECT EXTRACT(MONTH FROM date_column) FROM tablename;
+
+-- STRING FUNCTIONS --
+SELECT LENGTH(string_column) FROM tablename;
+SELECT LOWER(string_column) FROM tablename;
+SELECT UPPER(string_column) FROM tablename;
+SELECT CONCAT(string1, string2) FROM tablename;
+
+-- SYSTEM INFO --
+SELECT version();
+
+# advanced section
 
 
-------------------------------------------------------------------------------
-context: do I have foreign key constraings:
+-- ADVANCED TABLE OPERATIONS --
+CREATE TEMP TABLE temp_tablename AS SELECT * FROM tablename;
+TRUNCATE tablename;  -- Remove all rows from a table
 
-\d+ <tablename>
-\dt+ <tablename> # what does this do?
-------------------------------------------------------------------------------
-context: ask where config files are
+-- CONSTRAINTS --
+ALTER TABLE tablename ADD CONSTRAINT constraintname UNIQUE (columnname);
+ALTER TABLE tablename ADD CONSTRAINT constraintname FOREIGN KEY (column1) REFERENCES other_table(column2);
+ALTER TABLE tablename DROP CONSTRAINT constraintname;
 
-psql -Upostgres -c "SHOW hba_file"
-psql -Upostgres -c "SHOW config_file"
-------------------------------------------------------------------------------
-context: pg_dump examples
+-- PARTITIONING --
+CREATE TABLE parent_tablename (column1 datatype1, column2 datatype2) PARTITION BY RANGE (column1);
+CREATE TABLE child_tablename PARTITION OF parent_tablename FOR VALUES FROM (start_value) TO (end_value);
 
-pg_dump --schema-only --tables <tablename>
-pg_dump <tablename> > pg_dump.txt
+-- VACUUM --
+VACUUM tablename;  -- Clean up and optimize the table
+VACUUM FULL tablename;  -- More aggressive cleanup
+ANALYZE tablename;  -- Update statistics
 
-dropdb -Uvipsched vip_db
-createdb -Uvipsched vip_db
-psql -Uvipsched vip_db < pg_dump.txt
-------------------------------------------------------------------------------
-context: Host-based Access Configuration (pg_hba.conf):
+-- LISTEN & NOTIFY --
+LISTEN channelname;
+NOTIFY channelname, 'message';
 
-that is what HBA stands for.  example:
-# TYPE   DATABASE        USER        ADDRESS       METHOD
-  host   replication     rep_user    10.10.1.8/32  scram-sha-256
-  host   replication     rep_user    10.11.1.9/32  scram-sha-256
-  host   replication     rep_user    10.12.1.10/32 scram-sha-256
+-- EXTENSIONS --
+CREATE EXTENSION extensionname;
+DROP EXTENSION extensionname;
 
-  from:
-  https://www.enterprisedb.com/blog/high-availibility-parameters-configuration-streaming-replication-postgresql
-------------------------------------------------------------------------------
-context: error from hot standby getting out of sync:
+-- FULL TEXT SEARCH --
+CREATE TEXT SEARCH DICTIONARY dictionaryname (TEMPLATE = template_name, OPTIONS);
+CREATE TEXT SEARCH CONFIGURATION configname (PARSER = parser_name);
+ALTER TEXT SEARCH CONFIGURATION configname ADD MAPPING FOR token_type WITH dictionaryname;
 
-"record with incorrect prev-link"
-in /path/to/data/log/postgresql-Mon.log
-------------------------------------------------------------------------------
-context: returns
+-- SHELL ADMIN TASKS --
 
-  $sql            = "INSERT INTO table (name) VALUES ('$name') RETURNING id";
-  ....
-    $id             = $r['id'];
+-- Start PostgreSQL (typically for Linux systems) --
+pg_ctl start -D /path/to/data_directory
 
-------------------------------------------------------------------------------
-context: pg_hba
+-- Stop PostgreSQL (typically for Linux systems) --
+pg_ctl stop -D /path/to/data_directory
 
-postgres=# SHOW hba_file;
-              hba_file
--------------------------------------
- /etc/postgresql/12/main/pg_hba.conf
+-- Restart PostgreSQL (typically for Linux systems) --
+pg_ctl restart -D /path/to/data_directory
 
-------------------------------------------------------------------------------
-context: user authentication workaround
+-- Reload PostgreSQL without dropping connections (typically for Linux systems) --
+pg_ctl reload -D /path/to/data_directory
 
-https://stackoverflow.com/questions/17443379/psql-fatal-peer-authentication-failed-for-user-dev
+-- Check PostgreSQL status (typically for Linux systems) --
+pg_ctl status -D /path/to/data_directory
 
-psql -U user_name  -h 127.0.0.1 -d db_name
+-- Starting PostgreSQL in single-user mode --
+postgres --single -D /path/to/data_directory dbname
 
-where
+-- Create a new PostgreSQL cluster --
+initdb -D /path/to/new_data_directory
 
-    -U is the database user name
-    -h is the hostname/IP of the local server, thus avoiding Unix domain sockets
-    -d is the database name to connect to
+-- Check PostgreSQL configuration files (usually located in the data directory) --
+postgresql.conf  -- Main configuration file
+pg_hba.conf  -- Client authentication configuration
+pg_ident.conf  -- User name mapping
 
-This is then evaluated as a "network" connection by Postgresql rather than a Unix domain socket connection, thus not evaluated as a "local" connect as you might see in pg_hba.conf:
+-- Replication --
+pg_basebackup -h master_host -D /path/to/replica_data_directory -U replication_user -P --wal-method=stream
 
-local   all             all                                     peer
+-- Tablespaces --
+CREATE TABLESPACE tablespacename LOCATION '/path/on/filesystem';
+DROP TABLESPACE tablespacename;
 
-------------------------------------------------------------------------------
-ALTER TABLE table_name
-ADD COLUMN new_column_name data_type constraint;
-ALTER TABLE customers
-ADD COLUMN contact_name VARCHAR NOT NULL;
+-- LOG MANAGEMENT --
+-- Assuming you're logging to a directory, navigate to that directory and check the log files.
+tail -f /path/to/log_directory/logfile
 
-ALTER TABLE caps_alert_destinations ADD COLUMN is_current boolean NOT NULL DEFAULT TRUE;
-ALTER TABLE caps_alert_destinations DROP COLUMN is_current;
+-- CONNECTION & SESSION MANAGEMENT --
+SELECT * FROM pg_stat_activity WHERE state = 'active';
 
-# date + time + timezone
-ALTER TABLE caps_alert_destinations ADD COLUMN invalid_since timestamp with time zone;
+-- TERMINATE CONNECTIONS --
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'dbname';
 
-------------------------------------------------------------------------------
-# FATAL: db is shutting down etc
-# fast server shutdown:
-su - postgres -c "/usr/pgsql-12/bin/pg_ctl stop -m fast -D /mnt/database/data"
+-- BLOAT CHECK --
+SELECT tablename, pg_total_relation_size(tablename::text), pg_total_relation_size(tablename::text) - pg_relation_size(tablename::text) AS overhead
+FROM (SELECT ('"' || schemaname || '"."' || tablename || '"')::text AS tablename FROM pg_tables) AS subquery;
 
 
-------------------------------------------------------------------------------
-truncate hangs:
-select * from pg_catalog.pg_locks
-select * from pg_catalog.pg_stat_activity
-# see https://stackoverflow.com/questions/1063043/how-to-release-possible-postgres-row-locks
-------------------------------------------------------------------------------
-[single user mode]
-sudo su -l postgres
-/usr/pgsql-12/bin/pg_ctl -D /path/to/database -l logfile start
-or
-/usr/pgsql-12/bin/postgres --single -D /path
 
-[table owner can't access tables]
-GRANT USAGE ON SCHEMA public TO username;
-
-[get all the tables]
-------------------------------------------------------------------------------
-[root@localhost pgiterate]# psql -Upostgres vip_db -At < test2.sql > test2.out
-[root@localhost pgiterate]# cat test2.sql
-select table_name
-from information_schema.tables
-where
-  table_schema not in ('pg_catalog', 'information_schema')
-
-> cat query.sh:
-for t in $(cat test2.out); do echo '**********************'; echo "-- $t --"; psql -Upostgres vip_db -c "select * from $t"; done
-
-------------------------------------------------------------------------------
-
-[echo queries for shortcuts]
-psql -Upostgres -c '\dn' -E
-# this gives me the real query
-
-[list schema permissions]
-\dn+
-https://stackoverflow.com/questions/22715053/postgresql-view-schema-privileges
-
-[rundown]
-psql db_name db_user                                                     # open psql
-select * from pg_catalog.pg_tables where tableowner != 'postgres';       # list custom tables
-                                                                         # describe table
-select column_name, data_type, character_maximum_length from
-  INFORMATION_SCHEMA.COLUMNS where table_name = 'destinations'
-
-[replace]
-UPDATE etable SET name = replace(name, 'string', 'newstring')
-
-[dump]
-pg_dump -Upostgres vip_db > vip_db.txt
-
-[clear table / delete form table]
-psql -Upostgres db -c "delete from tablename;" # remove all rows
-
-[check and update]
-[root@localhost ~]# psql -Upostgres db -c "select * from information" | grep log # or...
-[root@localhost ~]# psql -Upostgres db -c "select * from information where label like '%log%'"
-[root@localhost ~]# psql -Upostgres db -c "update information set value=7 where label='loglevel'"
-
-[induce failure]
-\set STOP_ON_ERROR true
-ALTER SCHEMA main RENAME TO delete_later;
-this line fails the psql command, will have a non-zero exit code
-
-
-[clean]
-SELECT setval('information_id_seq', (SELECT MAX(id) FROM information)+1);
-
-select count(tablename) from pg_catalog.pg_tables;                       # Count all tables
-insert into v_roles values (1,'role1',2,2,2,2,2,2,2,2,2,2,2,2)           # Insert row
-update information set value = 7 where label='loglevel';                 # edit row
-
-create database mydb         # create database
-> \l                         # list databases
-
-Some interesting flags (to see all, use -h):
-
-    -E: will describe the underlaying queries of the \ commands (cool for learning!)
-    -l: psql will list all databases and then exit (useful if the user you connect with doesn't has a default database, like at AWS RDS)
-
-Most \d commands support additional param of __schema__.name__ and accept wildcards like *.*
-
-    \q: Quit/Exit
-    \c __database__: Connect to a database
-    \d __table__: Show table definition including triggers
-    \l: List databases
-    \dy: List events
-    \df: List functions
-    \di: List indexes
-    \dn: List schemas
-    \dt *.*: List tables from all schemas (if *.* is omitted will only show SEARCH_PATH ones)
-    \dv: List views
-    \df+ __function__ : Show function SQL code.
-    \x: Pretty-format query results instead of the not-so-useful ASCII tables
-    \copy (SELECT * FROM __table_name__) TO 'file_path_and_name.csv' WITH CSV: Export a table as CSV
-
-User Related:
-
-    \du: List users
-    \du __username__: List a username if present.
-    create role __test1__: Create a role with an existing username.
-    create role __test2__ noinherit login password __passsword__;: Create a role with username and password.
-    set role __test__;: Change role for current session to __test__.
-    grant __test2__ to __test1__;: Allow __test1__ to set its role as __test2__.
 

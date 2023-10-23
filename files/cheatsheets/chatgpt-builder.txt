@@ -1,0 +1,8 @@
+ [filling LLM knowledge gaps - phrases from GPT4]
+ natural language tasks
+ - "Automated Fact-Checking" - "Given the following ...provide an assessment of its accuracy"
+ - "Code Generation from Natural Language Descriptions"
+    + Translate the following description into Java code
+feedback loop - keep editing initial prompt instead of adding new ones
+explorarion - "Imagine", "Speculate", "Hypothesize" or tell the system to increase temparature
+
