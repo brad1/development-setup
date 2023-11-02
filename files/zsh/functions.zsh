@@ -596,6 +596,13 @@ shell-status2() {
     echo
     echo 'New commands to try:'
     echo '    exa'
+    echo '    vim-usage'
+    echo '    cdf'
+    echo 'Commands to remember:'
+    echo '    pgrep -af postinstall'
+    echo '    pstree $(pgrep -f postinstall | head -n1)'
+    echo 'Things to add:'
+    echo '    cw (cheatsheet for work, not in github)'
 }
 
 vim-usage() {

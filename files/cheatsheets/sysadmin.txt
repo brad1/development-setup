@@ -11,6 +11,7 @@ users and groups:
 useradd
 groups <username>
 sudo usermod -a -G examplegroup exampleusername
+useradd -m <name and create matching in /home> -s /usr/bin/bash
 ------------------------------------------------------------------------------
 context: yum one of the configured repositories failed
 

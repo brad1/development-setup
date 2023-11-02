@@ -1,0 +1,10 @@
+## GPT Prompt Strategy: Latent Space Activation
+  - (https://www.youtube.com/watch?v=N8p6u1OtARs&t=575s)
+
+https://github.com/daveshap/latent_space_activation/blob/main/system01_dialog.txt
+https://github.com/daveshap/latent_space_activation/blob/main/technique01_dialog.py
+- the above is akin to a "prompt builder", it helps you figure out how to squeeze out the right answer
+  - "you are an expert" worked better than this, but it may depend on the question
+
+https://github.com/daveshap/latent_space_activation/blob/main/technique02_brainstorm_search_hypothesize_refine.py
+  - BSHR loop - google these, take notes, rinse and repeat?

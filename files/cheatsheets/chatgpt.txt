@@ -15,12 +15,29 @@ I am a computer engineer.  I need to learn more about the latest tech including 
   * I can delete the basebox for a VM, but only if it is not running?  What is different about the VM in stopped state that enables deletion of its baseline?
 + Explain why it solves the problem.
 + System:  I want you to ask me questions until you can faithfully meet the output criteria.
++ I want you to brainstorm some ideas for <incremental improvement> Please give the first thing that comes to mind, 3 words only.
+  - extend 3 to 4+ or followup, this was a useful shortcut
 
 [Useful prompts]
+You are a postgres  expert.  I want you to write me a postgres cheatsheet.  It
+should include code statements only, be in plaintext format.  It will be
+searchable, so it can be in maximum detail.  Please place in a single code
+block for easy copying.
+
 My goal is to learn more about <topic> through narrowly focused discussion.
 please engage me in a dialogue about <topic>.  The subject is <subject>
 System:  [minimal temparature, minimal tokens.]  Responses should consist of a short response to my prompt followed by a question.  Keep it as concise as possible.
 This helps to make sure that the dialogue is relevant to me.
+- see  latent space activation in links, probably better!
+
+# system
+you are an expert python programmer.   This is a prototyping excersize where we
+will make repeated changes to code, so the size of the code and comments should
+be kept small and simple.
+# user
+I want you to prototype a function that executes an infinite loop, calls a
+command pattern, and catches all exceptions. Exceptions should be printed in a
+compact and readable manner
 
 [Running prompts]
 - synopsis: Present a system of rules, then ask for help getting over a problem.

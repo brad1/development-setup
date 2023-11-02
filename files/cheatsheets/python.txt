@@ -1,3 +1,7 @@
+# ----- PIP -----
+pip install --update pip
+pipdeptree
+
 # ----- BASICS -----
 print("Hello, World!") 
 x = 5  # variable assignment
