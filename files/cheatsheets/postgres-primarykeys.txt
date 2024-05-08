@@ -1,0 +1,29 @@
+-- Create a table with a single-column primary key
+CREATE TABLE table_name (id SERIAL PRIMARY KEY, column_name data_type);
+
+-- Create a table with a composite primary key (multiple columns)
+CREATE TABLE table_name (column1 data_type, column2 data_type, PRIMARY KEY (column1, column2));
+
+-- Add a primary key to an existing table
+ALTER TABLE table_name ADD PRIMARY KEY (column_name);
+
+-- Add a composite primary key to an existing table
+ALTER TABLE table_name ADD PRIMARY KEY (column1, column2);
+
+-- Drop a primary key from a table (also drops the index)
+ALTER TABLE table_name DROP CONSTRAINT table_name_pkey;
+
+-- Change the primary key of a table (first drop, then add a new one)
+ALTER TABLE table_name DROP CONSTRAINT table_name_pkey, ADD PRIMARY KEY (new_column);
+
+-- Create a table with a UUID as the primary key
+CREATE TABLE table_name (id UUID PRIMARY KEY, column_name data_type);
+
+-- Create a table with a primary key using a specific data type
+CREATE TABLE table_name (id data_type PRIMARY KEY, column_name data_type);
+
+-- Create a foreign key that references a primary key in another table
+CREATE TABLE foreign_table (id SERIAL PRIMARY KEY, reference_id integer, FOREIGN KEY (reference_id) REFERENCES primary_table(primary_key_column));
+
+-- Check constraints of a primary key (useful for seeing settings/linked indexes)
+SELECT conname, pg_get_constraintdef(c.oid) FROM pg_constraint c JOIN pg_namespace n ON n.oid = c.connamespace WHERE contype = 'p' AND n.nspname = 'public';

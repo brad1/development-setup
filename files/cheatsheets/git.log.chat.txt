@@ -1,0 +1,47 @@
+# Git Log Cheatsheet
+
+## My favorites
+- git log --author="Your Name" -n3 --pretty=tformat: --name-only | sort -u
+  - all files modified in the last 3 of someone's commits
+- "                             "  --pretty=tformat: --patch
+  - all file changes
+
+
+## Common Options
+- `--oneline`: Show each commit as a single line, simplifying the output.
+- `--graph`: Display the commit history in a graphical representation.
+- `--author="Author Name"`: Filter commits by a specific author.
+- `--since`, `--after`: Show commits after a specific date.
+- `--until`, `--before`: Show commits before a specific date.
+- `--grep`: Search for commits with a message containing the given text.
+- `--no-merges`: Exclude merge commits from the log.
+- `-n <number>`: Limit the number of commits to output.
+- `--decorate`: Show branch and tag names on appropriate commits.
+
+## Common One-Liners
+- Show commit history in a simplified format:  
+  `git log --oneline`
+
+- Visualize the commit history with a graph:  
+  `git log --graph --oneline --decorate`
+
+- Filter commits by author "John Doe":  
+  `git log --author="John Doe"`
+
+- Show commits since "2023-01-01":  
+  `git log --since="2023-01-01"`
+
+- Show commits before "2023-01-01":  
+  `git log --until="2023-01-01"`
+
+- Find commits with "fix" in the commit message:  
+  `git log --grep="fix"`
+
+- Exclude merge commits:  
+  `git log --no-merges`
+
+- Show the last 5 commits:  
+  `git log -n 5`
+
+- Show commits by author "John" since "2023-01-01":  
+  `git log --author="John" --since="2023-01-01"`

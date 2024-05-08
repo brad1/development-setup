@@ -1,0 +1,41 @@
+chronyd
+	allow
+	local stratum 5 # medium authority
+	chronyc sources
+	chronyc tracking
+
+
+ntpd
+	restrict default ignore
+	restrict -6 default ignore
+	ntpdate -u '192.168.0.25' # is this IP a valid NTP server?
+
+
+
+# # # system health
+
+CHRONY=/etc/chrony  
+CHRONY_CONF="$CHRONY/chrony.conf"
+CHRONY_CONF_CENTOS="/etc/chrony.conf"
+CHRONY_SERVERS="$CHRONY/conf.d/servers.conf"
+CHRONY_ALLOW="$CHRONY/conf.d/allow.conf
+
+check_service() { 
+  # Guard services that are not installed on this machine 
+  service "$1" status 2>&1 >/dev/null | grep -qiE '(could not be found|unrecognized service)' && return
+
+  message="$1 status message:   "
+  message="${message}$(service $1 status 2>/dev/null | sed 's/-//g' | grep -iE '(active|stop|start|run)' | head -n1)"
+  logdebug "$message"
+}
+
+check_file() {
+  # Guard file missing or not modified recently
+  find "$1" -mmin -2 -print 2>/dev/null | grep -q '^' || return
+
+  message="$(basename "$1") updated at:   "
+  message="${message}$(stat -c '%Y' "$1" | xargs -I {} date -d @{} '+%H:%M:%S' | sed 's/-//g')"
+  logdebug "$message"
+}
+
+

@@ -33,6 +33,46 @@ git-portal() {
     export HISTFILE=$HOME/.git_portal_history
 }
 
+
+#### keyword search
+#
+#
+#
+
+ignored_dirs="_archived tmp"
+#keywords_to_crawl="todo ##consider thought"
+keywords_to_crawl="##starred"
+
+search_files() {
+    keyword=$1
+    shift  # Remove the first argument and shift the rest to the left
+    exclude_dirs=""
+    for dir in "$@"; do
+        exclude_dirs="$exclude_dirs --exclude-dir=$dir"
+    done
+    # zsh does not split strings by default
+    grep -rniI --color $(echo $exclude_dirs) "$keyword" /var/brad/reports 
+}
+
+
+crawl_keywords() {
+    local kw="$1"
+    search_files "$kw" $(echo $ignored_dirs)
+}
+
+do_crawl() {
+    for kw in $@; do
+        crawl_keywords $kw
+    done
+}
+
+shell_login_overview() {
+  do_crawl $(echo $keywords_to_crawl)
+}
+
+##################
+
+
 debug=0  # set to 1 for debugging output
 
 cdd () {
@@ -100,8 +140,20 @@ path-of() {
   echo `pwd`/$1
 }
 
+make-list-targets() {
+  make -pRrq -f Makefile | awk -F: '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {print $1}' | sort | uniq
+}
+
 git-backup-branch() {
   git checkout -b $(git branch --show-current)-backup_$(date +'%m-%d-%Y')
+}
+
+git-diff-main-summarize() {
+  git diff --stat main $(git branch --show-current)
+}
+
+git-diff-main() {
+  git diff main $(git branch --show-current)
 }
 
 git-diff-master-summarize() {
@@ -113,9 +165,8 @@ git-diff-master() {
 }
 
 vim-files-changed-in-branch() {
-  #                           #             #              # filter to avoid binaries
-  git diff $(git branch --show-current) master --name-only | > /tmp/asdf
-  vim $(cat /tmp/asdf | grep .\*.rb$ | fzf)
+  git diff $(git branch --show-current) master --name-only > /tmp/asdf
+  vim $(cat /tmp/asdf | fzf)
 }
 
 vim-files-modified () {
@@ -590,20 +641,68 @@ shell-status2() {
     echo $line
     printf "$format\n" "'e' edit pinned file" "'l' ..."
     printf "$format\n" "'c' cheatsheets" "'o' open-interpreter"
-    printf "$format\n" "'co' contexts" ""
+    printf "$format\n" "'co' contexts" "'cw' work cheatsheets"
     echo $line
 
     echo
     echo 'New commands to try:'
     echo '    exa'
     echo '    vim-usage'
-    echo '    cdf'
+    echo '    cdf (or cd Ctrl+t)'
+    echo '    last [reboot]'
+    echo '    arc scratch.txt' 
+    echo '    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print"'
     echo 'Commands to remember:'
+    echo '    c -> chatgpt-general-document.txt'
     echo '    pgrep -af postinstall'
     echo '    pstree $(pgrep -f postinstall | head -n1)'
+    echo '    compgen -c | fzf | xargs man'
+    echo '    diff <(make -p) <(make -np)'
+    echo '    man -k systemd' 
+    echo '    find /path/to/search -group apache ! -perm /o+r'
     echo 'Things to add:'
+    echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
     echo '    cw (cheatsheet for work, not in github)'
+    echo '    Ctrl-R:'
+    echo '    - import sticking commands (for Ctrl-R)'
+    echo '    - fzf in reverse search...'
+    echo 'Glen initiatives:'
+    echo '     TPS boot menu + EFI'
+    echo '     6.1 - audio/image file reboot, delete legacy SQL'
+    echo '     SiteManager - strip, restructure, LFS' 
+    echo '     Schedules export (Chad)' 
+    echo 'Ubuntu:'
+    echo '     https://ubuntu.com/core/docs/networkmanager/networkmanager-and-netplan'
+    echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
+    echo "-  Parnas' 1972 paper 'On the Criteria To Be Used in Decomposing Systems into Modules'"
+    echo
+    echo
+    echo '---- Pending action items: ----'
+    echo
+
+    # TODO test and expand
+    shell_login_overview 
 }
+
+
+#archive_file() {
+arc() {
+    local source_file="$1"
+    if [[ ! -f "$source_file" ]]; then
+        echo "Error: $source_file does not exist or is not a regular file."
+        return 1
+    fi
+    
+    local timestamp="$(date +%Y%m%d%H%M)"
+    local renamed_filename="${source_file}-archived-${timestamp}.txt"
+    
+    mv "$source_file" "$renamed_filename"
+    touch "$source_file"
+    
+    echo "File archived as ${renamed_filename}"
+}
+
+
 
 vim-usage() {
   # TODO inspired by make usage
@@ -664,6 +763,11 @@ c () {
   $EDITOR /opt/chef/cookbooks/development-setup/files/cheatsheets/$fn
 }
 
+cw () {
+  fn=$(cd ~/Projects/cheatsheets/; ls | fzf)
+  $EDITOR ~/Projects/cheatsheets/$fn
+}
+
 o () {
   oi_dir="/home/brad/Projects/_projects-research/open_interpreter"
   gnome-terminal --tab -- bash -c "cd '$oi_dir' && . ./init.sh; exec bash"
@@ -684,7 +788,7 @@ co () {
   echo "Opening $fn, press enter within 2 seconds to cat instead."
   if read -t 2; then
     #cat "$fp"
-    bat "$fp"
+    cat "$fp"
   else
     $EDITOR "$fp"
   fi

@@ -1,75 +1,45 @@
-------------------------------------------------------------------------------
-man systemd.kill ?
-------------------------------------------------------------------------------
-context: manual
+Systemd Advanced Cheat Sheet
 
-man systemd.directives
-------------------------------------------------------------------------------
+1. DNS Configuration with systemd-resolved
+   - Check DNS Servers: `resolvectl status`
+     Displays DNS servers used by systemd-resolved for each interface.
 
-context: reload propogation!
+2. Viewing and Managing System Services
+   - List All Services: `systemctl list-units --type=service`
+   - Check Service Status: `systemctl status [service_name]`
+   - Start/Stop/Restart Service: `systemctl start|stop|restart [service_name]`
+   - Enable/Disable Service at Boot: `systemctl enable|disable [service_name]`
 
-# postgresql@.service # clustering!
-[Unit]
-ReloadPropogatedFrom=postgresql.service
+3. Systemd Timers (Alternative to cron jobs)
+   - List Timers: `systemctl list-timers`
+   - View Timer Details: `systemctl status [timer_name]`
 
-# postgresql.service
-[Service]
-type=oneshot
-ExecStart=/bin/true
-ExecReload=/bin/true
-RemainAfterExit=on
+4. Systemd Journals (Logging)
+   - View Logs: `journalctl`
+   - Follow System Logs: `journalctl -f`
+   - Filter Logs by Service: `journalctl -u [service_name]`
+   - Show Logs Since a Time Period: `journalctl --since "2023-01-01 00:00:00"`
 
-------------------------------------------------------------------------------
-context: reset failure circuit breaker
+5. Systemd Sockets
+   - List All Sockets: `systemctl list-sockets`
+   - Check Socket Status: `systemctl status [socket_name]`
 
-systemctl reset-failed <service name>
-------------------------------------------------------------------------------
-links:
-https://stackoverflow.com/questions/35200232/how-to-launch-a-process-outside-a-systemd-control-group
-https://superuser.com/questions/1405656/how-to-attach-background-process-to-systemctl-services-cgroup
-https://www.freedesktop.org/software/systemd/man/systemd.kill.html
-------------------------------------------------------------------------------
+6. Systemd Network
+   - List Network Links: `networkctl list`
+   - Status of a Network Interface: `networkctl status [interface_name]`
 
-[Unit]
-Description=My Miscellaneous Service
-After=network.target
+7. Systemd Cgroups (Control Groups)
+   - List Control Groups: `systemd-cgls`
+   - Show Top for Control Groups: `systemd-cgtop`
 
-[Service]
-Type=simple
-# Another Type option: forking
-User=user
-WorkingDirectory=/home/user
-ExecStart=/home/user/my_daemon --option=a
-Restart=on-failure
-# Other Restart options: or always, on-abort, etc
+8. Systemd Analyze Tools
+   - Boot Time Analysis: `systemd-analyze`
+   - Critical Chain Analysis: `systemd-analyze critical-chain`
+   - Plot Boot Process: `systemd-analyze plot > boot.svg`
 
-[Install]
-WantedBy=multi-user.target
+9. Systemd Machine Management (Containers and VMs)
+   - List Machines: `machinectl list`
+   - Start/Stop Machine: `machinectl start|stop [machine_name]`
 
-# There are more options you can specify. For example, in addition to ExecStart you can specify ExecStop and ExecReload to control what happens when stopping and restarting. Those are not required though. If you omit the ExecStop option, it is smart enough to know it should kill the process. If you need a more graceful shutdown though, specify that with ExecStop. To see some more options, look at man systemd.service in your distribution. Freedesktop.org's man systemd.service .
+Note: Replace `[service_name]`, `[timer_name]`, `[socket_name]`, `[interface_name]`, and `[machine_name]` with actual names as needed.
 
-# try cat /etc/services
-------------------------------------------------------------------------------
-
-# Read all the service options
-man systemd.service
-
-# Control whether service loads on boot
-systemctl enable
-systemctl disable
-
-# Manual start and stop
-systemctl start
-systemctl stop
-
-# Restarting/reloading
-systemctl daemon-reload # Run if .service file has changed
-systemctl restart
-
-# See if running, uptime, view latest logs
-systemctl status
-systemctl status [service_name]
-
-journalctl # See all systemd logs
-journalctl -f # Tail logs
-journalctl -u my_daemon.service # Show logs for specific service

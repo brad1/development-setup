@@ -60,7 +60,8 @@ iabbrev pry    require 'pry'<CR>binding.pry<CR>
 :iabbrev pry    require 'pry'<CR>binding.pry<CR>
 :iabbrev pend   PendingAlertProcessor
 
-execute pathogen#infect()
+" commented out for neovim 0.6
+"execute pathogen#infect()
 
 syntax on
 
@@ -100,7 +101,7 @@ nmap <leader>d Gzz                        " Go to bottom and center the cursoer
 nmap <Leader>r :reg<CR>                   " registers
 nmap <Leader>p :set mouse=a<CR>           " mouse mode
 " search
-nmap <Leader>f :%s///g<Left><Left><Left>
+" nmap <Leader>f :%s///g<Left><Left><Left>
 " !!! find a better way to do this: see iabbrev
 " inoremap <Leader>a {"":"","":[]}
 " date

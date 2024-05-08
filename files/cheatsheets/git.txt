@@ -1,7 +1,13 @@
+#deleted files
+git log -- <filepath>
+# same as:
+git reset --hard SHA~1
+git log <filepath> --follow
 ------------------------------------------------------------------------------
-context: List commits by author
+git rebase --onto master release feature # moves the feature branch's commits to be on top of master instead of one top of release
 
-git log --author="Jon"
+git rev-list --count test ^main # for git rebase -i HEAD~<count>
+git merge-base <branch1> <branch2> # locate fork point
 ------------------------------------------------------------------------------
 TODO: consider merging w/ zsh-aliases
 ------------------------------------------------------------------------------
@@ -34,6 +40,10 @@ context: partial cherry-pick
 git cherry-pick -n <commit>
 "no commit", so edit before picking
 ------------------------------------------------------------------------------
+
+# log examples
+git diff HEAD~7 HEAD # recent commits
+git log --author="Jon"
 
 # find checked out branches:
 git reflog | grep 'checkout: moving from master' | head -n 20

@@ -1,0 +1,77 @@
+------------------------------------------------------------------------------
+systemctl is-enabled
+
+man systemd.kill ?
+------------------------------------------------------------------------------
+context: manual
+
+man systemd.directives
+------------------------------------------------------------------------------
+
+context: reload propogation!
+
+# postgresql@.service # clustering!
+[Unit]
+ReloadPropogatedFrom=postgresql.service
+
+# postgresql.service
+[Service]
+type=oneshot
+ExecStart=/bin/true
+ExecReload=/bin/true
+RemainAfterExit=on
+
+------------------------------------------------------------------------------
+context: reset failure circuit breaker
+
+systemctl reset-failed <service name>
+------------------------------------------------------------------------------
+links:
+https://stackoverflow.com/questions/35200232/how-to-launch-a-process-outside-a-systemd-control-group
+https://superuser.com/questions/1405656/how-to-attach-background-process-to-systemctl-services-cgroup
+https://www.freedesktop.org/software/systemd/man/systemd.kill.html
+------------------------------------------------------------------------------
+
+[Unit]
+Description=My Miscellaneous Service
+After=network.target
+
+[Service]
+Type=simple
+# Another Type option: forking
+User=user
+WorkingDirectory=/home/user
+ExecStart=/home/user/my_daemon --option=a
+Restart=on-failure
+# Other Restart options: or always, on-abort, etc
+
+[Install]
+WantedBy=multi-user.target
+
+# There are more options you can specify. For example, in addition to ExecStart you can specify ExecStop and ExecReload to control what happens when stopping and restarting. Those are not required though. If you omit the ExecStop option, it is smart enough to know it should kill the process. If you need a more graceful shutdown though, specify that with ExecStop. To see some more options, look at man systemd.service in your distribution. Freedesktop.org's man systemd.service .
+
+# try cat /etc/services
+------------------------------------------------------------------------------
+
+# Read all the service options
+man systemd.service
+
+# Control whether service loads on boot
+systemctl enable
+systemctl disable
+
+# Manual start and stop
+systemctl start
+systemctl stop
+
+# Restarting/reloading
+systemctl daemon-reload # Run if .service file has changed
+systemctl restart
+
+# See if running, uptime, view latest logs
+systemctl status
+systemctl status [service_name]
+
+journalctl # See all systemd logs
+journalctl -f # Tail logs
+journalctl -u my_daemon.service # Show logs for specific service

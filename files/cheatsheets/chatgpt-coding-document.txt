@@ -1,0 +1,14 @@
+# Rules regarding structure
+# (classes): Keep classes to 50 lines or fewer
+# (methods): keep methods to 15 lines or fewer 
+# (methods): Pass information in and out of helper methods using class member variables only, keep use of method arguments to a bare minimum
+
+# Rules regarding flow of control and IO
+# (classes) helper classes are disallowed.  Instead, use the message bus for any delegation
+# (classes) Use a single Main class to solve the problem. 
+# (output) do not use files or stdout, send results to the message bus only
+
+# Rules regarding the message bus
+# (classes) You should assume a preexisting singleton class called MessageBus
+# (methods) The MessageBus has 2 methods, blocking_send_recv(<json message>) nonblocking_send(<json message>) 
+

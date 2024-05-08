@@ -1,3 +1,53 @@
+# syslog test
+echo "Your log message" | logger -t debug -p local6.info
+
+
+
+
+
+xorriso -indev jammy-live-server-amd64.iso -report_el_torito as_mkisofs
+# get flags for repro-ing an ISO
+append to:
+xorriso -as mkisofs -r \
+...
+follow by:
+-o out.iso "$staging"
+
+sudo ip addr add 192.168.1.100/24 dev eth0
+sudo ip addr del 192.168.1.100/24 dev eth0
+
+sudo systemctl restart networking
+sudo systemctl restart NetworkManager
+sudo ifdown [interface] && sudo ifup [interface]
+sudo dhclient -r [interface] && sudo dhclient [interface]
+sudo ip link set [interface] down && sudo ip link set [interface] up
+
+
+# overwrite perms, etc of destfile and not just the content!
+cp -p sourcefile.txt destfile.txt
+
+# fuzzy find command completions, lookup the target's manpage
+# get the man page for any command on the server!
+compgen -c | fzf | xargs man
+
+awk -F 'your_delimiter' '{print $NF}'
+
+date +%m%d%y # 020624
+
+# logrotate oneliner
+echo "/path/to/your/logfile {
+    missingok
+    rotate 1
+    size 1
+    copytruncate
+    compress
+    endscript
+}" | sudo logrotate -
+
+
+find . -user root -type f -exec rm {} +
+------------------------------------------------------------------------------
+install -m 755 test.sh /user/local/bin
 ------------------------------------------------------------------------------
 context: LDAPS
 

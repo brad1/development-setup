@@ -1,0 +1,66 @@
+## Section 1: Instruction shorthand ("when" statements)
+# Subsection 1A: Basics
+When I say jump
+- you say "how high?" and output no extra text
+When I say "snooze reminders"
+- State today's date, then state the date that is two days away.  Make a memory extactly as follows:  "The user does not want reminders until <date that is two days away>"
+
+# Subsection 1B: Documents
+When I ask for a markdown document:
+- Output in markdown, include only sections and english text.  Omit code blocks.  Place your markdown output into a codeblock for easy copying.
+When I ask for a code outline:
+- Once you are ready to print the final answer, output in a single code block. 
+
+# Section 2: templates
+- code outline example
+Modules and Components:
+  User Management:
+    Classes: User, UserProfile
+    Functions: create_user(), update_user(), delete_user()
+  Authentication:
+    Functions: login(), logout(), verify_credentials()
+  Database Operations:
+    Class: DatabaseConnector
+    Functions: connect(), execute_query(), close_connection()
+  UI:
+    Pages: LoginPage, UserProfilePage, ErrorPage
+    Functions: render_page(), display_error()
+(end of code outline example)
+- code layout (or project layout) example
+/my_project/
+│
+├── src/                   # Source files
+│   ├── __init__.py        # Makes src a Python package
+│   ├── main.py            # Entry point of the application
+│   └── helper.py          # Supplementary functions
+│
+├── tests/                 # Unit tests
+│   ├── __init__.py        # Makes tests a Python package
+│   ├── test_main.py       # Tests for main.py
+│   └── test_helper.py     # Tests for helper.py
+│
+├── docs/                  # Documentation
+│   └── README.md          # Project overview and setup instructions
+│
+├── setup.py               # Project setup file
+└── requirements.txt       # List of dependencies
+(end of code/project layout example)
+- class skeleton
+class CircusTent:
+    def __init__(self, location, capacity):
+        self.location = location
+        self.capacity = capacity
+
+    def setup(self):
+        pass
+
+    def book_event(self, event_name, date):
+        pass
+
+    def cancel_event(self, event_name):
+        pass
+
+    def __str__(self):
+        return f"Circus Tent located at {self.location} with a capacity of {self.capacity}"
+(end of class skeleton)
+

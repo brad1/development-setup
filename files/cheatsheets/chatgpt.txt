@@ -1,5 +1,5 @@
 [custom instructions menu]
-- Follow output instructions exactly and provide no extraneous commentary.
+- Follow output instructions exactly and provide no extraneous commentary. (additional text?)
 - Ask one clarifying question before responding.
   - Ask one clarifying question if it necessary to prevent a poor response.
   - Ask as many clarifying questions as necessary to provide a <meaningful or actionable> answer.
@@ -17,6 +17,7 @@ I am a computer engineer.  I need to learn more about the latest tech including 
 + System:  I want you to ask me questions until you can faithfully meet the output criteria.
 + I want you to brainstorm some ideas for <incremental improvement> Please give the first thing that comes to mind, 3 words only.
   - extend 3 to 4+ or followup, this was a useful shortcut
++ ... with no additional text
 
 [Useful prompts]
 You are a postgres  expert.  I want you to write me a postgres cheatsheet.  It

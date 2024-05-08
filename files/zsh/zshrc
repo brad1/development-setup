@@ -12,6 +12,9 @@ source $INCLUDE/oh-my-zsh.zsh
 # Include this instead when using .oh-my-zsh/custom
 source $INCLUDE/sources.zsh
 
+#ZSH_THEME="robbyrussell"
+ZSH_THEME="random"
+
 
 
 # Vi editing mode with visual mode.

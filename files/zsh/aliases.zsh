@@ -1,6 +1,8 @@
 # Bookmarks:
 # frequentuse, updatedaily
 
+g='git'
+
 # prompt for new journal entry?  automatic daily doesn't always make sense
 alias help='clear; shell-status; cat $DEVSETUP/files/help.txt'
 
@@ -13,6 +15,10 @@ alias awkf='awk "{print $0}"' # same
 alias print-date="date +'%m-%d-%Y'"
 alias edit-pending='vim /var/brad/pending.list'
 alias canidothis='file="$(fzf)"; echo $file'
+
+# sysadmin
+alias genkey="openssh-keygen -t rsa -b 2048"
+alias validate_saml_cert="xmlsec1 --verify --pubkey-cert-pem saml-idp-public-key --id-attr:ID urn:oasis:names:tc:SAML:2.0:assertion:Assertion saml.xml"
 
 # check GPG packet on a bin file
 # head -c 4 FILENAME | hexdump -C
@@ -197,7 +203,8 @@ alias git-compare-commits-with-master='git log master... --oneline; git log mast
 alias git-compare-commits-with-release='git log release... --oneline; git log release... --oneline|wc -l'
 alias git-compare-master-inspect='git log master... --oneline | awk "{print \$1}" | xargs -n1 git show --name-only'
 alias git-list-aliases='git config --global --list | grep alias'
-alias git-list-branch-moves="git reflog | grep -o 'moving from.*' | head -n25"
+alias git-list-branch-moves="echo use git-search-branch-moves"
+alias git-search-branch-moves="git reflog | grep -o 'moving from.*' | head -n25 | fzf"
 alias git-rebase-abort-force='rm -rf .git/rebase-apply'
 alias git-folder-compare='git diff master..yourbranch path/to/folder'
 
@@ -207,6 +214,9 @@ alias git-ca='git commit --amend'
 alias git-sq='git commit -m squash'
 alias git-recent-files='git diff --name-only HEAD~10..HEAD'
 alias git-time-back='git log --grep Merge | grep Date -B5 | head -n200 | tail -n4'
+
+# good for django migrations
+alias git-files-changed-since='git log --after="March 25" --name-only  --pretty=format: -- server_api/api_root/database/migrations | sort | uniq'
 
 
 

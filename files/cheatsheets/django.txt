@@ -1,3 +1,5 @@
+# run in foreground
+gunicorn your_project_name.wsgi:application -b unix:/path/to/your/socket.sock --access-logfile -
 ------------------------------------------------------------------------------
 context: untested file download
 

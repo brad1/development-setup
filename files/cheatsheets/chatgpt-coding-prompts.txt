@@ -1,0 +1,74 @@
+# goals:
+# * enable the model to generate code in reasonably sized context windows
+# * make it easy to move this bits of code around without breaking them! 
+
+# Example prompt that worked well for me: ###################################################################
+
+You are an expert in python and selenium. Output format:  python test script that crawls a page with selenium.
+
+coding constraints:
+* helper methods should never return a value
+* helper methods should never take arguments, instead they should operate on class variables
+
+script requirements:
+* browses to base_url
+* identifies clickable elements
+* clicks the first one
+* takes a screenshot in the tmp directory
+* edits the screenshot to black out the upper right corner of the image
+* takes the md5sum of the edited image
+* saves the screenshot in a 'screenshots' dir, using the md5sum as the filename
+
+##################################################################################3
+
+# Example prompt that used "Format" rules instead of high level constraints" ###############
+
+
+I need help prototyping some code.  Lets use the following rules:
+main method:
+* calls helper methods (A) only, pass no parameters and take no return values
+helper methods (A): [format]
+* call helper methods (B)
+* print method name
+helper methods (B): [format]
+* native python code
+* print the string 'B'
+Solve a problem of your own choosing following these rules
+
+
+#############################################################################################
+
+
+# Example prompt from GPT4:  ####################
+
+coding constraints:
+* Each segment of code should be self-contained: Define all variables and dependencies within the scope of the code snippet to avoid external dependencies.
+* Use clear and descriptive variable names to ensure that each part of the code is understandable and can be easily modified.
+* Encapsulate functionality: Design code snippets as functions or methods that can be easily moved and reused. Each should perform a single task or represent a specific functionality.
+* Avoid side effects: Functions or methods should not alter global state or have unexpected effects outside their scope.
+* Include comments: Provide brief explanations of the purpose and functionality of the code, making it easier to understand and modify.
+* Favor readability and simplicity: Write code that is straightforward and easy to follow, avoiding overly complex structures or optimizations that could make the code harder to move or understand.
+* Specify input and output: Clearly define what data the code expects and what it returns or outputs, to facilitate integration with other code parts.
+
+##############################################
+
+# Example prompt sections from GPT4: ########################
+
+Objective: Clearly state the purpose and expected outcome of the code. This helps in keeping the focus and ensuring that the generated code meets the intended goals.
+Input Specifications: Detail the type, format, and source of inputs the code will handle. This guides the model in understanding what data the code needs to work with.
+Output Specifications: Define the expected output, including its format and how it should be returned or stored. This ensures that the generated code produces results in a usable manner.
+Error Handling: Describe how the code should deal with unexpected or invalid inputs, exceptions, or any other errors. This improves the robustness and reliability of the code.
+Performance Considerations: Outline any requirements related to efficiency, such as time complexity, memory usage, or scalability, especially if performance is a critical aspect.
+Security Guidelines: Include any specific security measures or considerations the code must adhere to, such as sanitizing inputs, managing sensitive data, or following best practices to prevent vulnerabilities.
+Coding Style and Standards: Specify any particular coding conventions or standards to follow, such as naming conventions, formatting rules, or best practices specific to the language or framework you're using.
+Testing Criteria: Provide criteria or scenarios to test the generated code, ensuring it works as intended and meets quality standards.
+Documentation Requirements: State the level and type of documentation needed within the code, such as comments explaining complex logic, docstrings for functions, or an overview of how the code fits into a larger project.
+Integration Guidelines: Offer instructions or considerations on how the code should integrate with existing codebases, APIs, or systems.
+
+my comments for later testing:
+- integration: "make standalone code snippets"
+- input/output specs:  this has been effective before
+- objectives: good in combination with the above
+
+#########################################################
+
