@@ -141,7 +141,7 @@ alias enable-touchpad='org.gnome.desktop.peripherals.touchpad send-events enable
 alias whereami='pstree -s $$'
 alias hist='history'
 alias hist-all='cat ~/.history.d/**/*'
-alias ff='echo make a function: <command> >/dev/null 2>&1 &' # maybe nohup?
+#alias fff='echo make a function: <command> >/dev/null 2>&1 &' # maybe nohup?
 # related, see: xargs -P 10 -r -n 1 wget -nv # (xargs start commands in parallel)
 # maybe related: https://github.com/alexanderepstein/Bash-Snippets
 # https://www.ostechnix.com/list-useful-bash-keyboard-shortcuts/ # add to terminal splash

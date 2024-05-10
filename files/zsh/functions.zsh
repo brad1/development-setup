@@ -186,6 +186,11 @@ git-branches-edit() {
   vim /var/brad/lists/branches.list
 }
 
+git-branch-hop() {
+  git reflog | grep -o 'moving from.*' | head -n25 | sed 's/moving //; s/from // ; s/to //'  | xargs -n 1 | sort | uniq | fzf > /var/brad/tmp/branch
+  git checkout "$(cat /var/brad/tmp/branch)"
+}
+
 # subshell variable data
 # (stickied snippets)
 sub-var() {
@@ -600,6 +605,16 @@ auto () {
   $command
 }
 
+f () {
+  list-functions|fzf > /var/brad/tmp/command
+  eval $(cat /var/brad/tmp/command)
+}
+
+ff () {
+  ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf > /var/brad/tmp/command 
+  eval $(cat /var/brad/tmp/command)
+}
+
 # Main menu
 
 #shell-status2() {
@@ -607,7 +622,8 @@ shell-status2-bak() {
   echo "press 'a' for a command menu"
   echo "press 's' to connect to a server"
   echo "press 'd' to select a bookmarked directory" # consider using ranger bookmarks going forward
-  echo "press 'f' to edit these lists"
+  echo "press 'f' for a function menu" 
+  echo "press 'g' to edit these lists"
   echo
   echo "press 'gh' for git commands"
   echo "press 'h' to edit hostfile"
@@ -623,6 +639,16 @@ shell-status2-bak() {
   echo "press 'co' contexts"
 }
 
+list-functions() { # and aliases, for selection
+  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh; print -l ${(ok)functions}'
+  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias | cut -d= -f1'
+}
+
+list-aliases() { # for definition 
+  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias'
+}
+
+
 #splash_screen() {
 shell-status2() {
     # Clear the screen
@@ -637,7 +663,8 @@ shell-status2() {
     printf "$format\n" "'a' command menu" "'gh' git commands"
     printf "$format\n" "'s' connect to server" "'h' edit hostfile"
     printf "$format\n" "'d' bookmarked dir" "'j' ..."
-    printf "$format\n" "'f' edit lists" "'k' ..."
+    printf "$format\n" "'f' function menu" "'k' ..."
+    printf "$format\n" "'ff' full command menu" "'k' ..."
     echo $line
     printf "$format\n" "'e' edit pinned file" "'l' ..."
     printf "$format\n" "'c' cheatsheets" "'o' open-interpreter"
@@ -653,6 +680,8 @@ shell-status2() {
     echo '    arc scratch.txt' 
     echo '    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print"'
     echo 'Commands to remember:'
+    echo '    print -l ${(ok)functions} | grep status2'
+    echo '    alias|grep date' 
     echo '    c -> chatgpt-general-document.txt'
     echo '    pgrep -af postinstall'
     echo '    pstree $(pgrep -f postinstall | head -n1)'
@@ -667,7 +696,6 @@ shell-status2() {
     echo '    - import sticking commands (for Ctrl-R)'
     echo '    - fzf in reverse search...'
     echo 'Glen initiatives:'
-    echo '     TPS boot menu + EFI'
     echo '     6.1 - audio/image file reboot, delete legacy SQL'
     echo '     SiteManager - strip, restructure, LFS' 
     echo '     Schedules export (Chad)' 
@@ -730,9 +758,9 @@ d () {
   cd "$dest"
 }
 
-f () {
-   $EDITOR /var/brad/lists/$(ls /var/brad/lists|fzf)
-}
+#g () {
+#   $EDITOR /var/brad/lists/$(ls /var/brad/lists|fzf)
+#}
 
 # already used by git
 #g () {
