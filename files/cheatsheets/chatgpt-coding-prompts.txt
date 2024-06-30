@@ -1,3 +1,111 @@
+### Best one yet:
+
+Overview:  
+Help me write ... in python using the python programming
+language.  Each section of this project will use a subset of the python
+programming language to be described next.  The scope of this project is
+limited to ... so would not include <counterexamples, tests, security, etc>  
+The python code should output ... by ... ( Ex. state by  printing to the console)
+The python code should input fake data in place of user inputs, be full automated. 
+
+Let us break this assignment up into pieces:
+
+... classes { # Ex. pinball data classes
+  # requirements, relationships to other sections 
+  # Example, "Use data primimitives here such as `int a = 5;`"
+  # Example, "There are consumed by flow of control code"
+  # ...
+  # After taking the model's questions, backfill answers here for clarity.
+  # Stop backfilling when the model begins asking "dumb questions", and proceed with the conversation.
+  # ...
+  You will brainstorm a list of line items for this section, then ask the user for confirmation.
+}
+
+# More sections, # Ex. pinball flow of control code 
+
+// end pieces
+
+  
+Before outputting anything, I want you to follow a process and request feedback
+between each step.  You must only output one step at a time until you get
+feedback from me.  Again, ask me for confirmation at the end of each of the
+following steps.
+
+Steps:
+
+1.   { 
+   For this first step, it is critical that you output the following subsections:
+   subsection a. List any aspects of this assignment that are unclear.
+   subsection b.  Out of the above, are there any aspects that would not be
+   covered by brainstorming the line items that were previously covered?  If
+   so, pick those out and list them here.
+}
+2.  { You will brainstorm any line items that are needed for a section, then ask me for confirmation. }
+3.  { Complete your assignment one piece at a time. }
+
+// end steps
+
+
+Example::::
+
+Overview:  Help me write a pinball game in python using the python programming language.  Each section of this project will use a subset of the python programming language to be described next.  The scope of this project is limited to simulating the game state, and so would not include aspects such as unit tests, graphics, security, or performance.  The python code should output changes in the game state by simply printing to the console.  This simulation will be fully automated, making use of fake inputs in place of a real user.
+
+Let us break this assignment up into pieces:
+
+pinball data classes {
+   Any code that requires data, primitives, or variables.
+   This code shall be free of branches, loops, method calls, and mathematical operations.
+   I do not have specific classes in mind here, you must brainstorm a list of these and ask me for confirmation at an appropriate time.
+}
+
+pinball flow of control code { 
+    This code exclusively uses branches, loops, and method calls.
+    This code should program against pinball helper module interfaces.
+    This code shall be free of any data, python primitives, and mathematical operations.
+    I do not have a specific flow in mind for this.  You should design it from scratch, and make it as complete as you possibly can.  If the scope of the code is larger than I want, we will just leave some modules unimplemented.
+   You will brainstorm a list of events that may occur here.  Come up with the line items and ask me for confirmation when appropriate.
+   Favor the state machine pattern over the event driven pattern.
+}
+
+pinball helper modules {
+  This code shall consume pinball data classes.
+  This code shall be consumed by the flow of control code.
+   Math operations and other data manipulation belong here.
+  I do not have specific functionalities in mind here.  When appropriate, you will brainstorm a list of items and ask me for confirmation.
+}
+
+// end pieces
+
+  
+Before outputting anything, I want you to follow a process and request feedback between each step.  You must only output one step at a time until you get feedback from me.  Once more, ask me for confirmation at the end of each following steps.
+
+Steps:
+
+1.   { 
+   For this first step, it is critical that you output the following subsections:
+   subsection a. List any aspects of this assignment that are unclear.
+   subsection b.  Out of the above, are there any aspects that would not be covered by brainstorming the line items that were previously covered?  If so, pick those out and list them here.
+}
+2.  { You will brainstorm any line items that are needed for a section, then ask me for confirmation. }
+3.  { Complete your assignment one piece at a time. }
+
+// end steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # goals:
 # * enable the model to generate code in reasonably sized context windows
 # * make it easy to move this bits of code around without breaking them! 

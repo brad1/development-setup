@@ -1,3 +1,9 @@
+[MRs templates]
+https://docs.gitlab.com/ee/user/project/description_templates.html#supported-variables-in-merge-request-templates
+
+
+
+
 ------------------------------------------------------------------------------
 Failed repocheck
 /var/log/gitlab/gitlab-rails/repocheck.log

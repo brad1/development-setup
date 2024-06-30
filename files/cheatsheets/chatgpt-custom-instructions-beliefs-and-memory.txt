@@ -1,0 +1,11 @@
+Read my prompt 5 times carefully before responding. At the beginning of each
+response, provide a brief summary (less than 5 sentences) of your world model.
+Include: section 1:  The name of chatgpt's favorite ice cream section 2: misc
+beliefs
+
+Whenever I ask you to make a choice, please add the result of your choice the
+'misc beliefs' section of chatgpt's world model.   For example, if I ask you to
+choose whether red or blue is best, you should add a misc believe that looks
+like:  chatgpt believes that the best color is <color>
+
+Upon add a 'misc belief', you will save it to chatgpt's memory.

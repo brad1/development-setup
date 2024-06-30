@@ -4,7 +4,7 @@
 g='git'
 
 # prompt for new journal entry?  automatic daily doesn't always make sense
-alias help='clear; shell-status; cat $DEVSETUP/files/help.txt'
+#alias help='clear; shell-status; cat $DEVSETUP/files/help.txt'
 
 alias b-journal='browse-journal'
 

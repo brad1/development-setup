@@ -41,7 +41,7 @@ git-portal() {
 
 ignored_dirs="_archived tmp"
 #keywords_to_crawl="todo ##consider thought"
-keywords_to_crawl="##starred"
+keywords_to_crawl="##starred ##todo"
 
 search_files() {
     keyword=$1
@@ -162,6 +162,12 @@ git-diff-master-summarize() {
 
 git-diff-master() {
   git diff master $(git branch --show-current)
+}
+
+# neat, but use :Tags from fzf.vim 
+vim-goto() {
+  local pattern="$1"
+  vim -c "/$pattern" -c "normal zt" "$(rg -l $pattern | head -n1)"
 }
 
 vim-files-changed-in-branch() {
@@ -416,9 +422,9 @@ cheat-bash() {
   cheatsheet "$1" "bash" "$2"
 }
 
-cdf() {
-  cd "$(find . -type d | fzf)"
-}
+#cdf() {
+#  cd "$(find . -type d | fzf)"
+#}
 
 find-with() {
   # better way!
@@ -675,27 +681,25 @@ shell-status2() {
     echo 'New commands to try:'
     echo '    exa'
     echo '    vim-usage'
-    echo '    cdf (or cd Ctrl+t)'
     echo '    last [reboot]'
-    echo '    arc scratch.txt' 
-    echo '    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print"'
+    echo '    arc scratch.txt # arbitrary terminal captures in "reports" to keep clipboard clean'  
+    echo '    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print" # file type filtering'
+    echo '    vim-goto # hop to a pattern'
+    echo '    rj # resume job fzf' 
     echo 'Commands to remember:'
-    echo '    print -l ${(ok)functions} | grep status2'
-    echo '    alias|grep date' 
-    echo '    c -> chatgpt-general-document.txt'
+    echo '    find /path/to/files -type f -mtime +7 -delete'
+    echo '    c -> chatgpt-general-document.txt # for shorthand, labeled instructions'
     echo '    pgrep -af postinstall'
-    echo '    pstree $(pgrep -f postinstall | head -n1)'
-    echo '    compgen -c | fzf | xargs man'
     echo '    diff <(make -p) <(make -np)'
     echo '    man -k systemd' 
     echo '    find /path/to/search -group apache ! -perm /o+r'
     echo 'Things to add:'
     echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
-    echo '    cw (cheatsheet for work, not in github)'
     echo '    Ctrl-R:'
-    echo '    - import sticking commands (for Ctrl-R)'
+    echo '    - import sticking commands (for Ctrl-R) # over time these may become functions'
     echo '    - fzf in reverse search...'
     echo 'Glen initiatives:'
+    echo '     Faster builds' 
     echo '     6.1 - audio/image file reboot, delete legacy SQL'
     echo '     SiteManager - strip, restructure, LFS' 
     echo '     Schedules export (Chad)' 
@@ -711,6 +715,11 @@ shell-status2() {
     # TODO test and expand
     shell_login_overview 
 }
+
+# More commands
+# echo '    pstree $(pgrep -f postinstall | head -n1)'
+# echo '    compgen -c | fzf | xargs man'
+#  cd $(ls | head -n1) ; vagrant destroy -f ; cd .. ; rm -rf $(ls | head -n1) # mass delete
 
 
 #archive_file() {
@@ -733,9 +742,7 @@ arc() {
 
 
 vim-usage() {
-  # TODO inspired by make usage
-  # grep ~/.vimrc for ## and display results
-  grep '##' ~/.vimrc
+  grep '##' ~/.vimrc # inspired by make usage
 }
 
 
@@ -819,5 +826,20 @@ co () {
     cat "$fp"
   else
     $EDITOR "$fp"
+  fi
+}
+
+# Problem: using Ctrl-R to search for a file open in vim does not work
+# unless absolute filepaths are used.  Solution:
+# Instead of holding many files in one vim buffer, open them as you go,
+# Ctrl-Z.
+#resume_job() {
+rj() {
+  local job_id
+  job_id=$(jobs -l | fzf --height 40% --layout=reverse --prompt="Select job: " | awk '{print $2}')
+  if [[ -n "$job_id" ]]; then
+    fg %"$job_id"
+  else
+    echo "No job selected."
   fi
 }

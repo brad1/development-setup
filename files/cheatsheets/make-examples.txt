@@ -1,0 +1,19 @@
+
+### marker files: (one instance of a pattern)
+
+.PHONY: create_app_bin
+
+app_bin.complete: $(wildcard $(FILES)/app*bin)
+	@if [ "$(wildcard $(FILES)/app*bin)" = "" ]; then \
+		$(MAKE) create_app_bin; \
+	elif [ "$(words $(wildcard $(FILES)/app*bin))" -ne 1 ]; then \
+		echo "Multiple files matching 'app*bin' found"; \
+		exit 1; \
+	else \
+		touch $@; \
+	fi
+
+create_app_bin:
+	# Your logic to create app*bin file goes here
+	@echo "Creating app*bin file"
+	@touch $(FILES)/app_somethingbin

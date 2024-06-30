@@ -1,3 +1,8 @@
+# Debugging:
+make -d | grep 'Must remake target'
+
+
+
 # Help excerpt, options I should try using
 Usage: make [options] [target] ...
 Options:

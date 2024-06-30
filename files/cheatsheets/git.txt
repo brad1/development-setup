@@ -1,3 +1,7 @@
+# log commits, number of files changed, useful for rebasing
+git log --pretty=format:"%h - %an, %ar : %s" --shortstat # --name-only
+
+
 #deleted files
 git log -- <filepath>
 # same as:

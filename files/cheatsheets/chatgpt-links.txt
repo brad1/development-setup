@@ -1,3 +1,6 @@
+# lots of prepackaged prompts:
+https://github.com/danielmiessler/fabric/tree/main/patterns
+
 ## GPT Prompt Strategy: Latent Space Activation
   - (https://www.youtube.com/watch?v=N8p6u1OtARs&t=575s)
 

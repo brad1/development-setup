@@ -1,0 +1,94 @@
+# Base64 Encoding in Different Languages
+
+## Python
+import base64
+
+# Encode
+data = b'Hello, world!'
+encoded_bytes = base64.b64encode(data)
+encoded_string = encoded_bytes.decode('utf-8')
+print(encoded_string)
+
+# Decode
+decoded_bytes = base64.b64decode(encoded_bytes)
+decoded_string = decoded_bytes.decode('utf-8')
+print(decoded_string)
+
+## Ruby
+require 'base64'
+
+# Encode
+encoded_string = Base64.encode64("Hello, world!")
+puts encoded_string
+
+# Decode
+decoded_string = Base64.decode64(encoded_string)
+puts decoded_string
+
+## JavaScript (Node.js)
+const base64 = require('base64-js');
+
+// Encode
+const data = Buffer.from('Hello, world!');
+const encodedBytes = base64.fromByteArray(data);
+const encodedString = encodedBytes.toString('utf-8');
+console.log(encodedString);
+
+// Decode
+const decodedBytes = base64.toByteArray(encodedBytes);
+const decodedString = Buffer.from(decodedBytes).toString('utf-8');
+console.log(decodedString);
+
+## Bash
+# Encode
+echo -n "Hello, world!" | base64
+
+# Decode
+echo -n "SGVsbG8sIHdvcmxkIQ==" | base64 -d
+
+## C
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <openssl/bio.h>
+#include <openssl/evp.h>
+
+void base64_encode(const unsigned char* input, int length) {
+    BIO *bio, *b64;
+    FILE* stream;
+
+    stream = fopen("output.txt", "wb");
+    b64 = BIO_new(BIO_f_base64());
+    bio = BIO_new_fp(stream, BIO_NOCLOSE);
+    bio = BIO_push(b64, bio);
+
+    BIO_write(bio, input, length);
+    BIO_flush(bio);
+    BIO_free_all(bio);
+    fclose(stream);
+}
+
+void base64_decode(const unsigned char* input, int length) {
+    BIO *b64, *bio;
+    FILE* stream;
+
+    stream = fopen("output.txt", "wb");
+    b64 = BIO_new(BIO_f_base64());
+    bio = BIO_new_mem_buf(input, length);
+    bio = BIO_push(b64, bio);
+
+    char* buffer = (char*)malloc(length);
+    BIO_read(bio, buffer, length);
+    printf("%s", buffer);
+
+    BIO_free_all(bio);
+    fclose(stream);
+}
+
+int main() {
+    const unsigned char input[] = "Hello, world!";
+    base64_encode(input, strlen(input));
+    base64_decode("SGVsbG8sIHdvcmxkIQ==", strlen("SGVsbG8sIHdvcmxkIQ=="));
+    return 0;
+}
+
