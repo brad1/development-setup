@@ -1,3 +1,11 @@
+# interfaces (old)
+man ifquery :
+... ifup, ifdown, ifquery ...
+bash$> dpkg -S /etc/network/interfaces.d
+ifupdown: /etc/network/interfaces.d 
+# ( on ubuntu the above dir was empty)
+
+
 # My last good DNS: 
 2001:1998:f00:1::1 
 

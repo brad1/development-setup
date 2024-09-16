@@ -1,0 +1,21 @@
+examples:
+  apt-cache, apt-search, dpkg, apt-cdrom, apt-config, apt-key, etc
+List repos:
+  apt-cache policy # or, grep -Erh ^deb /etc/apt/sources.list*
+Search available packages:
+  apt-cache search keyword
+  apt-cache search . # all pkgs
+  apt search package_name
+  https://packages.ubuntu.com/
+List files in a package:
+  dpkg-query -L <package_name>
+  dpkg-deb -c <package_name.deb>
+List packages
+  apt list --installed
+Local install
+  apt install /path/to/pkg.deb
+  dpkg -i /path/to/pkg.deb
+
+[errors]
+  "package <asdf> is not configured", leading to a circular dependency.
+  solution: apt-get install -f ./debs/pkg.deb

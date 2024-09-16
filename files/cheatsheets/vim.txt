@@ -100,6 +100,20 @@ gT - go to previous tab
 :vmap <C-c> "+y - map CTRL+c to yank to system clipboard
 :vmap <C-v> "+p - map CTRL+v to paste from system clipboard
 :help [topic] - open help for topic
+gqq # for automatic work wrap!    
+:set textwidth=80    
+-> then, position cursor, then gq} to wrap paragraph to the right width
+* search for word under the cursor    
+:set colorcolumn=80 # mark col 80    
+:set textwidth=80 # try this    
+#  try:    
+:!ctags -R    
+:tag init    
+:tnext"    
+:grep "..." **/*.h    
+:cnext    
+s/^\(.*\)$/'\1',/g # for quoting big lists    
+
 
 
 # # # Advanced section # # # #
@@ -180,3 +194,66 @@ CTRL+w+o - close other windows, keep only current
 z= - suggest spellings for word under cursor
 :checkhealth - check system for potential problems (Neovim)
 
+
+=== Tricks to try === 
+# was vim-news.txt
+
+1. :%!python -m json.tool                    # Format JSON data using Python    
+    
+2. :g/^$/d                                   # Delete all blank lines    
+    
+3. :v/pattern/d                              # Delete lines not matching pattern    
+    
+4. :%s/\v<(\w+)>/\1/g                        # Remove HTML tags, keep content    
+    
+5. :%s/\(.\)\1\+/\1/g                        # Remove duplicate characters    
+    
+6. :r !ls                                    # Insert the output of 'ls' command    
+    
+7. :%!awk '{print $1}'                       # Keep first column of each line    
+    
+8. :%s/^/    /                               # Indent all lines (add spaces)    
+    
+9. :%!column -t                              # Align text in columns    
+    
+10. :g/^.\{,79\}$/d                          # Delete lines with < 80 characters    
+    
+11. :%!sort -u                               # Sort lines, remove duplicates    
+    
+12. :%s/\s\+$//e                             # Trim trailing whitespace    
+    
+13. :%norm A;                                # Append a semicolon to every line    
+    
+14. :g/./ .!rev                              # Reverse each line using external command    
+    
+15. :%s/^\(\s*\)\(.*\)/\2\r\1/               # Swap line order with indentation    
+    
+16. :%s/\(.*\)\n\1/\1/                       # Remove consecutive duplicate lines    
+    
+17. :vimgrep /pattern/ %                     # Search for 'pattern' in all lines    
+    
+18. :bufdo %s/pattern/replacement/ge | w     # Replace in all open buffers & save    
+    
+19. :%!fold -w 80                            # Wrap lines at 80 characters    
+    
+20. :%s/\v^.{-}(\s*\S+)/\1/                  # Align text right    
+    
+21. :%s/.*\zs(pattern)/replacement/          # Replace last occurrence in each line    
+    
+22. :g/pattern/m0                            # Move lines matching 'pattern' to top    
+    
+23. :%!tac                                   # Reverse line order (using external command)    
+    
+24. :%s/\(\w\+\)\s\+\1/\1/g                  # Remove repeated words next to each other    
+    
+25. :%!cut -d',' -f1                         # Keep first column of CSV data    
+    
+26. :%s/\v"([^"]+)"/\L\1/g                   # Convert text inside quotes to lowercase    
+    
+27. :g/./exe "normal! mqA\<Esc>`qd"          # Append a character to each line using marks    
+    
+28. :%s/./&\r/g                              # Split characters into separate lines    
+    
+29. :%!uniq -c                               # Prefix lines with their frequencies    
+    
+30. :%s/\(.*\),/\1/                          # Remove last comma from each line

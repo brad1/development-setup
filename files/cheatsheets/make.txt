@@ -1,6 +1,27 @@
+# online one pager:
+https://gitlab.valcom.com/-/snippets/36
+
 # Debugging:
 make -d | grep 'Must remake target'
 
+# <attempt to remove unused make targets>
+# probably not worth...
+# see below
+
+# used targets
+make -d | grep 'Considering target file' | awk -F"'" '{print $2}'
+
+# all targets that have recipes?
+make -p | grep -E '^[a-zA-Z0-9_-]+:' | awk '{print $1}' | sort | uniq
+make -p | grep -E '^[^[:space:]]+:' | awk '{print $1}' | sort | uniq
+
+# ?
+echo "Unreachable targets:"    
+comm -23 all_targets.txt used_targets.txt
+
+# make targets: ?
+rg -l -g '*.mk' -g '*.mf' -g 'Makefile' '^[a-zA-Z0-9_./-]+:'
+rg --no-filename -g '*.mk' -g '*.mf' -g 'Makefile' '^[a-zA-Z0-9_./-]+:' | grep -v PHONY | awk '{print $1}' | sort | uniq
 
 
 # Help excerpt, options I should try using
@@ -184,3 +205,22 @@ update: guard-root 64bit
 
 
 
+
+### marker files: (one instance of a pattern)
+
+.PHONY: create_app_bin
+
+app_bin.complete: $(wildcard $(FILES)/app*bin)
+	@if [ "$(wildcard $(FILES)/app*bin)" = "" ]; then \
+		$(MAKE) create_app_bin; \
+	elif [ "$(words $(wildcard $(FILES)/app*bin))" -ne 1 ]; then \
+		echo "Multiple files matching 'app*bin' found"; \
+		exit 1; \
+	else \
+		touch $@; \
+	fi
+
+create_app_bin:
+	# Your logic to create app*bin file goes here
+	@echo "Creating app*bin file"
+	@touch $(FILES)/app_somethingbin

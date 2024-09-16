@@ -20,3 +20,50 @@ concurrent = 0 # does not mean unlimited... ok
 
 "gitlab-runner register" - adds runner entries here with the appropriate token.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VMWARE runner targets:
+
+# # # VMware Build server    
+#    
+#    
+     
+# Before running this:    
+#    
+# install "ansible" package.    
+# install gitlab-runner for your distro.    
+#   - https://docs.gitlab.com/runner/install/linux-repository.html    
+# Run as root user.    
+#    
+# After running this:    
+# consider making a snapshot.    
+.PHONY: setup-build-server    
+setup-build-server:    
+  ansible-playbook --connection=local -i ./inventory.yml ./playbooks/gitlab-runner.yml    
+     
+# Use this after restoring a build server snapshot.    
+#    
+# tweak this as needed, double check all parameters.    
+# Run as root user, so that "gitlab-runner" runs in system mode.    
+# see: https://gitlab.valcom.com/servers/vmass/-/settings/ci_cd    
+.PHONY: register-build-server    
+register-build-server:    
+  @wget https://certs.godaddy.com/repository/gd_bundle-g2.crt    
+  @mv gd_bundle-g2.crt /usr/local/share/ca-certificates/    
+  update-ca-certificates    
+  gitlab-runner register --non-interactive --url https://gitlab.valcom.com/ --registration-token GR1348941Twt4hM4QSAruVvH4DQSw --description "ubuntu-vm-01" --tls-ca-file /usr/local/shar
+     
+

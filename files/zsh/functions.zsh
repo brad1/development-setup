@@ -144,6 +144,10 @@ make-list-targets() {
   make -pRrq -f Makefile | awk -F: '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {print $1}' | sort | uniq
 }
 
+git-list-merges() {
+  git log --merges --pretty=format:"%H %ad %s" --date=short
+}
+
 git-backup-branch() {
   git checkout -b $(git branch --show-current)-backup_$(date +'%m-%d-%Y')
 }
@@ -458,7 +462,7 @@ ln-first() {
 }
 
 grebase () {
-  git rebase -i HEAD~$1
+  echo favor git rebase master then git rebase -i master
 }
 
 grebase-master () {
@@ -619,6 +623,17 @@ f () {
 ff () {
   ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf > /var/brad/tmp/command 
   eval $(cat /var/brad/tmp/command)
+}
+
+vpn-start () {
+  nohup /opt/cisco/secureclient/bin/vpnui &
+}
+
+# copy from commit
+cfc () {    
+  for item in $(git show --name-only --format= $1) ; do    
+    copy-path $item
+  done    
 }
 
 # Main menu

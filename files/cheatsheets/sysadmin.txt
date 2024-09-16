@@ -1,3 +1,9 @@
+# ubuntu packaging:
+sudo apt-get install --reinstall gnome-control-center
+sudo ubuntu-drivers autoinstall
+
+
+
 # vagrant:
   config.vm.network "forwarded_port", guest: 22, host: 2222, disabled: true
   config.vm.network "forwarded_port", guest: 22, host: 2200, id: "ssh", host_ip: "0.0.0.0"

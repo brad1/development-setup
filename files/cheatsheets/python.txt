@@ -104,13 +104,827 @@ import pandas as pd
 pd.DataFrame(data, columns=[])
 df.head(), df.describe(), df.info(), df['column'], df.iloc[0]
 
+# ---------- Strings ------------- #
+# ----- STRING BASICS -----
+s = "Hello, World!"
+len(s), s[0], s[-1], s[2:5], s[:5], s[7:], s[:-2]
 
-# ----- To expand this:
+# ----- CASE OPERATIONS -----
+s.upper(), s.lower(), s.title(), s.capitalize(), s.swapcase()
 
-You are a python expert.  I want you to write me a python cheatsheet.  It
-should include code statements only, be in plaintext format.  It will be
-searchable, so it can be in maximum detail.
+# ----- TESTING STRINGS -----
+s.isalpha(), s.isdigit(), s.isalnum(), s.islower(), s.isupper()
+s.isspace(), s.startswith('Hel'), s.endswith('!'), s.istitle()
 
-Perfect!  Now print me a plaintext list, list only, of the above sections.  We will use these for iterating...
->
-Perfect!  Now a more advanced one for strings
+# ----- SEARCHING & COUNTING -----
+s.find('l'), s.rfind('l'), s.index('l'), s.rindex('l')
+s.count('l')
+
+# ----- REPLACEMENT & STRIPPING -----
+s.replace('l', 'L'), s.strip(), s.lstrip(), s.rstrip()
+s.strip('H!')
+
+# ----- SPLIT & JOIN -----
+s.split(), s.split(','), s.rsplit(',', 1)
+'-'.join(['Hello', 'World'])
+
+# ----- FORMATTING -----
+"{} {}".format('Hello', 'World'), "{1} {0}".format('World', 'Hello')
+f"{var1} {var2}", s.center(20, '*'), s.ljust(20, '*'), s.rjust(20, '*')
+s.zfill(10)
+
+# ----- ENCODING & DECODING -----
+"hello".encode('utf-8').decode('utf-8')
+
+# ----- ESCAPE CHARACTERS -----
+"\n", "\t", "\\", "\'", "\"", "\r", "\b", "\f"
+
+# ----- STRING METHODS -----
+s.partition(' '), s.rpartition(' '), s.splitlines()
+s.casefold(), s.expandtabs(tabsize=4)
+
+# ----- STRING TRANSLATION -----
+trans = str.maketrans('abc', '123', 'd')
+'sadbed'.translate(trans)
+
+# ----- REGULAR EXPRESSIONS -----
+import re
+re.search(pattern, s), re.findall(pattern, s), re.sub(pattern, replace, s)
+re.match(pattern, s), re.split(pattern, s), re.compile(pattern)
+
+# ----- STRING INTERPOLATION -----
+name = "John"
+age = 30
+f"My name is {name}. I am {age} years old."
+
+# Template strings
+from string import Template
+t = Template("My name is $name. I am $age years old.")
+t.substitute(name=name, age=age)
+
+# ----- BASIC CLASS DEFINITION -----
+class ClassName:
+    class_attribute = "value"
+
+    def __init__(self, instance_attribute):
+        self.instance_attribute = instance_attribute
+
+    def instance_method(self):
+        return self.instance_attribute
+
+    @classmethod
+    def class_method(cls):
+        return cls.class_attribute
+
+    @staticmethod
+    def static_method(param):
+        return param
+
+# ----- INHERITANCE -----
+class DerivedClass(ClassName):
+    def __init__(self, instance_attribute, new_attribute):
+        super().__init__(instance_attribute)
+        self.new_attribute = new_attribute
+
+# ----- ENCAPSULATION -----
+# Using single underscore (not enforced, but by convention)
+class EncapsulationDemo:
+    def __init__(self):
+        self.public = "public attribute"
+        self._protected = "protected attribute"
+
+# Using double underscores (name mangling to make it less accessible)
+    __private = "private attribute"
+
+    def access_private(self):
+        return self.__private
+
+# ----- POLYMORPHISM -----
+# Using duck typing
+def function_to_demo_polymorphism(obj):
+    return obj.method()
+
+class A:
+    def method(self):
+        return "A's method"
+
+class B:
+    def method(self):
+        return "B's method"
+
+# function_to_demo_polymorphism can take either an object of A or B
+
+# ----- ABSTRACT CLASSES & METHODS -----
+from abc import ABC, abstractmethod
+
+class AbstractClass(ABC):
+
+    @abstractmethod
+    def abstract_method(self):
+        pass
+
+# Derived class must implement the abstract_method
+
+# ----- COMPOSITION -----
+class Engine:
+    def start(self):
+        return "Engine started"
+
+class Car:
+    def __init__(self):
+        self.engine = Engine()
+
+    def start(self):
+        return self.engine.start()
+
+# ----- MAGIC METHODS (dunder methods) -----
+class MagicMethodsDemo:
+    def __init__(self, data):
+        self.data = data
+
+    def __str__(self):
+        return f"String representation: {self.data}"
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        return self.data[index]
+
+    def __eq__(self, other):
+        return self.data == other.data
+
+# ... and there are many more magic methods!
+
+# ----- PROPERTY DECORATORS -----
+class PropertyDemo:
+    def __init__(self, value):
+        self._attribute = value
+
+    @property
+    def attribute(self):
+        return self._attribute
+
+    @attribute.setter
+    def attribute(self, value):
+        if value > 0:
+            self._attribute = value
+        else:
+            raise ValueError("Value should be positive")
+
+    @attribute.deleter
+    def attribute(self):
+        del self._attribute
+
+# ----- ASSOCIATION, AGGREGATION, COMPOSITION, DEPENDENCY -----
+# These are higher-level OOP concepts often shown in UML diagrams and dictate the relationship between classes. 
+
+
+# ---------- Exceptions ------------- #
+o
+
+# ----- BASIC EXCEPTION HANDLING -----
+
+# Basic try-except block
+try:
+    # code that might raise an exception
+    pass
+except ExceptionType:
+    # code to handle exception
+    pass
+
+# Catch multiple exceptions
+try:
+    pass
+except (ExceptionType1, ExceptionType2):
+    pass
+
+# Catch exception and get the exception object
+try:
+    pass
+except ExceptionType as e:
+    print(e)
+
+# A general catch-all for exceptions
+try:
+    pass
+except Exception as e:
+    pass
+
+# ----- ELSE AND FINALLY -----
+
+# Using else (runs if no exception occurs)
+try:
+    pass
+except ExceptionType:
+    pass
+else:
+    pass
+
+# Using finally (always runs)
+try:
+    pass
+except ExceptionType:
+    pass
+finally:
+    pass
+
+# ----- RAISING EXCEPTIONS -----
+
+# Manually raise an exception
+raise Exception("Error message")
+
+# Raise an exception inside an except block
+try:
+    pass
+except ExceptionType:
+    raise
+
+# Raise a new exception from an existing one
+try:
+    pass
+except ExceptionType as e:
+    raise NewException("New message") from e
+
+# ----- COMMON BUILT-IN EXCEPTIONS -----
+
+AssertionError, AttributeError, EOFError, FloatingPointError
+ImportError, IndexError, KeyError, KeyboardInterrupt
+MemoryError, NameError, NotImplementedError, OSError
+OverflowError, ReferenceError, RuntimeError, StopIteration
+SyntaxError, IndentationError, TabError, SystemError, SystemExit
+TypeError, UnboundLocalError, UnicodeError, UnicodeEncodeError
+UnicodeDecodeError, UnicodeTranslateError, ValueError, ZeroDivisionError
+
+# ----- CUSTOM EXCEPTIONS -----
+
+# Define a custom exception
+class CustomError(Exception):
+    pass
+
+# ----- WARNINGS -----
+
+# Using warnings
+import warnings
+
+warnings.warn("This is a warning!")
+
+# Filter warnings
+warnings.filterwarnings("ignore")
+warnings.filterwarnings("error")
+
+# ----- ASSERT STATEMENTS -----
+
+# Basic assert (raises AssertionError if condition is False)
+assert condition, "Error message"
+
+# ----- CONTEXT MANAGERS AND EXCEPTIONS -----
+
+# Create a context manager using a class
+class ManagedResource:
+    def __enter__(self):
+        # setup code
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # cleanup code
+
+# Using a context manager
+with ManagedResource() as resource:
+    pass
+
+
+
+# -------- Files ---------
+o
+# ----- BASIC FILE OPERATIONS -----
+# Reading a file
+with open('filename.txt', 'r') as file:
+    content = file.read()
+
+# Writing to a file
+with open('filename.txt', 'w') as file:
+    file.write('Hello, World!')
+
+# Appending to a file
+with open('filename.txt', 'a') as file:
+    file.write('Appended text.')
+
+# Reading lines from a file
+with open('filename.txt', 'r') as file:
+    for line in file:
+        print(line.strip())
+
+# ----- BINARY FILES -----
+# Reading a binary file
+with open('filename.bin', 'rb') as file:
+    data = file.read()
+
+# Writing to a binary file
+with open('filename.bin', 'wb') as file:
+    file.write(b'Binary data')
+
+# ----- FILE AND DIRECTORY OPERATIONS USING OS -----
+import os
+
+os.rename('oldname.txt', 'newname.txt')  # Rename file
+os.remove('filename.txt')  # Delete file
+os.mkdir('new_directory')  # Make new directory
+os.rmdir('directory_name')  # Remove directory (only if empty)
+os.listdir('.')  # List files in current directory
+os.getcwd()  # Get current working directory
+os.chdir('path/to/change')  # Change directory
+
+# ----- PATH OPERATIONS USING OS.PATH -----
+os.path.join('folder', 'file.txt')  # Join paths
+os.path.exists('filename.txt')  # Check if file exists
+os.path.isdir('folder_name')  # Check if path is a directory
+os.path.isfile('filename.txt')  # Check if path is a file
+os.path.basename('/path/to/file.txt')  # Get file name from path
+os.path.dirname('/path/to/file.txt')  # Get directory from path
+os.path.split('/path/to/file.txt')  # Split path into folder and file
+
+# ----- PATH OPERATIONS USING PATHLIB (modern alternative) -----
+from pathlib import Path
+
+p = Path('.')
+p.glob('*.txt')  # Iterate over text files in current directory
+p.is_dir()  # Check if path is a directory
+p.is_file()  # Check if path is a file
+p.resolve()  # Absolute path
+p.parent  # Parent directory
+p.name  # File name
+p.suffix  # File extension
+
+# ----- WORKING WITH CSV FILES -----
+import csv
+
+# Reading CSV
+with open('file.csv', mode ='r')as file:
+    csvFile = csv.reader(file)
+    for lines in csvFile:
+        print(lines)
+
+# Writing CSV
+with open('file.csv', mode ='w', newline='')as file:
+    writer = csv.writer(file)
+    writer.writerow(['column1', 'column2'])
+    writer.writerow(['data1', 'data2'])
+
+# ----- WORKING WITH JSON FILES -----
+import json
+
+# Reading JSON
+with open('file.json', 'r') as file:
+    data = json.load(file)
+
+# Writing JSON
+with open('file.json', 'w') as file:
+    json.dump(data, file, indent=4)
+
+# ----- WORKING WITH PICKLE (Serializing objects) -----
+import pickle
+
+# Pickling an object
+with open('file.pkl', 'wb') as file:
+    pickle.dump(object, file)
+
+# Unpickling an object
+with open('file.pkl', 'rb') as file:
+    object = pickle.load(file)
+
+
+
+# -------- Methods ----- #
+
+# ----- ADVANCED PYTHON -----
+
+# ----- STRING -----
+"hello".rjust(10), "hello".ljust(10), "hello".center(10)
+"text".encode('utf-8'), "encoded_text".decode('utf-8')
+"hello".zfill(10)
+
+# ----- LIST -----
+list.copy(), list.count(x), [1, 2, 3] + [4, 5, 6], list.clear()
+
+# ----- DICTIONARY -----
+dict.update(new_dict), dict.pop('key'), dict.popitem()
+
+# ----- SET -----
+set.difference(set2), set.symmetric_difference(set2), set.update(set2)
+set.isdisjoint(set2), set.issubset(set2), set.issuperset(set2)
+
+# ----- ITERABLES -----
+map(function, iterable), filter(function, iterable)
+from itertools import combinations, permutations
+combinations([1,2,3], 2), permutations([1,2,3], 2)
+
+# ----- FUNCTIONAL PROGRAMMING -----
+from functools import partial, reduce, wraps
+
+partial(func, *args, **kwargs)
+reduce(lambda x, y: x*y, [1,2,3,4,5])
+
+# ----- DECORATORS -----
+def decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        pass  # logic before
+        result = func(*args, **kwargs)
+        pass  # logic after
+        return result
+    return wrapper
+
+# ----- GENERATORS -----
+def generator_function():
+    yield "value"
+
+gen = (x for x in range(10))
+
+# ----- CONTEXT MANAGERS -----
+from contextlib import contextmanager
+
+@contextmanager
+def context_func():
+    # setup
+    yield 
+    # teardown
+
+# ----- THREADING -----
+import threading
+
+def worker_function():
+    pass
+
+thread = threading.Thread(target=worker_function)
+thread.start(), thread.join()
+
+# ----- MULTIPROCESSING -----
+from multiprocessing import Process, Pool
+
+def worker_function():
+    pass
+
+process = Process(target=worker_function)
+process.start(), process.join()
+
+# ----- NUMPY -----
+np.arange(start, stop, step), np.linspace(start, stop, num)
+np.sum(array, axis=0), np.mean(array), np.median(array)
+np.var(array), np.std(array), np.min(array), np.max(array)
+np.unique(array)
+
+# ----- PANDAS -----
+df.tail(), df.sample(n), df.drop(columns=[]), df.dropna(), df.fillna(value)
+df.groupby('column'), df.pivot(index='col1', columns='col2', values='col3')
+df.merge(df2, on='column', how='inner'), df.concat([df1, df2], axis=0)
+
+# ----- MATPLOTLIB -----
+import matplotlib.pyplot as plt
+plt.plot(x, y), plt.scatter(x, y), plt.hist(data)
+plt.xlabel('Label'), plt.ylabel('Label'), plt.title('Title')
+
+# ----- SCIKIT-LEARN -----
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# ----- REGULAR EXPRESSIONS -----
+import re
+re.match(pattern, string), re.search(pattern, string)
+re.findall(pattern, string), re.split(pattern, string), re.sub(pattern, replace, string)
+
+# ----- NUMPY -----
+import numpy as np
+
+# Array Creation
+a = np.array([1,2,3])
+b = np.zeros((2,2))
+c = np.ones((3,3))
+d = np.eye(3)
+e = np.linspace(0, 1, 10)  # Linearly spaced values between 0 and 1
+f = np.arange(0, 10, 2)    # Array from 0 to 10 with step size 2
+
+# Array Manipulation
+a.reshape(3,1), a.flatten()
+a+b, a-b, a*b, a/b
+np.dot(a,b)
+
+# Mathematical Functions
+np.sin(a), np.cos(a), np.log(a), np.exp(a)
+np.mean(a), np.median(a), np.std(a)
+
+# Linear Algebra
+np.linalg.det(d), np.linalg.inv(d), np.linalg.eig(d)
+
+
+# ----- PANDAS -----
+import pandas as pd
+
+# DataFrame
+df = pd.DataFrame({
+    'A': [1,2,3],
+    'B': [4,5,6],
+    'C': ['p', 'q', 'r']
+})
+
+# Basic Operations
+df.head(), df.tail(), df.info(), df.describe()
+df['A'], df.iloc[0], df.loc[0]
+df[df['A'] > 2], df.groupby('A').mean()
+
+# File Operations
+df.to_csv('filename.csv')
+new_df = pd.read_csv('filename.csv')
+
+
+# ----- MATPLOTLIB -----
+import matplotlib.pyplot as plt
+
+# Basic Plotting
+plt.plot([1,2,3], [4,5,6])
+plt.xlabel('X-axis'), plt.ylabel('Y-axis')
+plt.title('Title')
+plt.show()
+
+# Scatter, Histogram
+plt.scatter([1,2,3], [4,5,6])
+plt.hist([1,2,3,4,4,5], bins=3)
+
+
+# ----- SCIKIT-LEARN -----
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Sample Dataset Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Linear Regression
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
+
+
+# ----- REQUESTS -----
+import requests
+
+response = requests.get('https://www.example.com')
+content = response.text
+json_data = response.json()
+
+
+# ----- DATETIME -----
+from datetime import datetime
+
+now = datetime.now()
+formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+
+
+# ----- OS -----
+import os
+
+os.listdir(), os.mkdir('foldername')
+os.getcwd(), os.chdir('path')
+
+
+# ----- SYS -----
+import sys
+
+sys.argv, sys.exit()
+
+
+# ----- RE (Regular Expressions) -----
+import re
+
+pattern = re.compile(r'\d{3}-\d{2}-\d{4}')
+match = pattern.match("123-45-6789")
+
+
+
+
+
+
+# ----- Searchable dump of python-old.txt
+------------------------------------------------------------------------------
+context: ca certs
+
+>>> import ssl
+>>> print(ssl.get_default_verify_paths())
+urllib2.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:618)>
+
+response = urllib2.urlopen('https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm')
+
+------------------------------------------------------------------------------
+context: CBVTestCase post in json (django testing)
+
+request = RequestFactory().post('/', data=postdata, content_type='application/json')
+response = self.post(License, request=request, header=header)
+------------------------------------------------------------------------------
+context: html
+
+import html
+print(html.unescape('&pound;682m'))
+------------------------------------------------------------------------------
+context: mock method on an object of a type
+def test_export_response_indicates_ready(api_client, data, mocker):
+    mocker.patch.object(CapsListView, 'export_all_sent_messages')
+------------------------------------------------------------------------------
+context: django unknowns
+Model creation:
+SomeObjects.objects.all() --> query set to read out of DB
+opposite, writing a new object to DB
+------------------------------------------------------------------------------
+context: django responses
+    data = {
+        'name': 'Vitor',
+        'location': 'Finland',
+        'is_active': True,
+        'count': 28
+    }
+    return JsonResponse(data)
+------------------------------------------------------------------------------
+context: files
+
+# touch
+with open('hello.txt', 'w+') as outFile:
+  outFile.write('text')
+
+# read
+obj = open('hello.txt', 'r')
+str = obj.read()
+------------------------------------------------------------------------------
+context: heredoc
+
+itext="""string
+string
+{place}"""
+print(text.format(place='here'))
+------------------------------------------------------------------------------
+context: NOOP
+
+"pass" in python instead of break or continue
+------------------------------------------------------------------------------
+context: skipping and iterables
+
+next(reader, None)
+for data in reader:
+   list.append(data)
+# this skips the first one.  alternative to "next()" is slicing:
+
+return list[1:] # same result
+
+------------------------------------------------------------------------------
+context: "is" and "any"
+
+if variable is None:
+
+any([0,False]) # False
+any([0,True])  # True
+any([1,False]) # True
+
+I think "any" is "is" for iterables.
+------------------------------------------------------------------------------
+context: asserts
+
+E       assert 3 == 4
+E        +  where 3 = f()
+
+test_assert1.py:6: AssertionError
+------------------------------------------------------------------------------
+context: null check
+if variable is None:
+if variable is not None:
+
+------------------------------------------------------------------------------
+context: append
+list.append(itme) # as opposed to list << item
+------------------------------------------------------------------------------
+context: pytest, expects, matchers:
+https://expects.readthedocs.io/en/stable/matchers.html
+https://github.com/jaimegildesagredo/expects
+------------------------------------------------------------------------------
+context: csv
+
+https://docs.python.org/3/library/csv.html#reader-objects
+
+>>> import csv
+>>> with open('export.csv') as csvfile:
+...     reader = csv.reader(csvfile)
+...     for row in reader:
+...         print(', '.join(row))
+------------------------------------------------------------------------------
+context: open a file
+    def export_all_sent_messages(self, filepath):
+        with open(filepath, "w+") as csvfile:
+
+------------------------------------------------------------------------------
+context: read all lines in a file
+
+with open(filepath, "r") as textfile:
+        lines = textfile.readlines()
+        print(lines)
+
+------------------------------------------------------------------------------
+class Object:
+    class_attribute = "CA" # Class attribute, must get a value, its the same for every instance
+
+    def __init__(self, name, age):
+        self.name = name # instance attribute, same as a class member
+        self.age = age
+
+# instanciate with: Object()
+
+------------------------------------------------------------------------------
+contxt: variable defaults
+if vara is None:
+  vara = 'value'
+------------------------------------------------------------------------------
+context: pytest
+@pytest.mark.skip(reason="cap review not merged yet")
+------------------------------------------------------------------------------
+context: pytest test names
+os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+------------------------------------------------------------------------------
+context: filesystem
+
+import os
+path = '/path/to/file'
+isFile = os.path.isfile(path)
+isFile = os.path.isdir(path)
+
+
+
+# foreach
+for val in array:
+    print(val)
+
+
+------------------------------------------------------------------------------
+# log method we are in:
+def autolog(message):
+    "Automatically log the current function details."
+    import inspect, logging
+    # Get the previous frame in the stack, otherwise it would
+    # be this function!!!
+    func = inspect.currentframe().f_back.f_code
+    # Dump the message + the name of this function to the log.
+    logging.debug("%s: %s in %s:%i" % (
+        message,
+        func.co_name,
+        func.co_filename,
+        func.co_firstlineno
+    ))
+------------------------------------------------------------------------------
+import ipdb; ipdb.set_trace() # standin for binding.pry
+------------------------------------------------------------------------------
+Example: environment setup with python36 and pip:
+sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+sudo yum install -y python3 python36-django
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+python3 get-pip.py
+pip install psycopg2-binary # or psycopg2, to compile the module locally
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+Example: pipenv is like bundler, use to DL dependencies and create a
+virtual env
+pip install --user pipenv
+If you need to update PATH, see: python -m site --user-base
+for ex: ~/.local/bin
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+Example: pipenv usage
+$ cd project_folder
+$ pipenv install requests
+$ ls Pipfile
+  # like Gemfile.lock? ^
+Use with:
+```python
+import requests
+response = requests.get('https://httpbin.org/ip')
+print('Your IP is {0}'.format(response.json()['origin']))
+```
+pipenv run python main.py # think `bundle exec`
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+Example: virtualenv
+$ pip install virtualenv
+$ virtualenv --version
+$ cd project_folder
+$ virtualenv venv
+$ "" --no-site-packages # no system packages! virtualenv 1.7 + does this by default
+$ ...
+$ deactivate # think 'rvm use system'
+see also: pip install virtualenvwrapper
+------------------------------------------------------------------------------
+
+
+
+format strings
+>>> name = ""
+>>> age = 74
+>>> f"Hello, {name}. You are {age}."

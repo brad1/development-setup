@@ -1,3 +1,66 @@
+### VAGRANT
+
+vagrant plugin expunge
+vagrant plugin repair
+vagrant ssh-config > vagrant-ssh # save the config to a file
+  * ssh -F vagrant-ssh default       # run ssh with the file.
+vagrant ssh
+  * sudo -u vagrant bundle install --local
+
+
+### VAGRANTFILE
+
+# Make rsync space make targets... SO solution doesn't quite work
+      rsync__args: ["--filter=:- .gitignore",
+        "--verbose", "--rsync-path='sudo rsync'", "--archive", "--delete", "-z"]
+
+### Bundle
+
+bundle config build.do_postgres --with-opt-lib="$PGDIR/lib"
+bundle config build.nokogiri --use-system-libraries
+bundle config build.pg --with-pg-config="$PGDIR/bin/pg_config"
+bundle config build.sequel_pg   --with-pq-lib"=$PGDIR/lib --with-pq-include=$PGDIR/include/"
+bundle exec rspec -f p -f h --out $art/rspec.html -f d --out $art/rspec-documentation.log 2>>$art/rspec.err
+bundle install --local --path vendor/bundle; # Populate vendor/bundle using vendor/cache as the source
+bundle install --system --local --without development test
+bundle package --no-install;                 # Populate vendor/cache
+
+### DOCKERFILE
+
+mkdir -p $HOME/.gem $HOME/.bundle && \
+mkdir -p /home/gitlab-runner/.bundle && \
+
+
+#### Rspec
+
+# ordered and raise
+expect_any_instance_of(Object).to receive(:select).ordered.and_return([[socket_double]])
+expect_any_instance_of(Object).to receive(:select).ordered.and_raise()
+
+# stub/mock global methods
+allow_any_instance_of(Object).to receive(:start_in_thread).and_yield
+
+2.2.0 :002 > method(:puts).receiver
+ => main
+
+2.2.0 :003 > method(:puts).owner
+ => Kernel
+
+# example
+describe FirstStart do
+
+  context "#exec" do
+    context "when item is" do
+      it "returns false" do
+      end
+    end
+  end
+end
+
+
+
+
+##### Searchable dump of ruby.txt
 ------------------------------------------------------------------------------
 context: monkeypatch wrap
 

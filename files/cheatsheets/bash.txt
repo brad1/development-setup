@@ -206,3 +206,632 @@ awk '{print $2}' file              # Print the second column of a file using awk
 echo "command1 & command2" | parallel
 
 
+# USEFUL COMMANDS
+echo "string1 string1" | xargs -n 1 echo
+strings <filename> # pull out strings
+awk
+perl
+
+
+
+
+
+
+### dump of bash-old.txt, may find by search later
+------------------------------------------------------------------------------
+context: cleanup processes
+
+# kill pids in tree
+pids=$(pstree -p | grep vagrant | grep -E '{0-9}+')
+for pid in $pids ; do pkill $pid; done
+
+# find where a PID came from:
+cat /proc/3906/cmdline
+ls -lah /proc/3906/cwd
+------------------------------------------------------------------------------
+context: cleanup old files
+find . -mtime +28 -type f -exec rm {} +
+sudo find . -user root -exec rm -rf {} +
+------------------------------------------------------------------------------
+context: path
+
+PATH=$PATH:~/opt/bin
+------------------------------------------------------------------------------
+context: treat variable as file
+
+grep select <<< "$line"
+------------------------------------------------------------------------------
+context: find newest file in a directory
+
+# no 'awk' because print $2 did not work in  a makefile
+find . -type f  -printf '%T+ %p\n' | sort | head -n1 | cut -d' ' -f2
+------------------------------------------------------------------------------
+context: loop till fail
+
+for i in $(seq 1 12); do make ipc-test-ubuntu || break; done
+------------------------------------------------------------------------------
+context: try ssh ports
+
+function try_a_port() {
+  echo "Trying port $port..."
+  timeout $tmt ssh -i .vagrant/machines/ubuntu/virtualbox/private_key -p$port vagrant@localhost ":" && return
+  rval=$?
+  port="$(($port+1))"
+  return $rval
+}
+
+function find_good_port() {
+  tmt=2
+
+  for i in $(seq 1 3)
+  do
+    port=2224
+    try_a_port && return
+    try_a_port && return
+    tmt="$(($tmt+1))"
+  done
+
+}
+
+find_good_port
+
+ssh -i .vagrant/machines/ubuntu/virtualbox/private_key -p$port vagrant@localhost
+
+------------------------------------------------------------------------------
+context: exec and redirect
+
+https://stackoverflow.com/questions/8756535/conditional-redirection-in-bash
+------------------------------------------------------------------------------
+context: bash substring example
+
+STR='GNU/Linux is an operating system'
+SUB='Linux'
+if [[ "$STR" == *"$SUB"* ]]; then
+  echo "It's there."
+fi
+------------------------------------------------------------------------------
+context: check for empty directory
+
+if [ -z "$(ls -A $filepath 2>/dev/null)" ]; then
+  echo "$filepath is empty"
+fi
+
+if [ -z "$(ls $filepath 2>/dev/null)" ]; then
+  echo "$filepath is empty of non-hidden files"
+fi
+
+------------------------------------------------------------------------------
+context: links to bunch of matching files
+
+find ../platform -name \*sh | xargs -L 1 ln -sf
+------------------------------------------------------------------------------
+context: recorder
+
+for i in $(seq -f "%03g" 1 900)
+do
+	systemctl status control > data/$i 2>/dev/null
+  sleep 1
+done
+
+# easier to sort for md5sum output etc
+------------------------------------------------------------------------------
+context: increment
+
+i=$((i+1))
+------------------------------------------------------------------------------
+context: variable handling
+
+https://stackoverflow.com/questions/1305237/how-to-list-variables-declared-in-script-in-bash
+------------------------------------------------------------------------------
+context: read input to drop into a command
+
+while : ; do
+  read pkg
+  echo $pkg
+  rpm -qa $pkg
+  if [ "$pkg" = "quit" ] ; then
+    break
+  fi
+done
+------------------------------------------------------------------------------
+context: args from list file
+
+xargs git branch -D < /tmp/list-of-branches
+------------------------------------------------------------------------------
+context: bracket checks, empty variable
+
+
+## Check if $var is set using ! i.e. check if expr is false ##
+[ ! -z "$var" ] || echo "Empty"
+[ -z "$var" ] && echo "Empty"
+------------------------------------------------------------------------------
+context: unknowns
+
+echo $?
+
+------------------------------------------------------------------------------
+context: last pid
+
+echo $!
+
+------------------------------------------------------------------------------
+context: my pid
+
+echo $$
+
+
+------------------------------------------------------------------------------
+context: example code
+
+# ------------------------------------------------------------------------------
+#
+# change server date
+date -s "19 APR 2012 11:14:00"
+
+# bash escape # inside a string:
+cat vmass-selenium-all-links.modified| grep "localhost:8080/[^\#]"
+
+
+# cool, safe loop:
+timeout 45 bash -c -- 'while ! grep -qs "control.$pid.*LICENSE" /var/log/application.log ; do sleep 1; done'
+
+# Prevent ssh session hangs:
+running_remotely() {
+  pstree -s $$ | grep -qs sshd
+}
+if running_remotely ; then
+  exit 0
+fi
+
+
+# ls trick instead of find -type f:
+ls -R /path | awk '
+/:$/&&f{s=$0;f=0}
+/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}
+NF&&f{ print s"/"$0 }'
+
+
+# Find latest modification under a directory:
+find . -printf "%T@ %Tc %p\n" | sort -n
+
+find . -type f -printf '%T@ %p\n' \
+| sort -n | tail -1 | cut -f2- -d" "
+
+# unix seconds
+date +%s
+
+# read file, preserve whitespace
+while IFS= read line; do echo ":$line:"; done < file
+while IFS= read -r line; do echo ":${line:0:1}:"; done < file
+while IFS= read -r line; do
+  if [ "${line:0:1}" = " " ] ; then
+    echo "caught a space@"
+  fi
+done < file
+
+
+# timestamp by second
+ls -l --time-style=full-iso . | awk '{print $6 " "  $7 "   " $9}'
+# 2021-01-22 13:02:54.229473799   appInsights-nodeAIF-444c3af9-8e69-4462-ab49-4191e6ad1916
+# 2021-01-19 16:33:04.486738508   appInsights-nodeAIF-d9b70cd4-b9f9-4d70-929b-a071c400b217
+# 2021-01-25 10:40:28.092133423   mozilla_brad0
+# 2021-01-25 09:30:58.434024034   qtsingleapp-zoom-3e8
+# 2021-01-15 09:31:47.419702220   qtsingleapp-zoom-3e8-lockfile
+# 2021-01-15 11:53:58.076694517   Slack
+
+
+
+# split by space
+cut -d' ' -f1 <<< "$string" # print first work
+IFS=' ' read -r -a array <<< "$string" # split into an array
+
+# new stuff
+https://stackoverflow.com/questions/2336977/can-a-shell-script-indicate-that-its-lines-be-loaded-into-memory-initially
+https://stackoverflow.com/questions/2285403/how-to-make-shell-scripts-robust-to-source-being-changed-as-they-run
+
+
+#
+# substitution
+echo "${var//search/replace}"
+pth=/var/log
+echo ${pth//\//-}
+-var-log
+# advanced, strip leading char
+tmp="${pth//\//-}"; echo "${tmp:1}"
+var-log
+
+# strip out chars
+myString="${myString:1}"
+
+
+# try until it works:
+for i in $(seq 1 10); do sleep 10 && vagrant ssh backend && break; done
+# try until it breaks:
+for i in $(seq 1 10); do sleep 10 && vagrant ssh backend || break; done
+
+
+# strip quotes
+temp="${opt%\"}"
+temp="${temp#\"}"
+echo "$temp"
+
+# file access times!
+ls -l --time=atime
+
+padding (better)
+for i in $(seq -f "%05g" 10 15)
+do
+  echo $i
+done
+
+
+# printf justifications: (padding)
+# # although this is C, bash printf accepts same options.
+printf ("<%d> is not justified.\n", x);
+printf ("<%5d> is right-justified.\n", x);
+printf ("<%-5d> The minus sign makes it left-justified.\n", x);
+/* Demonstrate with strings. */
+printf ("'%s' is not justified.\n", y);
+printf ("'%10s' is right-justified.\n", y);
+printf ("'%-10s' is left-justified using a minus sign.\n", y);
+
+# detect interactive shell
+if [ -t 1 ] ; then echo terminal; else echo "not a terminal"; fi
+
+# ssh w/ expon. backoff until succeeds
+for i in $(seq 1 60) ; do
+  ssh -p5147 gear@192.168.1.2 && break
+  echo waiting: $((i * i))
+  sleep $((i * i))
+done
+
+# subshells!
+pstree -pls $$
+
+# for all tmux, and not just your stack:
+ps aux | grep -v grep | grep tmux | tail -n1 | awk '{print $2}'
+9103
+pstree -pls 9103
+systemd(1)───tmux: server(9103)─┬─zsh(9104)───vim(12998)
+                                ├─zsh(9375)
+                                ├─zsh(9609)
+                                ├─zsh(9763)
+                                ├─zsh(10182)
+                                └─zsh(11843)───ranger(11789)───zsh(11804)───pstree(24498)
+
+# Scraping the last bit of some command output:
+vagrant ssh --command ... | xargs | awk '{print $NF}'
+
+# Am I in a subshell?  this doesn't work with zsh
+#$ ( if [ "$$" -eq "$BASHPID" ]; then echo not subshell; else echo subshell; fi )
+#subshell
+#$   if [ "$$" -eq "$BASHPID" ]; then echo not subshell; else echo subshell; fi
+#not subshell
+#
+# kind of cheating, but:
+# echo $PPID # in a new shell session under tmux, expect a low number like 300.
+# echo $PPID # in a new shell started from ranger, expect a large number in the thousands.  WOrks in zsh too!
+
+# check if I am in a ranger subshell:
+ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
+ not 100%, but should be OK in development.
+
+
+# file timestamps
+stat -c %y *
+- or -
+date -r "$1" +%s
+
+# # # Misc # # #
+#
+cat msg.xml
+<?xml version = "1.0" encoding = "UTF-8"?>
+<alert xmlns = "urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>test</identifier>
+  <sent>2020-06-20T15:00:00-05:00</sent>
+  <msgType>Alert</msgType>
+  <info>
+    <headline>matchme</headline>
+  </info>
+</alert>
+msg="$(cat msg.xml)"
+curl -XPOST --data "$msg" http://127.0.0.1/....
+#
+#
+
+
+#  print current method name
+${FUNCNAME[0]}
+
+# line-by-line file multiple delimieters:
+echo "12|23|11" | awk '{split($0,a,"|"); print a[3],a[2],a[1]}'
+
+# awk delimeters
+echo "1.2.4" | awk -F. '{print $1$2$3}'
+
+# switch on find command
+if [ -z $(find /var/log/crashes -name "app-*.log" ) ]
+then
+    echo "File is missing!"
+fi
+
+# glob evaluation
+compgen -G "/tmp/someFiles*
+
+# remote polling w/ pgrep
+ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment 'for i in $(seq 1 12); do (sleep 10; echo -n .; pgrep script.sh >/dev/null 2>&1 ) && break; done'
+ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment 'for i in $(seq 1 60); do (sleep 10; echo -n .; pgrep script.sh >/dev/null 2>&1 ) || break; done'
+ssh -o StrictHostKeyChecking=no -p "$SSH_PORT" user@$environment '! pgrep script.sh >/dev/null 2>&1'
+
+# one of my favorites
+# recursive diff
+find . -type f | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{print $2 " " $1 }'
+# then compare a coupel files with vim -d
+# a variant
+find . -name post-\* | xargs md5sum | awk '{print $2 " " $1}' | sort | awk '{print $2 " " $1 }'
+
+
+# find exec on fedora
+find . -user root -exec rm -rf {} +
+
+# find filenames
+find vendor/ -type f | args -L1 -I{} basename {}
+# stripping out version string from filename # | sort | sed -E 's/-[0-9]{1,2}.*//'
+
+# nonempty files
+find . -type f -name scratch -size +0
+
+# greater less then
+[ 0 -lt 1 ] && echo hello
+
+# search replace
+# #------------------------------------------------------------------------------
+rw = {} # replace with
+
+rw['pgsql-9\.6'] = 'pgsql-12'
+rw['postgresql96'] = 'postgresql12'
+rw['postgresql-9\.6'] = 'postgresql-12'
+rw['pgdg96'] = 'pgdg12'
+
+
+rw.each_pair do |p,s| # pattern, substitute
+  `ag -l '#{p}' | xargs sed -i 's/#{p}/#{s}/g'`
+end
+# ------------------------------------------------------------------------------
+
+# polling
+# ------------------------------------------------------------------------------
+server_is_using() {
+  #shellcheck disable=2009
+  ps aux | grep -v grep | grep -qs "$1"
+}
+
+while (server_is_using "kworker"); do
+  sleep 20
+  [ -z "$start" ] && start="$(date +%s)"
+  now=$(date +%s)
+  [ $((now-start)) -le 360 ] || break # timeout after 6 mins
+done
+# ------------------------------------------------------------------------------
+
+
+
+# universal argument parser
+while (( "$#" )); do
+  case "$1" in
+    -f|--flag-with-argument)
+      FARG=$2
+      shift 2
+      ;;
+    --) # end argument parsing
+      shift
+      break
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+
+
+# all args
+echo "$@"
+
+# short substitutions
+state=off # or on!
+state=${state//off/disabled}
+state=${state//on/enabled}
+
+# Loop through file
+while read item; do
+  echo "$item"
+done <file.list
+
+
+# Handy basename alternative
+find /path/to/files -type f | grep bin | sed 's!.*/!!'
+
+# focused search
+fzf | xargs cat | grep assert | less
+#(type testlib)
+
+# Increment template log statements:
+FN=get_network_info.sh
+for i in $(seq 1 100); do
+  sed -i "0,/0000/ s/0000/$i/g" $FN # 0, substitutes the first match only
+  grep -q "echo '0000'" $FN || break
+done
+#
+# poll for test breakage
+for i in $(seq 1 12); do bundle exec rspec spec || break; done
+
+
+# arrays
+dirs[0] = '/'
+dirs[1] = '/home'
+all=(1 2 4 8)
+for i in "${all[@]}" ; do
+echo $i; done
+
+# find/exec on mac
+find . -type f -exec wc -l {} \;
+
+# sort files by number of lines
+wc -l classes.output/* | sort -n
+find classes.output -type f -exec wc -l {} \; | sort -rn | less
+
+# is a useful one-liner which will give you the full directory name of the script no matter where it is being called from.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# absolute filepath of parent dir:
+"$(cd ..; pwd)"
+
+# check shell type
+"[[ $- == *i* ]] && echo 'Interactive' || echo 'Not interactive'"
+"shopt -q login_shell && echo 'Login shell' || echo 'Not login shell'"
+
+# mass search/replace
+find /path/to/dir/ -type f | xargs sed -i  's/replace_me_with/this/g'
+
+# greater than
+if [ "$a" -gt "$b" ];
+fi
+
+# remove a char from a string:
+asdf="\"static\""
+"${asdf//\"}"
+# "static" vs. static
+
+date +"%Y-%m-%d_%H-%M-%S"
+
+# string include
+if [[ $state == *"original"* ]]
+# strign equality
+if [ "$state" == "original" ]]
+
+# follow link
+readlink -f /root/Public/myothertextfile.txt
+
+# lazy variabel heredoc
+VAR=$(cat <<'END_HEREDOC'
+abc'asdf"
+$(dont-execute-this)
+foo"bar"''
+END_HEREDOC
+)
+
+# plain heredoc
+cat << EOF
+  asdf
+EOF
+
+# default values in bash ksh?
+COMMIT1=$1
+COMMIT1=${COMMIT1:=f4c11a2}
+
+# unset variable
+end -U NAME
+unset NAME
+
+# check regex
+[[ "$string" =~ ^[0-9]+$ ]] && echo yes
+
+# filenames in batches, plus gsub:
+names=$(ls packages/*.rpm | xargs -I % basename %)
+names=${PACKAGE_NAMES//\.rpm/}
+
+echo $(basename $(pwd)) # name directory were running in:
+echo $(basename $(dirname $(<script_filepath>))) # equivalent to above
+echo $(basename $(dirname $(pwd))) # name of 2 dirs up!
+
+# args
+for arg in $@;
+do
+  [ "vecap" = "$arg" ] && echo hello
+done
+
+## increment/math
+var=0
+echo $((var++))
+echo $((var++))
+echo $((COLUMNS - 2))
+echo $((RANDOM % 2)) # random 1 or 0
+
+## no escape
+port=$(cat file | grep -o "$pattern")     # works
+port="$(cat file | grep -o \"$pattern\")" # can't work
+
+(list)   # run in subshell, exit 1 does not kill the script
+{list; } # run in current shell
+
+for i in $(seq 1 $END); do echo $i; done
+for i in /etc/*.conf; do cp $i /backup; done
+for word in word1 word2 word3 word4; do echo word; done
+
+Ex.
+for i in $(vagrant box list | cut -f 1 -d' ' | xargs); do vagrant box remove $i; done
+
+# run a function in the background
+my_background_method {
+  ...
+}
+my_background_method &
+
+
+case "$asdf" in
+"hello")
+   echo hello
+   ;;
+"abcd")
+   echo asdf
+   ;;
+esac
+
+
+# Background watcher
+ls /path/to/file || exit
+:>/root/log
+:>/root/err
+run_when_appears() {
+  for i in $(seq 1 30); do
+    ls /path/to/generated_file && break
+    echo "waiting..." >> /root/log;
+    sleep 20
+  done
+  run_thing
+}
+run_when_appears &
+
+
+
+
+
+
+
+
+
+
+# man [
+    -b FILE - True if the FILE exists and is a block special file.
+    -c FILE - True if the FILE exists and is a special character file.
+    -d FILE - True if the FILE exists and is a directory.
+    -e FILE - True if the FILE exists and is a file, regardless of type (node, directory, socket, etc.).
+    -f FILE - True if the FILE exists and is a regular file (not a directory or device).
+    -G FILE - True if the FILE exists and has the same group as the user running the command.
+    -h FILE - True if the FILE exists and is a symbolic link.
+    -g FILE - True if the FILE exists and has set-group-id (sgid) flag set.
+    -k FILE - True if the FILE exists and has a sticky bit flag set.
+    -L FILE - True if the FILE exists and is a symbolic link.
+    -O FILE - True if the FILE exists and is owned by the user running the command.
+    -p FILE - True if the FILE exists and is a pipe.
+    -r FILE - True if the FILE exists and is readable.
+    -S FILE - True if the FILE exists and is socket.
+    -s FILE - True if the FILE exists and has nonzero size.
+    -u FILE - True if the exists and set-user-id (suid) flag is set.
+    -w FILE - True if the FILE exists and is writable.
+    -x FILE - True if the FILE exists and is executable.

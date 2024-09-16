@@ -1,3 +1,76 @@
+## Django Administration Cheatsheet
+
+### Accessing Django Shell
+```bash
+python manage.py shell
+```
+
+### Creating Superuser
+```bash
+python manage.py createsuperuser
+```
+
+### Database Migrations
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### Checking for Problems
+```bash
+python manage.py check
+```
+
+### Querying Data
+```python
+from myapp.models import MyModel
+objects = MyModel.objects.all()
+```
+```python
+filtered_objects = MyModel.objects.filter(attribute='value')
+```
+
+### Creating Objects
+```python
+new_object = MyModel(attribute='value')
+new_object.save()
+```
+
+### Updating Objects
+```python
+obj = MyModel.objects.get(id=1)
+obj.attribute = 'new value'
+obj.save()
+```
+
+### Deleting Objects
+```python
+obj = MyModel.objects.get(id=1)
+obj.delete()
+```
+
+### Django Admin Customization
+```python
+from django.contrib import admin
+from .models import MyModel
+
+@admin.register(MyModel)
+class MyModelAdmin(admin.ModelAdmin):
+    list_display = ('attribute', 'other_attribute')
+```
+
+### Debugging
+```python
+import logging
+logger = logging.getLogger(__name__)
+
+def my_view(request):
+    logger.debug('A debug message!')
+```
+
+
+### old cheatsheet
+
 # run in foreground
 gunicorn your_project_name.wsgi:application -b unix:/path/to/your/socket.sock --access-logfile -
 ------------------------------------------------------------------------------
