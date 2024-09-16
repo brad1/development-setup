@@ -1,4 +1,4 @@
-# Base64 Encoding in Different Languages
+Base64 Encoding in Different Languages
 
 ## Python
 import base64

@@ -43,3 +43,186 @@ Systemd Advanced Cheat Sheet
 
 Note: Replace `[service_name]`, `[timer_name]`, `[socket_name]`, `[interface_name]`, and `[machine_name]` with actual names as needed.
 
+
+####### Timers
+5 minute timer example from medium
+
+[Unit]
+Description=My Timer
+
+[Timer]
+OnCalendar=*-*-* *:*/5:00
+Persistent=true
+Unit=myjob.service
+
+[Install]
+WantedBy=multi-user.target
+
+------------------------------------------------------------------------------
+
+1 minute example
+
+[Unit]
+...
+Requires=myjob.service
+
+[Timer]
+...
+OnCalendar=*-*-* *:*:00
+
+
+####### Services
+see: man systemd.service
+
+[Unit]
+Description=Comprehensive example of a systemd service unit file # Brief description of what this service does
+Documentation=man:example(8) # Documentation reference for this service
+Wants=network.target # This unit wants the network target to be active
+After=network.target # This unit should start after the network target
+Before=multi-user.target # This unit should start before the multi-user target
+Requires=local-fs.target # This unit requires the local filesystem target to function
+BindsTo=another.service # This unit’s start-up is bound to the start-up of another service
+PartOf=group.service # This unit is part of a group of services
+Conflicts=conflicting.service # This unit cannot run concurrently with conflicting.service
+ConditionArchitecture=x86-64 # This unit is only relevant on x86-64 architectures
+ConditionFileNotEmpty=/etc/example/config # This unit will only start if the config file is not empty
+AssertPathExists=/var/log/example # This unit will only start if this path exists
+
+[Service]
+Type=simple:  # : The simplest option where systemd considers the service up as soon as the binary is invoked.
+Type=exec:    #: Similar to simple, but systemd waits for the binary to execute before considering the service started.
+Type=forking: #: Suitable for traditional daemons that fork a child process.
+Type=oneshot: #: Useful for tasks that perform one action and then exit.
+Type=dbus:    #: For services that take a name on the D-Bus.
+Type=notify:  # : The service will notify systemd when it is ready.
+Type=idle:    # : Delays execution until all jobs are dispatched.
+ExecStart=/usr/bin/example --option # Command to start the service
+ExecStartPre=/usr/bin/example-check # Command to run before starting the service
+ExecStartPost=/usr/bin/example-post # Command to run after the service starts
+ExecReload=/bin/kill -HUP $MAINPID # Command to reload the service configuration
+ExecStop=/usr/bin/example-stop # Command to stop the service
+ExecStopPost=/usr/bin/example-cleanup # Command to clean up after service stops
+Restart=always # Service to restart after it exits, regardless of status
+RestartSec=5s # Wait 5 seconds before restarting the service
+SuccessExitStatus=200 201 # Additional exit codes considered as successful
+RestartPreventExitStatus=SIGTERM # Prevents restart if the service exits with SIGTERM
+RestartForceExitStatus=3 # Force a restart even if exit status is 3
+TimeoutStartSec=30s # Service must start within 30 seconds
+TimeoutStopSec=30s # Service must stop within 30 seconds
+WatchdogSec=10s # Watchdog timer set to 10 seconds
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_SYS_TIME # Limits the capabilities of the service process
+AmbientCapabilities=CAP_NET_BIND_SERVICE # Allows the service to bind to well-known ports
+User=exampleuser # Run the service as exampleuser
+Group=examplegroup # Run the service under examplegroup
+WorkingDirectory=/var/lib/example # Set the working directory for the service
+RootDirectory=/opt/chroot # Change the root directory for the service process
+ProtectSystem=full # Protect system directories from being written
+ProtectHome=read-only # Protect home directories, but allow reading
+PrivateTmp=true # Give the service its own temporary directory
+NoNewPrivileges=true # Prevent the service from gaining new privileges
+Environment="VAR1=value1" "VAR2=value2" # Set environment variables
+EnvironmentFile=-/etc/sysconfig/example # Load environment variables from specified file, proceed even if it does not exist
+UMask=0022 # Set the UMask for the service
+LimitNOFILE=1024:2048 # Set the maximum number of open file descriptors
+OOMScoreAdjust=-500 # Adjust the OOM killer score
+Slice=user.slice # Place service in the user.slice control group
+MemoryHigh=500M # Set the memory high threshold for the service
+CPUWeight=500 # Set the CPU weight for the service
+IOWeight=500 # Set the I/O weight for the service
+KillMode=mixed # Use mixed kill mode during service termination
+KillSignal=SIGTERM # Specify the signal used to kill the service
+SendSIGHUP=yes # Send SIGHUP to remaining processes after main process is killed
+SendSIGKILL=no # Do not send SIGKILL to remaining processes after timeout
+Delegate=yes # Delegate authority of cgroup management
+Restart=on-failure # Restart service on failure conditions
+NonBlocking=true # Use non-blocking mode for all file descriptors
+NotifyAccess=all # Allow notification from any service process
+Sockets=example.socket # Inherit file descriptors from example.socket
+StandardInput=null # Do not accept any standard input
+StandardOutput=syslog # Redirect standard output to syslog
+StandardError=inherit # Inherit standard error handling
+SyslogIdentifier=example # Set the syslog identifier
+SyslogFacility=daemon # Set the syslog facility
+SyslogLevel=info # Set the syslog level
+TTYPath=/dev/tty12 # Set a specific TTY for the service
+TTYReset=yes # Reset the TTY on service startup
+
+
+######## systemd-old.txt searachable dump
+------------------------------------------------------------------------------
+systemctl is-enabled
+
+man systemd.kill ?
+------------------------------------------------------------------------------
+context: manual
+
+man systemd.directives
+------------------------------------------------------------------------------
+
+context: reload propogation!
+
+# postgresql@.service # clustering!
+[Unit]
+ReloadPropogatedFrom=postgresql.service
+
+# postgresql.service
+[Service]
+type=oneshot
+ExecStart=/bin/true
+ExecReload=/bin/true
+RemainAfterExit=on
+
+------------------------------------------------------------------------------
+context: reset failure circuit breaker
+
+systemctl reset-failed <service name>
+------------------------------------------------------------------------------
+links:
+https://stackoverflow.com/questions/35200232/how-to-launch-a-process-outside-a-systemd-control-group
+https://superuser.com/questions/1405656/how-to-attach-background-process-to-systemctl-services-cgroup
+https://www.freedesktop.org/software/systemd/man/systemd.kill.html
+------------------------------------------------------------------------------
+
+[Unit]
+Description=My Miscellaneous Service
+After=network.target
+
+[Service]
+Type=simple
+# Another Type option: forking
+User=user
+WorkingDirectory=/home/user
+ExecStart=/home/user/my_daemon --option=a
+Restart=on-failure
+# Other Restart options: or always, on-abort, etc
+
+[Install]
+WantedBy=multi-user.target
+
+# There are more options you can specify. For example, in addition to ExecStart you can specify ExecStop and ExecReload to control what happens when stopping and restarting. Those are not required though. If you omit the ExecStop option, it is smart enough to know it should kill the process. If you need a more graceful shutdown though, specify that with ExecStop. To see some more options, look at man systemd.service in your distribution. Freedesktop.org's man systemd.service .
+
+# try cat /etc/services
+------------------------------------------------------------------------------
+
+# Read all the service options
+man systemd.service
+
+# Control whether service loads on boot
+systemctl enable
+systemctl disable
+
+# Manual start and stop
+systemctl start
+systemctl stop
+
+# Restarting/reloading
+systemctl daemon-reload # Run if .service file has changed
+systemctl restart
+
+# See if running, uptime, view latest logs
+systemctl status
+systemctl status [service_name]
+
+journalctl # See all systemd logs
+journalctl -f # Tail logs
+journalctl -u my_daemon.service # Show logs for specific service
