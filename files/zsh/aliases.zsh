@@ -78,7 +78,6 @@ alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
 alias vim-queue='cd ~/Documents/txt/var; vim queue; cd -'
 alias vimrc="vim $DEVSETUP/files/vim/vimrc"
 alias vim-open-modified='vim $(git status | grep modified | cut -f2 | cut -d" " -f4)'
-alias vim-tmp='vim ~/tmp/$(date "+%F-%T")'
 alias vim-clipboard='vim ~/Documents/txt/var/clipboard'
 alias vim-clipboard-2='vim ~/Documents/txt/clipboard/'
 alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'

@@ -168,6 +168,10 @@ git-diff-master() {
   git diff master $(git branch --show-current)
 }
 
+git-show-file-diffs() {
+  git log -p -- "$1"
+}
+
 # neat, but use :Tags from fzf.vim 
 vim-goto() {
   local pattern="$1"
@@ -620,10 +624,19 @@ f () {
   eval $(cat /var/brad/tmp/command)
 }
 
-ff () {
-  ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf > /var/brad/tmp/command 
-  eval $(cat /var/brad/tmp/command)
+fzf_insert_function() {
+  LBUFFER+=$( ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf )
 }
+zle -N fzf_insert_function
+bindkey '^f' fzf_insert_function
+
+
+# Alternative to fzf-history-widget
+#fzf_insert_history() {
+#  LBUFFER+=$(fc -l 1 | fzf | sed 's/^[ ]*[0-9]*[ ]*//')
+#}
+#zle -N fzf_insert_history
+#bindkey '^r' fzf_insert_history
 
 vpn-start () {
   nohup /opt/cisco/secureclient/bin/vpnui &
@@ -685,7 +698,7 @@ shell-status2() {
     printf "$format\n" "'s' connect to server" "'h' edit hostfile"
     printf "$format\n" "'d' bookmarked dir" "'j' ..."
     printf "$format\n" "'f' function menu" "'k' ..."
-    printf "$format\n" "'ff' full command menu" "'k' ..."
+    printf "$format\n" "'Ctrl-f' full command menu" "'k' ..."
     echo $line
     printf "$format\n" "'e' edit pinned file" "'l' ..."
     printf "$format\n" "'c' cheatsheets" "'o' open-interpreter"
@@ -694,6 +707,7 @@ shell-status2() {
 
     echo
     echo 'New commands to try:'
+    echo '    https://github.com/twinnydotdev/twinny - local chat complete + voice'
     echo '    exa'
     echo '    vim-usage'
     echo '    last [reboot]'
@@ -714,10 +728,15 @@ shell-status2() {
     echo '    - import sticking commands (for Ctrl-R) # over time these may become functions'
     echo '    - fzf in reverse search...'
     echo 'Glen initiatives:'
-    echo '     Faster builds' 
-    echo '     6.1 - audio/image file reboot, delete legacy SQL'
-    echo '     SiteManager - strip, restructure, LFS' 
+    echo '     6.2 - audio/image file reboot, delete legacy SQL, move C code and scripts/'
     echo '     Schedules export (Chad)' 
+    echo 'My initiatives:'
+    echo '     AutoUpdates - outline and labels for next meeting'
+    echo '     smoke test expand PM events are next? control packets?' 
+    echo '     PDP - friday kubernetes practice' 
+    echo '     Stress.sql'
+    echo '     tripwire'
+    echo '     smoke test expand (note that selenium job VM pcrunner missing default provider)'
     echo 'Ubuntu:'
     echo '     https://ubuntu.com/core/docs/networkmanager/networkmanager-and-netplan'
     echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
@@ -758,6 +777,14 @@ arc() {
 
 vim-usage() {
   grep '##' ~/.vimrc # inspired by make usage
+}
+
+vtmp() {
+  vim $(mktemp)
+}
+
+vim-tmp() {
+  vim $(mktemp)
 }
 
 
@@ -808,6 +835,7 @@ e () {
 
 c () {
   fn=$(cd /opt/chef/cookbooks/development-setup/files/cheatsheets/; ls | fzf)
+  # Next: use bat or glow to view MDs
   # from cheatsheets.list ?
   # evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
   $EDITOR /opt/chef/cookbooks/development-setup/files/cheatsheets/$fn
@@ -858,3 +886,9 @@ rj() {
     echo "No job selected."
   fi
 }
+
+# favor ln -s /usr/bin/batcat ~/.local/bin/bat 
+#bat() {
+#  batcat
+#}
+

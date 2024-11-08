@@ -1,3 +1,8 @@
+### quick examples:
+# Distinguish added migration files from modified ones.
+git diff --name-status 6025-v6.0.0 v6.0 -- server_api/api_root/database/migrations/ 
+* variant: git diff --name-only --diff-filter=A v1.0 v2.0
+
 
 # **Git Cheatsheet**
 

@@ -3,6 +3,79 @@ sudo apt-get install --reinstall gnome-control-center
 sudo ubuntu-drivers autoinstall
 
 
+# iptables
+# 1. Basics
+# List rules
+iptables -L -v -n --line-numbers
+
+# Save rules
+iptables-save > /etc/iptables/rules.v4
+
+# Restore rules
+iptables-restore < /etc/iptables/rules.v4
+
+# 2. Flushing Rules
+# Flush all chains
+iptables -F
+
+# Flush a specific chain
+iptables -F INPUT
+
+# 3. Adding Rules
+# Allow SSH (port 22)
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Allow HTTP (port 80)
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+# Allow a specific IP
+iptables -A INPUT -s 192.168.1.10 -j ACCEPT
+
+# 4. Blocking and Rejecting Traffic
+# Drop traffic from a specific IP
+iptables -A INPUT -s 203.0.113.1 -j DROP
+
+# Reject traffic with an ICMP message
+iptables -A INPUT -s 203.0.113.1 -j REJECT --reject-with icmp-port-unreachable
+
+# 5. Logging Traffic
+# Log dropped packets
+iptables -A INPUT -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+
+# 6. NAT Rules
+# Masquerade outgoing traffic (useful for NAT)
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+# Port forwarding from port 80 to 8080
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+# 7. Deleting Rules
+# Delete a rule by specifying the rule
+iptables -D INPUT -p tcp --dport 22 -j ACCEPT
+
+# Delete a rule by line number
+iptables -D INPUT 1
+
+# 8. Policies
+# Set default policy to DROP
+iptables -P INPUT DROP
+
+# Set default policy to ACCEPT
+iptables -P INPUT ACCEPT
+
+iptables -L INPUT -v -n --line-numbers
+Output example:
+
+sql
+Copy code
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+2    DROP       all  --  203.0.113.1          0.0.0.0/0
+
+# end iptables
+#########################
+
 
 # vagrant:
   config.vm.network "forwarded_port", guest: 22, host: 2222, disabled: true

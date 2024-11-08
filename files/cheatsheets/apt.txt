@@ -19,3 +19,8 @@ Local install
 [errors]
   "package <asdf> is not configured", leading to a circular dependency.
   solution: apt-get install -f ./debs/pkg.deb
+
+Example:
+sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu bionic main'
+sudo apt update
+sudo apt install -y python-mysqldb

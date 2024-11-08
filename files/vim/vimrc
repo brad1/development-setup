@@ -9,7 +9,8 @@
 
 
 " move me "
-set clipboard=unnamedplus " system clipboard "
+" yank to system clipboard, more trouble than it is worth
+" set clipboard=unnamedplus " system clipboard "
 
 " Use with:
 " print("DEBUG: ") for example

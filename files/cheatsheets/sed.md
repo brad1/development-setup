@@ -78,12 +78,24 @@ sed -i 's|/a/path|/another/path|g'
 sed 's/string/"&"/' sed.txt
 ```
 
+### Replace the line of the first hit, read from file 
+```bash
+sed -i "0,/^pattern/s|.*|$(<.replacement)" file
+```
+
 ## Warnings:
 - **Be cautious with symlinks:**  
   `sed -i` **will overwrite a symlink!**
 
-## Example Deletion Command:
+## Example Deletion Commands:
 ```bash
 sed '/^u/d' file
+```
+
+```bash
+# just the first match 
+sed -i '/0,/pattern/{//d;}' file
+# test first like so, basically a grep
+sed -n '/0,/pattern/{//p;}' file
 ```
 

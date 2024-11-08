@@ -24,6 +24,12 @@ concurrent = 0 # does not mean unlimited... ok
 
 
 
+####### Section: ssh access troubleshooting
+gitlab-psql -c "select id,user_id,title,expires_at from keys order by id" # SSH key names in gitlab
+ssh-keygen -lf <(cat /var/opt/gitlab/.ssh/authorized_keys | grep 'ssh.*AAA.*$')  # produce fingerprints plus key id for SSH keys registered by gitlab users
+grep -o SHA256.\*$ /var/log/secure | sort | uniq  # fingerprints used to auth
+grep Accepted /var/log/secure            # auth hits
+grep 'partial fingerprint' /var/log/secure > someuserlogin.txt 
 
 
 
