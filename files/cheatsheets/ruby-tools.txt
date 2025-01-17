@@ -1,6 +1,7 @@
 ### VAGRANT
 
-vagrant plugin expunge
+# needed this and vagrant pkg update after virtualbox upgrade to 7.1
+vagrant plugin expunge [--reinstall]
 vagrant plugin repair
 vagrant ssh-config > vagrant-ssh # save the config to a file
   * ssh -F vagrant-ssh default       # run ssh with the file.
@@ -56,6 +57,20 @@ describe FirstStart do
     end
   end
 end
+
+
+#### RBENV
+    #export PATH=~/.rbenv/shims:$PATH    
+    #export PATH=~/.rbenv/bin:$PATH    
+  #eval "$(/root/.rbenv/bin/rbenv init - --no-rehash bash)"
+  (
+    export RBENV_DEBUG=0         
+    export HOME=/root         
+    $HOME/.rbenv/bin/rbenv init            
+    $HOME/.rbenv/bin/rbenv versions            
+    $HOME/.rbenv/bin/rbenv global 3.3.6               
+  )
+
 
 
 

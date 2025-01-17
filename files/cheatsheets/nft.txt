@@ -1,0 +1,78 @@
+In `nftables`, saving rules is straightforward and involves exporting the current rule set to a file. Here's how you can save and restore rules:
+
+---
+
+### **1. Save Rules**
+To save the current `nftables` ruleset to a file, use the following command:
+
+```bash
+sudo nft list ruleset > /etc/nftables.conf
+```
+
+- **`nft list ruleset`**: Dumps the complete ruleset in a human-readable format.
+- **`/etc/nftables.conf`**: Common location to store the ruleset file, but you can choose any path.
+
+---
+
+### **2. Restore Rules**
+To restore the saved rules from a file, use:
+
+```bash
+sudo nft -f /etc/nftables.conf
+```
+
+- **`-f`**: Specifies the file containing the ruleset.
+
+---
+
+### **3. Automatic Loading on Boot**
+To ensure the rules are applied automatically at system startup:
+
+1. Place your saved ruleset in `/etc/nftables.conf`:
+   ```bash
+   sudo mv /path/to/your-ruleset.conf /etc/nftables.conf
+   ```
+
+2. Enable the `nftables` service:
+   ```bash
+   sudo systemctl enable nftables
+   sudo systemctl start nftables
+   ```
+
+The `nftables` service will automatically load the `/etc/nftables.conf` file at boot.
+
+---
+
+### **4. Example Workflow**
+1. **Create or Modify Rules**:
+   ```bash
+   sudo nft add table ip filter
+   sudo nft add chain ip filter input { type filter hook input priority 0; }
+   sudo nft add rule ip filter input ip saddr 192.168.1.0/24 accept
+   ```
+
+2. **Save Rules**:
+   ```bash
+   sudo nft list ruleset > /etc/nftables.conf
+   ```
+
+3. **Restore (if needed)**:
+   ```bash
+   sudo nft -f /etc/nftables.conf
+   ```
+
+4. **Enable Persistent Rules**:
+   ```bash
+   sudo systemctl enable nftables
+   ```
+
+---
+
+### **5. Verify Rules**
+After saving or restoring, verify the active ruleset:
+
+```bash
+sudo nft list ruleset
+```
+
+This will display the current `nftables` configuration in an easily readable format.

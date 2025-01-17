@@ -33,6 +33,11 @@ git-portal() {
     export HISTFILE=$HOME/.git_portal_history
 }
 
+tmux-options() {
+  echo "man tmux | grep -iE '(key bindings are|rename)'"
+  man tmux | grep -iE '(key bindings are|rename)'
+}
+
 
 #### keyword search
 #
@@ -630,6 +635,15 @@ fzf_insert_function() {
 zle -N fzf_insert_function
 bindkey '^f' fzf_insert_function
 
+vim_insert_function() {
+  grep 'SELECTME' $(find /home/brad/.command_palettes/ -type f | fzf ) > /tmp/commandspals 
+  cat /tmp/commandspals | fzf > /tmp/command
+  #LBUFFER+=$( cat /tmp/command | awk -F '$' '{print $1}' )
+  LBUFFER+=$( cat /tmp/command | awk -F '#' '{print $1}' )
+}
+
+zle -N vim_insert_function
+bindkey '^v' vim_insert_function
 
 # Alternative to fzf-history-widget
 #fzf_insert_history() {
@@ -684,7 +698,7 @@ list-aliases() { # for definition
 
 
 #splash_screen() {
-shell-status2() {
+shell-status2-2024() {
     # Clear the screen
     clear
 
@@ -715,6 +729,7 @@ shell-status2() {
     echo '    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print" # file type filtering'
     echo '    vim-goto # hop to a pattern'
     echo '    rj # resume job fzf' 
+    echo '    column # -x, -t, -s, ...' 
     echo 'Commands to remember:'
     echo '    find /path/to/files -type f -mtime +7 -delete'
     echo '    c -> chatgpt-general-document.txt # for shorthand, labeled instructions'
@@ -739,6 +754,54 @@ shell-status2() {
     echo '     smoke test expand (note that selenium job VM pcrunner missing default provider)'
     echo 'Ubuntu:'
     echo '     https://ubuntu.com/core/docs/networkmanager/networkmanager-and-netplan'
+    echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
+    echo "-  Parnas' 1972 paper 'On the Criteria To Be Used in Decomposing Systems into Modules'"
+    echo
+    echo
+    echo '---- Pending action items: ----'
+    echo
+
+    # TODO test and expand
+    shell_login_overview 
+}
+
+shell-status2() {
+    # Clear the screen
+    clear
+
+    # Set some formatting
+    local line="+------------------------+------------------------+"
+    local format="| %-22s | %-22s |"
+
+    # Print the layout using formatted printf statements
+    echo $line
+    printf "$format\n" "'a' default command pallette" "'gh' git commands"
+    printf "$format\n" "'s' connect to server" "'h' edit hostfile"
+    printf "$format\n" "'d' bookmarked dir" "'j' ..."
+    printf "$format\n" "'Ctrl-f' full command menu" "'k' ..."
+    echo $line
+    printf "$format\n" "'e' edit pinned file" "'l' ..."
+    printf "$format\n" "'c' cheatsheets" "" 
+    printf "$format\n" "'cw' work cheatsheets" ""
+    echo $line
+
+    echo
+    echo 'New commands to try (preview):'
+    grep 'SELECTME' ~/.command_palettes/to_try.txt | awk '{print "    " $0}' | head -n5
+    echo '    ...'
+    echo 'Commands to remember (preview):'
+    grep 'SELECTME' ~/.command_palettes/simple.txt | awk '{print "    " $0}' | head -n5
+    echo '    ...'
+    echo 'Things to add:'
+    echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
+    echo '    Ctrl-R:'
+    echo '    - import sticking commands (for Ctrl-R) # over time these may become functions'
+    echo '    - fzf in reverse search...'
+    echo 'My initiatives:'
+    echo '     AutoUpdates - outline and labels for next meeting'
+    echo '     Expand end to end tests'
+    echo '     PDP - friday kubernetes practice' 
+    echo '     Stress.sql'
     echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
     echo "-  Parnas' 1972 paper 'On the Criteria To Be Used in Decomposing Systems into Modules'"
     echo

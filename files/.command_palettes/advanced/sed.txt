@@ -1,0 +1,84 @@
+# <Basic Substitution>
+sed 's/old/new/' $FILE # Replace first occurrence of 'old' with 'new' per line. SELECTME
+sed 's/old/new/g' $FILE # Replace all occurrences of 'old' with 'new' per line. SELECTME
+sed 's/old/new/3' $FILE # Replace only the third occurrence of 'old' per line. SELECTME
+sed 's/old/new/gI' $FILE # Case-insensitive replacement of 'old' with 'new'. SELECTME
+sed 's#old#new#g' $FILE # Use an alternative delimiter (#) for clarity. SELECTME
+
+# <In-Place Editing>
+sed -i 's/old/new/g' $FILE # Edit file in place, replacing 'old' with 'new'. SELECTME
+sed -i.bak 's/old/new/g' $FILE # Edit in place with a backup file. SELECTME
+sed -i '/pattern/d' $FILE # Delete lines matching 'pattern' in place. SELECTME
+sed -i 's/old/new/g' $FILE1 $FILE2 # Modify multiple files in place. SELECTME
+sed -i 's/foo/bar/g; s/abc/xyz/g' $FILE # Apply multiple replacements. SELECTME
+
+# <Line Deletion>
+sed '/pattern/d' $FILE # Delete lines containing 'pattern'. SELECTME
+sed '1d' $FILE # Delete the first line of a file. SELECTME
+sed '$d' $FILE # Delete the last line of a file. SELECTME
+sed '1,5d' $FILE # Delete lines 1 through 5. SELECTME
+sed '/^$/d' $FILE # Delete empty lines. SELECTME
+
+# <Line Selection and Printing>
+sed -n '5p' $FILE # Print only the 5th line of a file. SELECTME
+sed -n '10,20p' $FILE # Print lines 10 to 20. SELECTME
+sed -n '/pattern/p' $FILE # Print only lines containing 'pattern'. SELECTME
+sed -n '1~2p' $FILE # Print every second line (starting from line 1). SELECTME
+sed -n '5,10!p' $FILE # Print all but lines 5 to 10. SELECTME
+
+# <Find and Replace with Patterns>
+sed -E 's/[0-9]+/NUM/g' $FILE # Replace all numbers with "NUM". SELECTME
+sed 's/[a-zA-Z]//g' $FILE # Remove all letters from a file. SELECTME
+sed -E 's/(error|fail)/WARNING/g' $FILE # Replace 'error' or 'fail' with 'WARNING'. SELECTME
+sed 's/\s\+/ /g' $FILE # Replace multiple spaces with a single space. SELECTME
+sed 's/[[:space:]]\+/ /g' $FILE # Normalize whitespace using character class. SELECTME
+
+# <Adding and Modifying Lines>
+sed '1i\Header Line' $FILE # Insert "Header Line" at the beginning. SELECTME
+sed '$a\Footer Line' $FILE # Append "Footer Line" at the end. SELECTME
+sed 's/^/PREFIX: /' $FILE # Add a prefix to each line. SELECTME
+sed 's/$/ :SUFFIX/' $FILE # Add a suffix to each line. SELECTME
+sed '3s/.*/REPLACED LINE/' $FILE # Replace only line 3 entirely. SELECTME
+
+# <Text Extraction>
+sed -n 's/.*start\(.*\)end.*/\1/p' $FILE # Extract text between 'start' and 'end'. SELECTME
+sed -n 's/^.*\(pattern\).*$/\1/p' $FILE # Extract text matching 'pattern'. SELECTME
+sed -n '/pattern/{s/.*\(important\).*/\1/;p;}' $FILE # Extract 'important' only from lines with 'pattern'. SELECTME
+sed -n 's/.*\(ERROR:.*\)/\1/p' $FILE # Extract error messages from logs. SELECTME
+sed -n '/<title>/s/<title>\(.*\)<\/title>/\1/p' $FILE # Extract HTML title tag content. SELECTME
+
+# <Whitespace Manipulation>
+sed 's/[[:space:]]*$//' $FILE # Trim trailing whitespace. SELECTME
+sed 's/^[[:space:]]*//' $FILE # Trim leading whitespace. SELECTME
+sed 's/[[:space:]]\+/ /g' $FILE # Reduce multiple spaces to a single space. SELECTME
+sed 's/\t/    /g' $FILE # Convert tabs to spaces. SELECTME
+sed 's/\r$//' $FILE # Remove carriage returns (DOS to UNIX conversion). SELECTME
+
+# <Rearranging Fields>
+sed 's/\([^ ]*\) \([^ ]*\)/\2 \1/' $FILE # Swap first two whitespace-separated words. SELECTME
+sed 's/\([^,]*\),\([^,]*\),\([^,]*\)/\3,\2,\1/' $FILE # Swap fields in a CSV row. SELECTME
+sed 's/^\(.*\),\(.*\)$/\2,\1/' $FILE # Swap two comma-separated values per line. SELECTME
+sed 's/\([0-9]\+\):\([0-9]\+\)/\2:\1/' $FILE # Swap numbers separated by ':'. SELECTME
+sed -E 's/(word1)(.*)(word2)/\3\2\1/' $FILE # Swap 'word1' and 'word2' while keeping text between them. SELECTME
+
+# <Advanced Pattern Matching>
+sed -n '/pattern1/,/pattern2/p' $FILE # Print everything between 'pattern1' and 'pattern2'. SELECTME
+sed '/pattern1/,/pattern2/d' $FILE # Delete everything between 'pattern1' and 'pattern2'. SELECTME
+sed -n '/BEGIN/,/END/{//!p}' $FILE # Print everything between 'BEGIN' and 'END' except those lines. SELECTME
+sed '/pattern1/!d; /pattern2/!d' $FILE # Print lines that contain both 'pattern1' and 'pattern2'. SELECTME
+sed -E 's/([a-z]+) \1/REPEAT/g' $FILE # Replace duplicate consecutive words with 'REPEAT'. SELECTME
+
+# <Working with Multiple Commands>
+sed -e 's/foo/bar/g' -e 's/baz/qux/g' $FILE # Apply multiple substitutions in one command. SELECTME
+sed 's/apple/orange/;s/dog/cat/' $FILE # Perform two substitutions sequentially. SELECTME
+sed '/pattern/{s/old/new/;s/foo/bar/}' $FILE # Conditionally apply multiple changes on matching lines. SELECTME
+sed -e 's/foo/bar/' -e 's/abc/xyz/' $FILE # Use multiple `-e` expressions for clarity. SELECTME
+sed 's/^/# /' $FILE # Comment out every line by adding '# '. SELECTME
+
+# <Using Hold and Pattern Space>
+sed -n 'h;n;G;p' $FILE # Append the next line to the current line before printing. SELECTME
+sed 'N;s/\n/ /' $FILE # Join two consecutive lines into one. SELECTME
+sed '/START/,/END/{H;$!d};x;s/\n/ /g' $FILE # Extract and merge everything between 'START' and 'END'. SELECTME
+sed -n 'x;/pattern/p' $FILE # Print only lines that match a pattern in the hold space. SELECTME
+sed '/^$/b end; H; $!d; :end x; s/\n/, /g' $FILE # Convert paragraphs into single comma-separated lines. SELECTME
+

@@ -64,12 +64,15 @@
 
 ## One-Line Exercises II
 - awk 'NR!=1{print $1}' file                          # Print first field for each record excluding the first record
-- awk 'END{print NR}' file                             # Count lines in file
+- awk -F':' 'NR!=1 {print $1}' file                   #    but Use colon ':' as field separator
+- awk -F':::' 'NR!=1 {print $1}' file                 #    but Use ":::" (note that the string is a regex!!!)
+- awk 'BEGIN{FS=":::"} NR!=1 {print $1}' file         #    but set FS within the awk script 
+- awk 'END{print NR}' file                            # Count lines in file
 - awk '/foo/{n++}; END {print n+0}' file              # Print total number of lines that contain "foo"
 - awk '{total=total+NF};END{print total}' file        # Print total number of fields in all lines
-- awk '/regex/{getline;print}' file                    # Print line immediately after regex, but not line containing regex
-- awk 'length > 32' file                               # Print lines with more than 32 characters
-- awk 'NR==12' file                                    # Print line number 12 of file
+- awk '/regex/{getline;print}' file                   # Print line immediately after regex, but not line containing regex
+- awk 'length > 32' file                              # Print lines with more than 32 characters
+- awk 'NR==12' file                                   # Print line number 12 of file
 
 ## Examples
 ### Context: Sanitize Before Printing

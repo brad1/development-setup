@@ -1,0 +1,90 @@
+# <Basic Network Information>
+ip a # Show all network interfaces and their IP addresses. SELECTME
+ip r # Display the routing table. SELECTME
+hostname -I # Show the local IP address of the machine. SELECTME
+cat /etc/resolv.conf # Display DNS resolver configuration. SELECTME
+nmcli dev status # Show network connection status using NetworkManager. SELECTME
+
+# <Active Connections and Listening Ports>
+ss -tuln # Show open ports and listening services. SELECTME
+ss -tunp # Show active network connections with process IDs. SELECTME
+netstat -tulnp # Show all listening ports with associated processes. SELECTME
+lsof -i :$PORT # Show which process is using a specific port. SELECTME
+netstat -rn # Display the system’s routing table. SELECTME
+
+# <Ping and Connectivity Checks>
+ping -c 5 $HOST # Send 5 ICMP echo requests to a host. SELECTME
+ping -i 0.2 -c 10 $HOST # Send 10 pings at 0.2s intervals. SELECTME
+fping -g $SUBNET # Ping all hosts in a subnet. SELECTME
+traceroute $HOST # Show the route packets take to a destination. SELECTME
+mtr --report $HOST # Continuous ping and traceroute analysis in real-time. SELECTME
+
+# <DNS Resolution>
+nslookup $DOMAIN # Query DNS for an IP address. SELECTME
+dig $DOMAIN +short # Get the IP address of a domain using dig. SELECTME
+dig -x $IP # Perform a reverse DNS lookup. SELECTME
+host $DOMAIN # Look up DNS records for a domain. SELECTME
+whois $DOMAIN # Get WHOIS information for a domain. SELECTME
+
+# <Packet Sniffing and Analysis>
+tcpdump -i $INTERFACE # Capture network packets on a specific interface. SELECTME
+tcpdump -n -i $INTERFACE port $PORT # Capture packets on a specific port. SELECTME
+tcpdump -A -i $INTERFACE # Capture packets and display raw ASCII output. SELECTME
+tcpdump -w capture.pcap -i $INTERFACE # Save captured packets to a file. SELECTME
+ngrep -d $INTERFACE "HTTP" # Capture HTTP traffic on an interface. SELECTME
+
+# <Checking External Connectivity>
+curl -I $URL # Get HTTP headers from a URL. SELECTME
+curl -L -o output.html $URL # Download a web page and follow redirects. SELECTME
+wget --spider $URL # Test if a website is reachable without downloading. SELECTME
+telnet $HOST $PORT # Test connectivity to a specific port (if telnet is installed). SELECTME
+nc -zv $HOST $PORT # Check if a remote host is listening on a specific port. SELECTME
+
+# <Bandwidth and Speed Testing>
+iperf3 -c $SERVER # Run a network bandwidth test to a server. SELECTME
+iperf3 -s # Start an iperf3 server to measure bandwidth. SELECTME
+speedtest-cli # Run an internet speed test from the terminal. SELECTME
+wget -O /dev/null $URL # Measure download speed of a file. SELECTME
+curl -o /dev/null -s -w "%{speed_download}" $URL # Check download speed in bytes per second. SELECTME
+
+# <Firewall Rules and Logs>
+sudo iptables -L -v # Show all iptables rules with details. SELECTME
+sudo ufw status verbose # Show firewall status and rules (UFW). SELECTME
+firewalld-cmd --list-all # Show active firewalld rules. SELECTME
+sudo journalctl -u firewalld --no-pager # View firewalld logs. SELECTME
+sudo iptables -I INPUT -s $IP -j DROP # Block incoming traffic from an IP. SELECTME
+
+# <Wi-Fi and Wireless Debugging>
+iwconfig # Show wireless interface details. SELECTME
+iwlist $INTERFACE scan | grep SSID # Scan for available Wi-Fi networks. SELECTME
+nmcli device wifi list # List Wi-Fi networks using NetworkManager. SELECTME
+nmcli connection show # Show all saved network connections. SELECTME
+rfkill list # Check if wireless interfaces are blocked. SELECTME
+
+# <VPN and Network Tunneling>
+openvpn --config $CONFIG.ovpn # Connect to a VPN using OpenVPN. SELECTME
+wg show # Display WireGuard VPN status. SELECTME
+sshuttle -r $USER@$VPN_HOST 0/0 # Route all traffic through an SSH tunnel. SELECTME
+sudo systemctl restart openvpn # Restart OpenVPN service. SELECTME
+sudo ip route add $DEST via $GATEWAY # Manually add a route for a VPN connection. SELECTME
+
+# <Network Performance and Latency>
+ping -q -c 10 $HOST # Measure packet loss and round-trip time. SELECTME
+netstat -s # Display detailed network statistics. SELECTME
+ss -i dst $HOST # Show detailed TCP connection statistics. SELECTME
+ethtool $INTERFACE # Show detailed Ethernet interface statistics. SELECTME
+nmap --reason $HOST # Scan a host and show why ports are open or closed. SELECTME
+
+# <Network Debugging and Advanced Tools>
+nmap -Pn $IP_RANGE # Scan all devices in a subnet without ICMP ping. SELECTME
+hping3 -S $HOST -p $PORT -c 3 # Send SYN packets to a target port. SELECTME
+arp -a # Show the ARP table for local network devices. SELECTME
+route -n # Display the routing table. SELECTME
+ss -o state established '( dport = :80 or sport = :80 )' # Show established HTTP connections. SELECTME
+
+# <Remote Access and Control>
+ssh $USER@$HOST # Connect to a remote machine via SSH. SELECTME
+ssh -L 8080:$HOST:80 $USER@$SSH_SERVER # Forward local port 8080 to remote host port 80. SELECTME
+scp $FILE $USER@$HOST:$DEST # Copy a file to a remote machine via SCP. SELECTME
+rsync -avz $SRC $USER@$HOST:$DEST # Sync files between local and remote systems. SELECTME
+mosh $USER@$HOST # SSH alternative with better network resilience. SELECTME

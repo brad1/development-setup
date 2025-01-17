@@ -1,0 +1,17 @@
+# <File Management>
+find /path/to/files -type f -mtime +7 -delete # Delete files older than 7 days. SELECTME
+
+# <Command Shortcuts>
+c -> chatgpt-general-document.txt # Shorthand for labeled instructions. SELECTME
+
+# <Process Management>
+pgrep -af postinstall # Find and list all processes matching "postinstall". SELECTME
+
+# <Build System Debugging>
+diff <(make -p) <(make -np) # Compare makefile execution plans. SELECTME
+
+# <Manual Page Search>
+man -k systemd # Search for man pages related to "systemd". SELECTME
+
+# <File Permissions and Ownership>
+find /path/to/search -group apache ! -perm /o+r # Find files owned by "apache" without read permission for others. SELECTME

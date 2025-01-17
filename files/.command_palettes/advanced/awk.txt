@@ -1,0 +1,77 @@
+# <Basic Usage>
+awk '{print}' $FP # Print entire file content. SELECTME
+awk '{print $1}' $FP # Print the first column of a file. SELECTME
+awk '{print $1, $3}' $FP # Print the first and third column. SELECTME
+awk '{print NR, $0}' $FP # Print line numbers along with lines. SELECTME
+awk 'NR==5' $FP # Print only the 5th line. SELECTME
+
+# <Filtering Rows>
+awk '$1 ~ /pattern/' $FP # Print lines where the first column matches 'pattern'. SELECTME
+awk 'length($0) > 50' $FP # Print lines longer than 50 characters. SELECTME
+awk '$2 > 100' $FP # Print lines where the second column is greater than 100. SELECTME
+awk 'NR >= 10 && NR <= 20' $FP # Print lines from 10 to 20. SELECTME
+awk 'NF==3' $FP # Print lines that have exactly 3 fields. SELECTME
+
+# <Column Manipulation>
+awk '{print $1, $2, $NF}' $FP # Print first, second, and last column. SELECTME
+awk '{print $(NF-1)}' $FP # Print the second-to-last column. SELECTME
+awk '{print toupper($2)}' $FP # Convert the second column to uppercase. SELECTME
+awk '{print tolower($1)}' $FP # Convert the first column to lowercase. SELECTME
+awk '{sub(/foo/, "bar"); print}' $FP # Replace first occurrence of 'foo' with 'bar' per line. SELECTME
+
+# <Mathematical Operations>
+awk '{print $1 + $2}' $FP # Add first and second column. SELECTME
+awk '{print $3 * 2}' $FP # Multiply the third column by 2. SELECTME
+awk '{print sqrt($2)}' $FP # Print the square root of the second column. SELECTME
+awk '{sum+=$3} END {print sum}' $FP # Sum the third column and print the result. SELECTME
+awk '{sum+=$3} END {print sum/NR}' $FP # Calculate the average of the third column. SELECTME
+
+# <String Processing>
+awk '{print substr($2, 1, 5)}' $FP # Print the first 5 characters of the second column. SELECTME
+awk '{gsub(/old/, "new"); print}' $FP # Replace all occurrences of 'old' with 'new'. SELECTME
+awk '/start/,/end/' $FP # Print lines between "start" and "end" (inclusive). SELECTME
+awk '{print length($3)}' $FP # Print the length of the third column. SELECTME
+awk '{if ($1 ~ /^[0-9]+$/) print $1}' $FP # Print lines where the first column is numeric. SELECTME
+
+# <Field Separators>
+awk -F ',' '{print $1, $2}' $FP # Use ',' as the field separator. SELECTME
+awk -F '|' '{print $NF}' $FP # Use '|' as the field separator and print the last column. SELECTME
+awk -F '[:=]' '{print $1, $2}' $FP # Use multiple delimiters ':' and '='. SELECTME
+awk 'BEGIN {FS=":"} {print $1}' $FP # Set field separator to ':' within the script. SELECTME
+awk 'BEGIN {OFS="\t"} {print $1, $2}' $FP # Set output field separator to a tab. SELECTME
+
+# <Multi-file Processing>
+awk 'FNR==1 {print "Processing file:", FILENAME}' $FP $FP2 # Print filename before processing each file. SELECTME
+awk 'FNR==NR {sum+=$2; next} {print $1, sum}' $FP $FP2 # Process first file separately before second. SELECTME
+awk 'NR==FNR {map[$1]=$2; next} {print $1, map[$1]}' $FP1 $FP2 # Join two files on the first column. SELECTME
+awk '{if (FILENAME=="file1") print "File1:", $0; else print "File2:", $0}' $FP1 $FP2 # Differentiate output by file. SELECTME
+awk 'FNR==NR{arr[$1]=$2; next} {print $1, arr[$1]}' $FP1 $FP2 # Lookup values from the first file in the second. SELECTME
+
+# <Control Flow>
+awk '{if ($2 > 100) print $1, "High"; else print $1, "Low"}' $FP # Print labels based on conditions. SELECTME
+awk 'NR % 2 == 0' $FP # Print only even-numbered lines. SELECTME
+awk '{count[$1]++} END {for (k in count) print k, count[k]}' $FP # Count occurrences of the first column. SELECTME
+awk '{sum[$1]+=$2} END {for (k in sum) print k, sum[k]}' $FP # Sum the second column grouped by the first column. SELECTME
+awk '{if (max < $3) max = $3} END {print "Max:", max}' $FP # Find the maximum value in the third column. SELECTME
+
+# <Output Formatting>
+awk 'BEGIN {print "Header"} {print $1, $2} END {print "Footer"}' $FP # Add a header and footer. SELECTME
+awk '{printf "%-10s %5d\n", $1, $2}' $FP # Print formatted output with column alignment. SELECTME
+awk 'BEGIN {printf "%-10s %-10s\n", "Name", "Score"} {printf "%-10s %10d\n", $1, $2}' $FP # Pretty-print tabular data. SELECTME
+awk '{print $1 "\t" $2}' $FP # Print tab-separated output. SELECTME
+awk '{print NR, NF, $0}' $FP # Print line number, field count, and the entire line. SELECTME
+
+# <Working with JSON and CSV>
+awk -F ',' '{print "{\"name\":\"" $1 "\", \"age\":" $2 "}"}' $FP # Convert CSV to JSON format. SELECTME
+awk -F '[:,]' '{print $2, $4}' $FP # Extract values from a structured CSV. SELECTME
+awk -F '[:,]' '{print "{ \"key\": \"" $1 "\", \"value\": \"" $2 "\" }"}' $FP # Format key-value pairs. SELECTME
+awk 'BEGIN {print "["} {print "  {\"id\": " NR ", \"name\": \"" $1 "\"},"} END {print "]"}' $FP # Wrap JSON array formatting. SELECTME
+awk 'BEGIN {FS=","; OFS=","} {print $3, $1, $2}' $FP # Reorder CSV columns. SELECTME
+
+# <Miscellaneous and Fun>
+awk 'BEGIN {srand(); print int(rand()*100)}' # Generate a random number between 0 and 99. SELECTME
+awk 'BEGIN {print strftime("%Y-%m-%d %H:%M:%S", systime())}' # Print the current timestamp. SELECTME
+awk 'BEGIN {for (i=1; i<=5; i++) print i, i*i}' # Generate a sequence with squares. SELECTME
+awk 'BEGIN {print "Hello, " ENVIRON["USER"]}' # Print a greeting with the current user’s name. SELECTME
+awk 'BEGIN {print "The system has " ENVIRON["HOME"] " as the home directory."}' # Print environment variable value. SELECTME
+

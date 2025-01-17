@@ -1,0 +1,111 @@
+# Next iteration:
+# SELECTME variants:
+# * vim -R  # no args, conventient for Ctrl-T
+# * Split based on #SPLIT to preserve env vars.
+
+
+# <File Operations>
+vim $FP # Open a file in Vim. SELECTME
+vim -R $FP # Open file in read-only mode. SELECTME
+vim -O $FP $FP2 # Open two files side by side in vertical splits. SELECTME
+vim -o $FP $FP2 # Open two files in horizontal splits. SELECTME
+vim -p $FP $FP2 # Open two files in separate tab pages. SELECTME
+vim -d $FP $FP2 # Compare two files using Vimdiff. SELECTME
+vim -u NONE $FP # Start Vim without loading any configuration files. SELECTME
+vim -N $FP # Start Vim in nocompatible mode. SELECTME
+vim -y $FP # Start Vim in easy mode. SELECTME
+vim -Z $FP # Start Vim in restricted mode. SELECTME
+
+# <Search and Navigation>
+vim +/pattern $FP # Open Vim and search for 'pattern'. SELECTME
+vim +':%s/old/new/g' $FP # Perform a global search and replace. SELECTME
+vim +':%s/\<foo\>/bar/g' $FP # Replace whole word 'foo' with 'bar'. SELECTME
+vim +':set number' $FP # Open file with line numbers enabled. SELECTME
+vim +':set relativenumber' $FP # Open file with relative line numbers. SELECTME
+vim +':set wrap' $FP # Open file with line wrapping enabled. SELECTME
+vim +':set nowrap' $FP # Open file with line wrapping disabled. SELECTME
+
+# <Multi-file Editing>
+vim -p $FP $FP2 $FP3 # Open multiple files in separate tabs. SELECTME
+vim -o $FP $FP2 $FP3 # Open multiple files in horizontal splits. SELECTME
+vim -O $FP $FP2 $FP3 # Open multiple files in vertical splits. SELECTME
+vim -S session.vim # Open Vim with a specific session. SELECTME
+vim -c 'mksession! session.vim' $FP # Create a session file for the current session. SELECTME
+
+# <Customization and Environment>
+vim -V1 vim_log.txt $FP # Start Vim with verbose logging level 1. SELECTME
+vim -c 'set paste' $FP # Open Vim with paste mode enabled. SELECTME
+vim -c 'set noautoindent' $FP # Open Vim without auto-indentation. SELECTME
+vim -c 'syntax on' $FP # Open Vim with syntax highlighting enabled. SELECTME
+vim -c 'set background=dark' $FP # Open Vim with dark background settings. SELECTME
+
+# <Integration and Automation>
+vim -e -s $FP < commands.txt # Open Vim in Ex mode and execute commands from a file. SELECTME
+vim -n $FP # Open Vim without a swap file. SELECTME
+vim -b $FP # Open Vim in binary mode. SELECTME
+vim -L $FP # Open Vim and log all messages to a file. SELECTME
+vim --servername VIM --remote-send '<C-\><C-N>:w<CR>' # Send a write command to a running Vim server. SELECTME
+
+# <Session Management>
+vim -S session.vim # Restore a Vim session from a session file. SELECTME
+vim -c 'source session.vim' $FP # Source a session file after opening a file. SELECTME
+vim -c 'mksession! session.vim' $FP # Save the current session to a session file. SELECTME
+vim -c 'tabsession' $FP # Open Vim with tabs restored from a session. SELECTME
+vim -c 'buffersession' $FP # Open Vim with buffers restored from a session. SELECTME
+
+# <Advanced Editing>
+vim -n $FP # Open Vim without creating a swap file, useful for scripting. SELECTME
+vim -M $FP # Open Vim in Modifications disabled mode. SELECTME
+vim -C $FP # Open Vim in compatible mode. SELECTME
+vim -X $FP # Open Vim without connecting to the X server. SELECTME
+vim -s script.vim $FP # Open Vim and source a script file for automated commands. SELECTME
+
+# <Performance and Debugging>
+vim -V9vim_debug.log $FP # Start Vim with verbose logging level 9 to vim_debug.log. SELECTME
+vim -u NONE -N $FP # Start Vim with no configuration and nocompatible mode for debugging. SELECTME
+vim -e -u DEFAULTS $FP # Start Vim in Ex mode with default settings. SELECTME
+vim --startuptime vim_startup.log $FP # Log the startup time of Vim to a file. SELECTME
+vim --clean $FP # Start Vim with default settings, ignoring any vimrc files. SELECTME
+
+# <Macros and Scripting>
+vim -S macro.vim $FP # Start Vim and execute a macro script. SELECTME
+vim -c 'source macros.vim' $FP # Source and execute macros from a file after opening. SELECTME
+vim -c 'let @a="iHello<Esc>"' $FP # Initialize register 'a' with a macro to insert "Hello". SELECTME
+vim -c 'execute "normal @a"' $FP # Execute the macro stored in register 'a'. SELECTME
+vim -c 'redir > output.txt | silent! %p | redir END' $FP # Redirect the entire buffer content to a file. SELECTME
+
+# <Plugins and Extensions>
+vim --cmd 'set runtimepath+=~/vim-plugins/pluginname' $FP # Start Vim with an additional plugin. SELECTME
+vim -c 'PluginInstall' $FP # Open Vim and install plugins using a plugin manager. SELECTME
+vim -c 'CocInstall coc-json' $FP # Install a specific Coc plugin on startup. SELECTME
+vim -c 'BundleInstall' $FP # Install bundles/plugins using a plugin manager. SELECTME
+vim --noplugin $FP # Start Vim without loading any plugins. SELECTME
+
+# <Filetype and Encoding>
+vim -c 'set filetype=python' $FP # Open Vim and set the filetype to Python. SELECTME
+vim -c 'set encoding=utf-8' $FP # Open Vim with UTF-8 encoding. SELECTME
+vim -c 'set fileencoding=latin1' $FP # Open Vim with Latin1 file encoding. SELECTME
+vim -c 'set syntax=javascript' $FP # Open Vim with JavaScript syntax highlighting. SELECTME
+vim -c 'set spell' $FP # Open Vim with spell checking enabled. SELECTME
+
+# <Temporary and Restricted Modes>
+vim -Z $FP # Start Vim in restricted mode, limiting available commands. SELECTME
+vim -T dumb $FP # Start Vim with a dumb terminal type, disabling some features. SELECTME
+vim -X $FP # Start Vim without connecting to the X server, useful for remote sessions. SELECTME
+vim -i NONE $FP # Start Vim without using a viminfo file, preventing history saving. SELECTME
+vim --noplugin $FP # Start Vim without loading any plugins for a clean environment. SELECTME
+
+# <Buffer and Window Management>
+vim -b $FP # Open Vim in binary mode, useful for editing non-text files. SELECTME
+vim -c 'silent! %bd | e $FP' $FP # Close all buffers and open a specific file silently. SELECTME
+vim -c 'windo set number' $FP # Set line numbers in all open windows. SELECTME
+vim -c 'tabnew $FP2' $FP # Open a new tab with a specific file from the initial file. SELECTME
+vim -c 'vertical resize 80' $FP # Resize the current window to 80 columns. SELECTME
+
+# <Color Schemes and Themes>
+vim -c 'colorscheme desert' $FP # Open Vim with the 'desert' color scheme. SELECTME
+vim -c 'set background=light' $FP # Open Vim with a light background setting. SELECTME
+vim -c 'set background=dark' $FP # Open Vim with a dark background setting. SELECTME
+vim -c 'highlight Normal ctermbg=none' $FP # Open Vim with a transparent background. SELECTME
+vim -c 'syntax enable' $FP # Enable syntax highlighting. SELECTME
+

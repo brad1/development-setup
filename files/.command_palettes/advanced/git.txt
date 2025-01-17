@@ -1,0 +1,111 @@
+# <Repository Setup>
+git init $FP # Initialize a new Git repository in $FP. SELECTME
+git clone $FP # Clone a repository from a remote source. SELECTME
+git clone --depth=1 $FP # Clone only the latest commit of a repository. SELECTME
+git remote add origin $FP # Add a new remote repository named 'origin'. SELECTME
+git remote set-url origin $FP # Change the URL of the remote repository. SELECTME
+
+# <Branching>
+git branch # List all local branches. SELECTME
+git branch -r # List all remote branches. SELECTME
+git branch -d $FP # Delete a local branch named $FP. SELECTME
+git checkout -b $FP # Create and switch to a new branch named $FP. SELECTME
+git switch $FP # Switch to an existing branch named $FP. SELECTME
+
+# <Committing Changes>
+git add $FP # Stage a file for commit. SELECTME
+git commit -m "Your message" # Commit staged changes with a message. SELECTME
+git commit --amend -m "New message" # Modify the last commit message. SELECTME
+git commit --amend --no-edit # Amend the last commit without changing the message. SELECTME
+git commit --squash $FP # Squash commits interactively. SELECTME
+
+# <Rebasing and Resetting>
+git rebase -i HEAD~3 # Interactively rebase the last 3 commits. SELECTME
+git rebase --abort # Abort an in-progress rebase. SELECTME
+git reset HEAD $FP # Unstage a file without discarding changes. SELECTME
+git reset --hard HEAD~1 # Revert back to the previous commit, discarding changes. SELECTME
+git reset --soft HEAD~1 # Move HEAD back one commit but keep changes staged. SELECTME
+
+# <Merging and Conflict Resolution>
+git merge $FP # Merge branch $FP into the current branch. SELECTME
+git merge --abort # Abort an in-progress merge. SELECTME
+git mergetool # Use an external tool to resolve conflicts. SELECTME
+git diff --name-only --diff-filter=U # Show files with merge conflicts. SELECTME
+git checkout --theirs $FP # Keep the version of a file from the incoming branch. SELECTME
+
+# <Fetching and Pulling>
+git fetch # Fetch changes from the remote repository. SELECTME
+git pull # Fetch and merge changes from the remote repository. SELECTME
+git pull --rebase # Fetch changes and rebase local commits on top. SELECTME
+git pull origin main --ff-only # Perform a fast-forward pull if possible. SELECTME
+git pull --depth=1 # Fetch only the latest commit to save bandwidth. SELECTME
+
+# <Pushing Changes>
+git push # Push changes to the remote repository. SELECTME
+git push -u origin $FP # Push a branch and track it remotely. SELECTME
+git push --force # Force push changes, overwriting history. SELECTME
+git push --tags # Push all local tags to the remote repository. SELECTME
+git push origin --delete $FP # Delete a remote branch named $FP. SELECTME
+
+# <Tagging>
+git tag # List all local tags. SELECTME
+git tag -a $FP -m "Tag message" # Create an annotated tag named $FP. SELECTME
+git tag -d $FP # Delete a local tag named $FP. SELECTME
+git push origin $FP # Push a tag named $FP to the remote repository. SELECTME
+git push origin --delete $FP # Delete a remote tag named $FP. SELECTME
+
+# <Stashing>
+git stash # Stash uncommitted changes. SELECTME
+git stash list # Show a list of stashed changes. SELECTME
+git stash apply stash@{0} # Apply the latest stash. SELECTME
+git stash pop # Apply and remove the latest stash. SELECTME
+git stash drop stash@{0} # Delete a specific stash entry. SELECTME
+
+# <Logging and History>
+git log --oneline --graph # Show a concise commit history. SELECTME
+git log --stat # Show commit history with file changes. SELECTME
+git log --author="Your Name" # Show commits by a specific author. SELECTME
+git log -S "function_name" # Show commits where a specific function was added/removed. SELECTME
+git reflog # Show reference log (actions affecting HEAD). SELECTME
+
+# <Diffing and Comparing>
+git diff # Show unstaged changes. SELECTME
+git diff --staged # Show staged but uncommitted changes. SELECTME
+git diff HEAD~1 HEAD # Compare the last commit with the current one. SELECTME
+git diff $FP $FP2 # Compare two different files. SELECTME
+git diff origin/main # Show changes between local and remote main branch. SELECTME
+
+# <Submodules>
+git submodule add $FP # Add a submodule to the repository. SELECTME
+git submodule update --init --recursive # Initialize and update submodules. SELECTME
+git submodule deinit -f $FP # Remove a submodule from tracking. SELECTME
+git submodule status # Show the status of submodules. SELECTME
+git submodule foreach git pull origin main # Update all submodules. SELECTME
+
+# <Cleanup and Optimization>
+git gc # Run garbage collection to optimize repository storage. SELECTME
+git prune # Remove unreachable objects from the repository. SELECTME
+git fsck # Check repository integrity. SELECTME
+git repack -a -d # Repack repository objects to save space. SELECTME
+git clean -df # Remove untracked files and directories. SELECTME
+
+# <Security and Credentials>
+git config --global user.name "Your Name" # Set the global Git username. SELECTME
+git config --global user.email "you@example.com" # Set the global Git email. SELECTME
+git config --global credential.helper cache # Cache credentials for a short period. SELECTME
+git config --global credential.helper store # Store credentials permanently. SELECTME
+git config --global http.sslVerify false # Disable SSL verification (not recommended). SELECTME
+
+# <Aliases and Shortcuts>
+git config --global alias.st "status -sb" # Create an alias for short status. SELECTME
+git config --global alias.unstage "reset HEAD --" # Create an alias to unstage files. SELECTME
+git config --global alias.last "log -1 HEAD" # Create an alias to view the last commit. SELECTME
+git config --global alias.graph "log --graph --oneline" # Create an alias for a visual commit graph. SELECTME
+git config --global alias.amend "commit --amend --no-edit" # Create an alias for amending commits. SELECTME
+
+# <Cherry-picking and Reverting>
+git cherry-pick $FP # Apply a specific commit from another branch. SELECTME
+git cherry-pick -x $FP # Apply a commit and record its original hash. SELECTME
+git revert $FP # Revert a specific commit by creating a new commit. SELECTME
+git bisect start # Start a binary search for a faulty commit. SELECTME
+git bisect bad $FP # Mark a commit as bad during bisecting. SELECTME

@@ -1,0 +1,77 @@
+# <Basic Log Exploration>
+cat $LOG | tail -50 # Show the last 50 lines of a log file. SELECTME
+less +F $LOG # Follow a log file in real-time with less. SELECTME
+grep "ERROR" $LOG # Search for lines containing 'ERROR' in a log file. SELECTME
+grep -i "failed" $LOG # Search for case-insensitive 'failed' occurrences. SELECTME
+awk '{print $1, $2, $3, $NF}' $LOG | head -10 # Extract first three columns and last field. SELECTME
+
+# <Real-Time Log Monitoring>
+tail -f $LOG # Continuously monitor a log file for new entries. SELECTME
+journalctl -f # Follow system logs in real-time. SELECTME
+multitail $LOG1 $LOG2 # Monitor multiple log files in real-time. SELECTME
+watch -n 2 tail -n 20 $LOG # Refresh last 20 lines of a log file every 2 seconds. SELECTME
+lnav $LOG # Interactive log viewing with lnav. SELECTME
+
+# <Filtering and Extracting Important Entries>
+grep -E "ERROR|WARN|CRITICAL" $LOG # Extract only critical log levels. SELECTME
+awk '$3 ~ /(ERROR|FATAL)/ {print $0}' $LOG # Extract lines where the third column contains ERROR or FATAL. SELECTME
+sed -n '/ERROR/,/END/p' $LOG # Extract lines between ERROR and END markers. SELECTME
+grep -v "DEBUG" $LOG # Exclude debug messages from logs. SELECTME
+grep -E "202[3-5]-[0-9]{2}-[0-9]{2}" $LOG # Extract logs within a specific date range format. SELECTME
+
+# <Analyzing Log Patterns>
+awk '{print $1}' $LOG | sort | uniq -c | sort -nr | head # Count occurrences of first column values. SELECTME
+awk '{print $NF}' $LOG | sort | uniq -c | sort -nr | head # Count occurrences of last field values. SELECTME
+grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" $LOG | sort | uniq -c | sort -nr # Count occurrences of IP addresses. SELECTME
+awk '$2 > "12:00:00" && $2 < "14:00:00"' $LOG # Filter logs between specific times. SELECTME
+cut -d' ' -f5 $LOG | sort | uniq -c | sort -nr | head # Extract and count HTTP status codes. SELECTME
+
+# <Parsing Structured Logs>
+jq '.' $LOG # Pretty-print JSON logs. SELECTME
+jq '.level' $LOG | sort | uniq -c # Count log levels in a JSON log. SELECTME
+awk -F'[:,]' '{print $3}' $LOG | sort | uniq -c | sort -nr # Extract values from JSON-like structured logs. SELECTME
+grep -Po '"message":.*?[^\\]"' $LOG # Extract log messages from JSON logs. SELECTME
+jq -r '.timestamp + " " + .message' $LOG # Format JSON logs to display timestamps and messages. SELECTME
+
+# <Detecting Anomalies in Logs>
+awk '$NF > 500' $LOG # Extract log lines where the last field is greater than 500. SELECTME
+awk '$3 ~ /ERROR/ {count++} END {print count}' $LOG # Count number of ERROR lines in a log file. SELECTME
+grep "timeout" $LOG | wc -l # Count occurrences of 'timeout' in a log file. SELECTME
+awk '{if (NF < 5) print}' $LOG # Detect malformed log lines with fewer than 5 fields. SELECTME
+awk '{print length, $0}' $LOG | sort -n | tail -10 # Detect the longest log lines. SELECTME
+
+# <Merging and Summarizing Logs>
+cat $LOG1 $LOG2 | sort -k1,2 # Merge logs by sorting on first two columns (date and time). SELECTME
+sort -u $LOG1 $LOG2 # Merge two log files and remove duplicate lines. SELECTME
+awk '{print $1, $2}' $LOG | sort | uniq -c | sort -nr | head # Summarize top frequent entries. SELECTME
+awk '{arr[$1]++} END {for (i in arr) print i, arr[i]}' $LOG # Count occurrences of first column values. SELECTME
+sed -e 's/[[:space:]]\+/ /g' $LOG | uniq -c | sort -nr | head # Normalize spacing and count duplicates. SELECTME
+
+# <Extracting Timestamps>
+awk '{print $1, $2}' $LOG | sort -u # Extract unique timestamps from logs. SELECTME
+grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" $LOG # Extract timestamps from logs. SELECTME
+awk '{if ($1 >= "2024-01-01" && $1 <= "2024-01-31") print}' $LOG # Filter logs from January 2024. SELECTME
+sed -n 's/\(.*2024-.*\)/\1/p' $LOG # Extract lines that contain the year 2024. SELECTME
+awk '$2 ~ /14:3[0-9]:[0-9]{2}/' $LOG # Extract logs between 14:30:00 and 14:39:59. SELECTME
+
+# <Log Compression and Storage>
+tar -czf logs_backup.tar.gz $LOG_DIR # Compress a directory of logs into a tar.gz archive. SELECTME
+gzip -c $LOG > $LOG.gz # Compress a log file using gzip. SELECTME
+zcat $LOG.gz | grep "ERROR" # Search for errors in a compressed log file. SELECTME
+xz -c $LOG > $LOG.xz # Compress a log file using xz. SELECTME
+find $LOG_DIR -type f -mtime +30 -exec rm {} \; # Delete log files older than 30 days. SELECTME
+
+# <Handling Large Log Files>
+awk '{print NR, $0}' $LOG | tail -n 1000000 > last_1M_lines.log # Extract the last 1 million lines of a log file. SELECTME
+split -b 500M $LOG log_part_ # Split a large log file into 500MB chunks. SELECTME
+pv $LOG | grep "ERROR" > errors.log # Process large logs while displaying progress. SELECTME
+awk 'NR % 1000 == 0' $LOG # Print every 1000th line from a large log file. SELECTME
+sed -n '1000000,2000000p' $LOG # Extract lines 1,000,000 to 2,000,000 from a log file. SELECTME
+
+# <Detecting Repetitive Log Patterns>
+awk '{print $0}' $LOG | sort | uniq -c | sort -nr | head # Find the most frequently occurring log lines. SELECTME
+grep -oE "user=[a-zA-Z0-9]+" $LOG | sort | uniq -c | sort -nr # Count occurrences of user IDs in logs. SELECTME
+awk '{arr[$3]++} END {for (i in arr) print i, arr[i]}' $LOG # Count occurrences of third column values. SELECTME
+grep -E "(error|fail|warn)" $LOG | sort | uniq -c | sort -nr # Count log levels occurrences. SELECTME
+awk '{if (++dup[$0] > 10) print $0}' $LOG # Detect log lines that repeat more than 10 times. SELECTME
+

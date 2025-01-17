@@ -7,9 +7,12 @@ Search available packages:
   apt-cache search . # all pkgs
   apt search package_name
   https://packages.ubuntu.com/
-List files in a package:
+Find files included in a package:
   dpkg-query -L <package_name>
+  dpkg-query -S <exe_name>
   dpkg-deb -c <package_name.deb>
+Find origin of a package: # source,repo,etc
+  apt-cache policy <package_name>
 List packages
   apt list --installed
 Local install
@@ -24,3 +27,9 @@ Example:
 sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu bionic main'
 sudo apt update
 sudo apt install -y python-mysqldb
+
+
+3rd party repos:
+### vagrant/hashicorp
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list

@@ -1,5 +1,9 @@
 # Ruby Cheatsheet
 
+# Misc
+# readlink -f /proc/$(pgrep process.rb)/exe
+# shows which ruby installation is running the tool
+
 # String Operations
 "Hello, World!".upcase                    # Uppercase
 "Hello".concat(" World!")                 # Concatenate

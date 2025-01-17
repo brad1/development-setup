@@ -1,0 +1,84 @@
+# <Basic File Operations>
+ls -lh $DIR # List files in a directory with human-readable sizes. SELECTME
+ls -lt $DIR # List files sorted by modification time. SELECTME
+ls -a $DIR # Show hidden files in a directory. SELECTME
+tree $DIR # Display directory structure in a tree format. SELECTME
+stat $FILE # Show detailed metadata about a file. SELECTME
+
+# <Creating and Removing Files>
+touch $FILE # Create an empty file or update its timestamp. SELECTME
+mkdir $DIR # Create a new directory. SELECTME
+mkdir -p $DIR # Create nested directories if they do not exist. SELECTME
+rm $FILE # Delete a file. SELECTME
+rm -rf $DIR # Force delete a directory and all its contents. SELECTME
+
+# <Copying and Moving Files>
+cp $SOURCE $DEST # Copy a file to another location. SELECTME
+cp -r $SOURCE_DIR $DEST_DIR # Copy a directory and its contents. SELECTME
+mv $SOURCE $DEST # Move or rename a file or directory. SELECTME
+rsync -av $SOURCE $DEST # Copy files/directories while preserving metadata. SELECTME
+rsync -av --progress $SOURCE $DEST # Show progress while copying files. SELECTME
+
+# <Finding Files and Directories>
+find $DIR -type f -name "*.txt" # Find all .txt files in a directory. SELECTME
+find $DIR -type d -name "backup" # Find all directories named "backup". SELECTME
+find $DIR -type f -mtime -7 # Find files modified in the last 7 days. SELECTME
+locate $FILE # Find a file using the locate database. SELECTME
+updatedb # Update the locate database (requires root privileges). SELECTME
+
+# <File Permissions and Ownership>
+ls -l $FILE # Show file permissions and ownership. SELECTME
+chmod 644 $FILE # Set file permissions to owner read/write, others read-only. SELECTME
+chmod -R 755 $DIR # Set executable permissions for all files in a directory. SELECTME
+chown $USER:$GROUP $FILE # Change ownership of a file. SELECTME
+chown -R $USER:$GROUP $DIR # Recursively change ownership of a directory. SELECTME
+
+# <File Compression and Archiving>
+tar -cvf archive.tar $DIR # Create a tar archive. SELECTME
+tar -xvf archive.tar # Extract a tar archive. SELECTME
+tar -czvf archive.tar.gz $DIR # Create a compressed tar.gz archive. SELECTME
+tar -xzvf archive.tar.gz # Extract a tar.gz archive. SELECTME
+zip -r archive.zip $DIR # Create a ZIP archive of a directory. SELECTME
+
+# <File Comparison>
+diff $FILE1 $FILE2 # Compare two text files line by line. SELECTME
+cmp $FILE1 $FILE2 # Compare two binary files byte by byte. SELECTME
+comm -12 <(sort $FILE1) <(sort $FILE2) # Find common lines in two sorted files. SELECTME
+diff -rq $DIR1 $DIR2 # Compare two directories recursively. SELECTME
+md5sum $FILE # Generate MD5 hash for file integrity check. SELECTME
+
+# <Symbolic and Hard Links>
+ln -s $TARGET $LINK_NAME # Create a symbolic (soft) link. SELECTME
+ln $TARGET $LINK_NAME # Create a hard link. SELECTME
+ls -l $LINK_NAME # Show details of a symbolic or hard link. SELECTME
+readlink -f $LINK_NAME # Resolve a symbolic link to its absolute path. SELECTME
+unlink $LINK_NAME # Remove a symbolic link. SELECTME
+
+# <Temporary File Management>
+mktemp # Create a temporary file with a unique name. SELECTME
+mktemp -d # Create a temporary directory with a unique name. SELECTME
+find /tmp -type f -atime +7 -delete # Delete temporary files older than 7 days. SELECTME
+find /var/tmp -type f -mtime +30 -delete # Delete files in /var/tmp older than 30 days. SELECTME
+df -h /tmp # Show available space in the /tmp directory. SELECTME
+
+# <File Integrity and Checksumming>
+md5sum $FILE # Generate MD5 hash for a file. SELECTME
+sha256sum $FILE # Generate SHA-256 checksum for a file. SELECTME
+shasum -a 512 $FILE # Generate SHA-512 checksum for a file. SELECTME
+cksum $FILE # Generate a cyclic redundancy check (CRC) for a file. SELECTME
+b2sum $FILE # Generate a BLAKE2 hash for a file. SELECTME
+
+# <Disk Space Management>
+du -sh $DIR # Show total disk usage of a directory. SELECTME
+du -sh * | sort -hr | head # Show the largest files/directories in the current folder. SELECTME
+df -h # Display available and used disk space in human-readable format. SELECTME
+ls -lhS $DIR | head # Show the largest files in a directory. SELECTME
+ncdu # Interactive disk usage analyzer. SELECTME
+
+# <Advanced File Manipulation>
+split -b 50M $FILE chunk_ # Split a file into 50MB chunks. SELECTME
+cat chunk_* > $OUTPUT_FILE # Combine split files back into one. SELECTME
+truncate -s 10M $FILE # Create or shrink a file to 10MB. SELECTME
+xargs -a filelist.txt cp -t $DEST # Copy files listed in a text file to a directory. SELECTME
+rsync --remove-source-files -av $SOURCE_DIR $DEST_DIR # Move files while preserving metadata. SELECTME
+

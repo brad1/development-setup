@@ -1,0 +1,90 @@
+# <CPU Monitoring>
+top # Interactive system monitoring with CPU and memory usage. SELECTME
+htop # Advanced interactive system monitor with better visualization. SELECTME
+vmstat 1 10 # Display CPU, memory, and I/O statistics every second for 10 iterations. SELECTME
+mpstat -P ALL 1 # Show per-CPU usage statistics every second. SELECTME
+sar -u 1 5 # Show CPU usage statistics every second for 5 iterations. SELECTME
+
+# <Memory Monitoring>
+free -h # Show system memory usage in human-readable format. SELECTME
+vmstat -s # Display memory statistics in a detailed format. SELECTME
+cat /proc/meminfo # Show detailed memory usage from system files. SELECTME
+ps -eo pid,user,%mem,command --sort=-%mem | head # Show top processes by memory usage. SELECTME
+smem -tk | head # Show detailed memory usage of processes. SELECTME
+
+# <Disk Usage and I/O Monitoring>
+df -h # Show disk usage of all mounted filesystems in human-readable format. SELECTME
+du -sh $DIR # Show total disk usage of a directory. SELECTME
+iotop # Show real-time disk I/O usage per process. SELECTME
+iostat -dx 1 10 # Show disk I/O statistics every second for 10 iterations. SELECTME
+lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT # List information about block devices. SELECTME
+
+# <Process Monitoring>
+ps aux # List all running processes with CPU and memory usage. SELECTME
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head # Show top CPU-consuming processes. SELECTME
+pgrep -fl $PROCESS # Find a process by name. SELECTME
+pidstat -d 1 5 # Show detailed CPU, disk, and memory usage per process every second for 5 iterations. SELECTME
+strace -p $PID # Trace system calls made by a running process. SELECTME
+
+# <Network Monitoring>
+ss -tulnp # Show all listening ports and associated processes. SELECTME
+iftop -i $INTERFACE # Monitor real-time bandwidth usage per connection. SELECTME
+nload $INTERFACE # Display real-time network usage statistics. SELECTME
+netstat -s # Show network statistics including TCP and UDP packet counts. SELECTME
+ip -s link # Show statistics for all network interfaces. SELECTME
+
+# <File and Directory Monitoring>
+inotifywait -m $DIR # Monitor file changes in a directory. SELECTME
+ls -lt --time=access $DIR | head # Show recently accessed files in a directory. SELECTME
+watch -d ls -lh $FILE # Continuously watch a file for changes. SELECTME
+lsof $FILE # List processes currently using a file. SELECTME
+stat $FILE # Display detailed metadata about a file. SELECTME
+
+# <Temperature and Hardware Sensors>
+sensors # Show CPU and motherboard temperature readings. SELECTME
+watch -n 1 sensors # Continuously monitor hardware temperatures every second. SELECTME
+cat /sys/class/thermal/thermal_zone*/temp # Display raw temperature data from system files. SELECTME
+hddtemp /dev/sda # Show the temperature of a hard drive. SELECTME
+glxinfo | grep "OpenGL version" # Check GPU driver and OpenGL version. SELECTME
+
+# <Battery and Power Monitoring>
+upower -i $(upower -e | grep BAT) # Show detailed battery information. SELECTME
+acpi -V # Display battery status and thermal readings. SELECTME
+cat /sys/class/power_supply/BAT0/capacity # Show battery percentage from system files. SELECTME
+tlp-stat -b # Show battery information with TLP power management. SELECTME
+powertop # Monitor power consumption and suggest optimizations. SELECTME
+
+# <Kernel and System Logs>
+dmesg | tail -50 # Show the last 50 lines of the kernel log. SELECTME
+journalctl -xe # Show recent system logs with errors. SELECTME
+sudo journalctl -f # Follow live system logs. SELECTME
+cat /var/log/syslog | tail -50 # Show the last 50 lines of the system log. SELECTME
+ls /var/log/ | grep log # List all log files available on the system. SELECTME
+
+# <User Sessions and Login Monitoring>
+w # Show logged-in users and their activity. SELECTME
+who # Show who is currently logged into the system. SELECTME
+last | head # Show recent logins to the system. SELECTME
+id $USER # Display the user ID and group memberships. SELECTME
+uptime # Show how long the system has been running. SELECTME
+
+# <System Performance and Benchmarking>
+time $COMMAND # Measure the execution time of a command. SELECTME
+perf stat -a sleep 5 # Collect system-wide performance statistics for 5 seconds. SELECTME
+stress-ng --cpu 4 --timeout 30s # Run a CPU stress test for 30 seconds. SELECTME
+fio --name=readtest --rw=read --size=1G --bs=4k # Run a disk read performance test. SELECTME
+sysbench cpu --cpu-max-prime=20000 run # Benchmark CPU performance. SELECTME
+
+# <General System Information>
+uname -a # Show kernel and system architecture information. SELECTME
+lsb_release -a # Show Linux distribution details. SELECTME
+cat /etc/os-release # Show OS release information. SELECTME
+uptime # Display system uptime and load average. SELECTME
+hostnamectl # Show system hostname and related metadata. SELECTME
+
+# <Service and Daemon Monitoring>
+systemctl list-units --type=service --state=running # Show running systemd services. SELECTME
+systemctl status $SERVICE # Show the status of a specific service. SELECTME
+systemctl restart $SERVICE # Restart a system service. SELECTME
+service $SERVICE status # Show service status using the service command. SELECTME
+chkconfig --list $SERVICE # List service runlevel configuration (if available). SELECTME

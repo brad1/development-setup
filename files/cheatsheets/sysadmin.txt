@@ -2,6 +2,8 @@
 sudo apt-get install --reinstall gnome-control-center
 sudo ubuntu-drivers autoinstall
 
+# exe trace
+readlink /proc/$(pgrep process.rb)/exe
 
 # iptables
 # 1. Basics

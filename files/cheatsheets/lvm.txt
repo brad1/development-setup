@@ -1,0 +1,135 @@
+
+Here’s a list of useful **LVM commands** to list and inspect your LVM setup:
+
+### Physical Volumes (PVs)
+- **List all physical volumes:**
+  ```bash
+  pvdisplay
+  ```
+- **Show a concise list of PVs:**
+  ```bash
+  pvs
+  ```
+- **Detailed information about a specific PV:**
+  ```bash
+  pvdisplay /dev/sdX
+  ```
+
+---
+
+### Volume Groups (VGs)
+- **List all volume groups:**
+  ```bash
+  vgdisplay
+  ```
+- **Show a concise list of VGs:**
+  ```bash
+  vgs
+  ```
+- **Detailed information about a specific VG:**
+  ```bash
+  vgdisplay <volume-group-name>
+  ```
+
+---
+
+### Logical Volumes (LVs)
+- **List all logical volumes:**
+  ```bash
+  lvdisplay
+  ```
+- **Show a concise list of LVs:**
+  ```bash
+  lvs
+  ```
+- **Detailed information about a specific LV:**
+  ```bash
+  lvdisplay <volume-group-name>/<logical-volume-name>
+  ```
+
+---
+
+### Overview of All LVM Components
+- **Show all LVM information in a concise table format:**
+  ```bash
+  lvs -a -o +devices
+  vgs -o +lv_count
+  pvs -o +vg_name
+  ```
+- **Show all active LVM components across PVs, VGs, and LVs:**
+  ```bash
+  lvm dumpconfig
+  ```
+
+---
+
+### Disk Usage and Mapping
+- **Show device mapper (LVM's backend abstraction):**
+  ```bash
+  lsblk
+  ```
+- **Inspect LVM mappings:**
+  ```bash
+  dmsetup ls --tree
+  ```
+
+---
+
+### **Steps to Triple the Size of Your Logical Volume**
+
+#### 1. **Check Available Space in the Volume Group**
+Before resizing, ensure the volume group (`ubuntu-vg`) has enough free space.
+
+```bash
+vgdisplay ubuntu-vg
+```
+- Look for the `Free PE / Size` field. This indicates how much space is available to allocate.
+
+#### 2. **Extend the Logical Volume**
+Since the current size is `100 GiB`, tripling it means the new size will be `300 GiB`.
+
+```bash
+lvextend -L 300G /dev/ubuntu-vg/ubuntu-lv
+```
+- Alternatively, you can specify the amount to **add** instead of the final size:
+  ```bash
+  lvextend -L +200G /dev/ubuntu-vg/ubuntu-lv
+  ```
+  This increases the size by 200 GiB to total 300 GiB.
+
+#### 3. **Resize the Filesystem**
+You must resize the filesystem to use the additional space. The command depends on the filesystem type:
+
+- **For ext4:**
+  ```bash
+  resize2fs /dev/ubuntu-vg/ubuntu-lv
+  ```
+
+- **For XFS:**
+  ```bash
+  xfs_growfs /dev/ubuntu-vg/ubuntu-lv
+  ```
+
+#### 4. **Verify the Changes**
+- Check the logical volume size:
+  ```bash
+  lvdisplay /dev/ubuntu-vg/ubuntu-lv
+  ```
+- Confirm the filesystem size:
+  ```bash
+  df -h
+  ```
+
+---
+
+### **Notes**
+- If the volume group doesn't have enough free space, you may need to add a new physical volume and extend the volume group:
+  1. Add a new disk or partition.
+  2. Initialize it as a physical volume:
+     ```bash
+     pvcreate /dev/sdX
+     ```
+  3. Add it to the volume group:
+     ```bash
+     vgextend ubuntu-vg /dev/sdX
+     ```
