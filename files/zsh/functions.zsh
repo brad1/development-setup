@@ -896,6 +896,12 @@ e () {
   $EDITOR $evaluated_path
 }
 
+e () {
+  file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
+  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
+  $EDITOR $evaluated_path
+}
+
 c () {
   fn=$(cd /opt/chef/cookbooks/development-setup/files/cheatsheets/; ls | fzf)
   # Next: use bat or glow to view MDs

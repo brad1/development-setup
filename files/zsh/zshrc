@@ -16,6 +16,7 @@ source $INCLUDE/sources.zsh
 ZSH_THEME="random"
 
 
+source /usr/share/autojump/autojump.sh
 
 # Vi editing mode with visual mode.
 bindkey -M vicmd v edit-command-line
