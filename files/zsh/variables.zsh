@@ -10,6 +10,7 @@ export SAVEHIST=100000
 #export DEVSETUP=/opt/chef/cookbooks/development-setup
 export PATH=$DEVSETUP/files/bin:$PATH
 export PATH=~/.local/bin:$PATH # for tmuxp, etc from pip
+export PATH=$HOME/.cargo/bin:$PATH
 
 export WORK_ZSHRC=~/Projects/sandbox/zshrc
 export TMPDIR=/tmp

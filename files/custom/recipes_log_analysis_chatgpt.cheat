@@ -1,0 +1,167 @@
+% recipes_log_analysis_chatgpt
+
+# Basic Log Exploration - View and search log files
+    cat $LOG | tail -50
+
+# Basic Log Exploration - Follow a log file in real-time with less
+    less +F $LOG
+
+# Basic Log Exploration - Search for lines containing 'ERROR' in a log file
+    grep "ERROR" $LOG
+
+# Basic Log Exploration - Search for case-insensitive 'failed' occurrences
+    grep -i "failed" $LOG
+
+# Basic Log Exploration - Extract first three columns and last field
+    awk '{print $1, $2, $3, $NF}' $LOG | head -10
+
+# Real-Time Log Monitoring - Continuously monitor a log file for new entries
+    tail -f $LOG
+
+# Real-Time Log Monitoring - Follow system logs in real-time
+    journalctl -f
+
+# Real-Time Log Monitoring - Monitor multiple log files in real-time
+    multitail $LOG1 $LOG2
+
+# Real-Time Log Monitoring - Refresh last 20 lines of a log file every 2 seconds
+    watch -n 2 tail -n 20 $LOG
+
+# Real-Time Log Monitoring - Interactive log viewing with lnav
+    lnav $LOG
+
+# Filtering and Extracting - Extract only critical log levels
+    grep -E "ERROR|WARN|CRITICAL" $LOG
+
+# Filtering and Extracting - Extract lines where the third column contains ERROR or FATAL
+    awk '$3 ~ /(ERROR|FATAL)/ {print $0}' $LOG
+
+# Filtering and Extracting - Extract lines between ERROR and END markers
+    sed -n '/ERROR/,/END/p' $LOG
+
+# Filtering and Extracting - Exclude debug messages from logs
+    grep -v "DEBUG" $LOG
+
+# Filtering and Extracting - Extract logs within a specific date range format
+    grep -E "202[3-5]-[0-9]{2}-[0-9]{2}" $LOG
+
+# Analyzing Log Patterns - Count occurrences of first column values
+    awk '{print $1}' $LOG | sort | uniq -c | sort -nr | head
+
+# Analyzing Log Patterns - Count occurrences of last field values
+    awk '{print $NF}' $LOG | sort | uniq -c | sort -nr | head
+
+# Analyzing Log Patterns - Count occurrences of IP addresses
+    grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" $LOG | sort | uniq -c | sort -nr
+
+# Analyzing Log Patterns - Filter logs between specific times
+    awk '$2 > "12:00:00" && $2 < "14:00:00"' $LOG
+
+# Analyzing Log Patterns - Extract and count HTTP status codes
+    cut -d' ' -f5 $LOG | sort | uniq -c | sort -nr | head
+
+# Parsing Structured Logs - Pretty-print JSON logs
+    jq '.' $LOG
+
+# Parsing Structured Logs - Count log levels in a JSON log
+    jq '.level' $LOG | sort | uniq -c
+
+# Parsing Structured Logs - Extract values from JSON-like structured logs
+    awk -F'[:,]' '{print $3}' $LOG | sort | uniq -c | sort -nr
+
+# Parsing Structured Logs - Extract log messages from JSON logs
+    grep -Po '"message":.*?[^\\]"' $LOG
+
+# Parsing Structured Logs - Format JSON logs to display timestamps and messages
+    jq -r '.timestamp + " " + .message' $LOG
+
+# Detecting Anomalies - Extract log lines where the last field is greater than 500
+    awk '$NF > 500' $LOG
+
+# Detecting Anomalies - Count number of ERROR lines in a log file
+    awk '$3 ~ /ERROR/ {count++} END {print count}' $LOG
+
+# Detecting Anomalies - Count occurrences of 'timeout' in a log file
+    grep "timeout" $LOG | wc -l
+
+# Detecting Anomalies - Detect malformed log lines with fewer than 5 fields
+    awk '{if (NF < 5) print}' $LOG
+
+# Detecting Anomalies - Detect the longest log lines
+    awk '{print length, $0}' $LOG | sort -n | tail -10
+
+# Merging and Summarizing Logs - Merge logs by sorting on first two columns (date and time)
+    cat $LOG1 $LOG2 | sort -k1,2
+
+# Merging and Summarizing Logs - Merge two log files and remove duplicate lines
+    sort -u $LOG1 $LOG2
+
+# Merging and Summarizing Logs - Summarize top frequent entries
+    awk '{print $1, $2}' $LOG | sort | uniq -c | sort -nr | head
+
+# Merging and Summarizing Logs - Count occurrences of first column values
+    awk '{arr[$1]++} END {for (i in arr) print i, arr[i]}' $LOG
+
+# Merging and Summarizing Logs - Normalize spacing and count duplicates
+    sed -e 's/[[:space:]]\+/ /g' $LOG | uniq -c | sort -nr | head
+
+# Extracting Timestamps - Extract unique timestamps from logs
+    awk '{print $1, $2}' $LOG | sort -u
+
+# Extracting Timestamps - Extract timestamps from logs
+    grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" $LOG
+
+# Extracting Timestamps - Filter logs from January 2024
+    awk '{if ($1 >= "2024-01-01" && $1 <= "2024-01-31") print}' $LOG
+
+# Extracting Timestamps - Extract lines that contain the year 2024
+    sed -n 's/\(.*2024-.*\)/\1/p' $LOG
+
+# Extracting Timestamps - Extract logs between 14:30:00 and 14:39:59
+    awk '$2 ~ /14:3[0-9]:[0-9]{2}/' $LOG
+
+# Log Compression and Storage - Compress a directory of logs into a tar.gz archive
+    tar -czf logs_backup.tar.gz $LOG_DIR
+
+# Log Compression and Storage - Compress a log file using gzip
+    gzip -c $LOG > $LOG.gz
+
+# Log Compression and Storage - Search for errors in a compressed log file
+    zcat $LOG.gz | grep "ERROR"
+
+# Log Compression and Storage - Compress a log file using xz
+    xz -c $LOG > $LOG.xz
+
+# Log Compression and Storage - Delete log files older than 30 days
+    find $LOG_DIR -type f -mtime +30 -exec rm {} \;
+
+# Handling Large Log Files - Extract the last 1 million lines of a log file
+    awk '{print NR, $0}' $LOG | tail -n 1000000 > last_1M_lines.log
+
+# Handling Large Log Files - Split a large log file into 500MB chunks
+    split -b 500M $LOG log_part_
+
+# Handling Large Log Files - Process large logs while displaying progress
+    pv $LOG | grep "ERROR" > errors.log
+
+# Handling Large Log Files - Print every 1000th line from a large log file
+    awk 'NR % 1000 == 0' $LOG
+
+# Handling Large Log Files - Extract lines 1,000,000 to 2,000,000 from a log file
+    sed -n '1000000,2000000p' $LOG
+
+# Detecting Repetitive Patterns - Find the most frequently occurring log lines
+    awk '{print $0}' $LOG | sort | uniq -c | sort -nr | head
+
+# Detecting Repetitive Patterns - Count occurrences of user IDs in logs
+    grep -oE "user=[a-zA-Z0-9]+" $LOG | sort | uniq -c | sort -nr
+
+# Detecting Repetitive Patterns - Count occurrences of third column values
+    awk '{arr[$3]++} END {for (i in arr) print i, arr[i]}' $LOG
+
+# Detecting Repetitive Patterns - Count log levels occurrences
+    grep -E "(error|fail|warn)" $LOG | sort | uniq -c | sort -nr
+
+# Detecting Repetitive Patterns - Detect log lines that repeat more than 10 times
+    awk '{if (++dup[$0] > 10) print $0}' $LOG
+

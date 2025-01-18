@@ -1,0 +1,19 @@
+% brad_reminder
+
+# Delete old files
+    find /path/to/files -type f -mtime +7 -delete
+
+# Labeled instructions
+    c -> chatgpt-general-document.txt
+
+# Find matching process
+    pgrep -af postinstall
+
+# Compare makefile execution plans
+    diff <(make -p) <(make -np)
+
+# Search systemd man pages
+    man -k systemd
+
+# Find unreadable files in apache group
+    find /path/to/search -group apache ! -perm /o+r

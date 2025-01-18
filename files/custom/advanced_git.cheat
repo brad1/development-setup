@@ -1,0 +1,242 @@
+% advanced_git
+
+# Repository Setup - Initialize a new Git repository
+    git init $FP
+
+# Repository Setup - Clone a repository from a remote source
+    git clone $FP
+
+# Repository Setup - Clone only the latest commit of a repository
+    git clone --depth=1 $FP
+
+# Repository Setup - Add a new remote repository named 'origin'
+    git remote add origin $FP
+
+# Repository Setup - Change the URL of the remote repository
+    git remote set-url origin $FP
+
+# Branching - List all local branches
+    git branch
+
+# Branching - List all remote branches
+    git branch -r
+
+# Branching - Delete a local branch named $FP
+    git branch -d $FP
+
+# Branching - Create and switch to a new branch named $FP
+    git checkout -b $FP
+
+# Branching - Switch to an existing branch named $FP
+    git switch $FP
+
+# Committing Changes - Stage a file for commit
+    git add $FP
+
+# Committing Changes - Commit staged changes with a message
+    git commit -m "Your message"
+
+# Committing Changes - Modify the last commit message
+    git commit --amend -m "New message"
+
+# Committing Changes - Amend the last commit without changing the message
+    git commit --amend --no-edit
+
+# Committing Changes - Squash commits interactively
+    git commit --squash $FP
+
+# Rebasing and Resetting - Interactively rebase the last 3 commits
+    git rebase -i HEAD~3
+
+# Rebasing and Resetting - Abort an in-progress rebase
+    git rebase --abort
+
+# Rebasing and Resetting - Unstage a file without discarding changes
+    git reset HEAD $FP
+
+# Rebasing and Resetting - Revert back to the previous commit, discarding changes
+    git reset --hard HEAD~1
+
+# Rebasing and Resetting - Move HEAD back one commit but keep changes staged
+    git reset --soft HEAD~1
+
+# Merging and Conflict Resolution - Merge branch $FP into the current branch
+    git merge $FP
+
+# Merging and Conflict Resolution - Abort an in-progress merge
+    git merge --abort
+
+# Merging and Conflict Resolution - Use an external tool to resolve conflicts
+    git mergetool
+
+# Merging and Conflict Resolution - Show files with merge conflicts
+    git diff --name-only --diff-filter=U
+
+# Merging and Conflict Resolution - Keep the version of a file from the incoming branch
+    git checkout --theirs $FP
+
+# Fetching and Pulling - Fetch changes from the remote repository
+    git fetch
+
+# Fetching and Pulling - Fetch and merge changes from the remote repository
+    git pull
+
+# Fetching and Pulling - Fetch changes and rebase local commits on top
+    git pull --rebase
+
+# Fetching and Pulling - Perform a fast-forward pull if possible
+    git pull origin main --ff-only
+
+# Fetching and Pulling - Fetch only the latest commit to save bandwidth
+    git pull --depth=1
+
+# Pushing Changes - Push changes to the remote repository
+    git push
+
+# Pushing Changes - Push a branch and track it remotely
+    git push -u origin $FP
+
+# Pushing Changes - Force push changes, overwriting history
+    git push --force
+
+# Pushing Changes - Push all local tags to the remote repository
+    git push --tags
+
+# Pushing Changes - Delete a remote branch named $FP
+    git push origin --delete $FP
+
+# Tagging - List all local tags
+    git tag
+
+# Tagging - Create an annotated tag named $FP
+    git tag -a $FP -m "Tag message"
+
+# Tagging - Delete a local tag named $FP
+    git tag -d $FP
+
+# Tagging - Push a tag named $FP to the remote repository
+    git push origin $FP
+
+# Tagging - Delete a remote tag named $FP
+    git push origin --delete $FP
+
+# Stashing - Stash uncommitted changes
+    git stash
+
+# Stashing - Show a list of stashed changes
+    git stash list
+
+# Stashing - Apply the latest stash
+    git stash apply stash@{0}
+
+# Stashing - Apply and remove the latest stash
+    git stash pop
+
+# Stashing - Delete a specific stash entry
+    git stash drop stash@{0}
+
+# Logging and History - Show a concise commit history
+    git log --oneline --graph
+
+# Logging and History - Show commit history with file changes
+    git log --stat
+
+# Logging and History - Show commits by a specific author
+    git log --author="Your Name"
+
+# Logging and History - Show commits where a specific function was added/removed
+    git log -S "function_name"
+
+# Logging and History - Show reference log (actions affecting HEAD)
+    git reflog
+
+# Diffing and Comparing - Show unstaged changes
+    git diff
+
+# Diffing and Comparing - Show staged but uncommitted changes
+    git diff --staged
+
+# Diffing and Comparing - Compare the last commit with the current one
+    git diff HEAD~1 HEAD
+
+# Diffing and Comparing - Compare two different files
+    git diff $FP $FP2
+
+# Diffing and Comparing - Show changes between local and remote main branch
+    git diff origin/main
+
+# Submodules - Add a submodule to the repository
+    git submodule add $FP
+
+# Submodules - Initialize and update submodules
+    git submodule update --init --recursive
+
+# Submodules - Remove a submodule from tracking
+    git submodule deinit -f $FP
+
+# Submodules - Show the status of submodules
+    git submodule status
+
+# Submodules - Update all submodules
+    git submodule foreach git pull origin main
+
+# Cleanup and Optimization - Run garbage collection to optimize repository storage
+    git gc
+
+# Cleanup and Optimization - Remove unreachable objects from the repository
+    git prune
+
+# Cleanup and Optimization - Check repository integrity
+    git fsck
+
+# Cleanup and Optimization - Repack repository objects to save space
+    git repack -a -d
+
+# Cleanup and Optimization - Remove untracked files and directories
+    git clean -df
+
+# Security and Credentials - Set the global Git username
+    git config --global user.name "Your Name"
+
+# Security and Credentials - Set the global Git email
+    git config --global user.email "you@example.com"
+
+# Security and Credentials - Cache credentials for a short period
+    git config --global credential.helper cache
+
+# Security and Credentials - Store credentials permanently
+    git config --global credential.helper store
+
+# Security and Credentials - Disable SSL verification (not recommended)
+    git config --global http.sslVerify false
+
+# Aliases and Shortcuts - Create an alias for short status
+    git config --global alias.st "status -sb"
+
+# Aliases and Shortcuts - Create an alias to unstage files
+    git config --global alias.unstage "reset HEAD --"
+
+# Aliases and Shortcuts - Create an alias to view the last commit
+    git config --global alias.last "log -1 HEAD"
+
+# Aliases and Shortcuts - Create an alias for a visual commit graph
+    git config --global alias.graph "log --graph --oneline"
+
+# Aliases and Shortcuts - Create an alias for amending commits
+    git config --global alias.amend "commit --amend --no-edit"
+
+# Cherry-picking and Reverting - Apply a specific commit from another branch
+    git cherry-pick $FP
+
+# Cherry-picking and Reverting - Apply a commit and record its original hash
+    git cherry-pick -x $FP
+
+# Cherry-picking and Reverting - Revert a specific commit by creating a new commit
+    git revert $FP
+
+# Cherry-picking and Reverting - Start a binary search for a faulty commit
+    git bisect start
+
+# Cherry-picking and Reverting - Mark a commit as bad during bisecting
+    git bisect bad $FP
+

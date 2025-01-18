@@ -1,0 +1,185 @@
+% advanced_sed
+
+# Delete a pattern
+    sed 's/old//g' $FILE
+
+# Basic Substitution - Replace first occurrence of 'old' with 'new' per line
+    sed 's/old/new/' $FILE
+
+# Basic Substitution - Replace all occurrences of 'old' with 'new' per line
+    sed 's/old/new/g' $FILE
+
+# Basic Substitution - Replace only the third occurrence of 'old' per line
+    sed 's/old/new/3' $FILE
+
+# Basic Substitution - Case-insensitive replacement of 'old' with 'new'
+    sed 's/old/new/gI' $FILE
+
+# Basic Substitution - Use an alternative delimiter (#) for clarity
+    sed 's#old#new#g' $FILE
+
+# In-Place Editing - Edit file in place, replacing 'old' with 'new'
+    sed -i 's/old/new/g' $FILE
+
+# In-Place Editing - Edit in place with a backup file
+    sed -i.bak 's/old/new/g' $FILE
+
+# In-Place Editing - Delete lines matching 'pattern' in place
+    sed -i '/pattern/d' $FILE
+
+# In-Place Editing - Modify multiple files in place
+    sed -i 's/old/new/g' $FILE1 $FILE2
+
+# In-Place Editing - Apply multiple replacements
+    sed -i 's/foo/bar/g; s/abc/xyz/g' $FILE
+
+# Line Deletion - Delete lines containing 'pattern'
+    sed '/pattern/d' $FILE
+
+# Line Deletion - Delete the first line of a file
+    sed '1d' $FILE
+
+# Line Deletion - Delete the last line of a file
+    sed '$d' $FILE
+
+# Line Deletion - Delete lines 1 through 5
+    sed '1,5d' $FILE
+
+# Line Deletion - Delete empty lines
+    sed '/^$/d' $FILE
+
+# Line Selection and Printing - Print only the 5th line of a file
+    sed -n '5p' $FILE
+
+# Line Selection and Printing - Print lines 10 to 20
+    sed -n '10,20p' $FILE
+
+# Line Selection and Printing - Print only lines containing 'pattern'
+    sed -n '/pattern/p' $FILE
+
+# Line Selection and Printing - Print every second line (starting from line 1)
+    sed -n '1~2p' $FILE
+
+# Line Selection and Printing - Print all but lines 5 to 10
+    sed -n '5,10!p' $FILE
+
+# Find and Replace with Patterns - Replace all numbers with "NUM"
+    sed -E 's/[0-9]+/NUM/g' $FILE
+
+# Find and Replace with Patterns - Remove all letters from a file
+    sed 's/[a-zA-Z]//g' $FILE
+
+# Find and Replace with Patterns - Replace 'error' or 'fail' with 'WARNING'
+    sed -E 's/(error|fail)/WARNING/g' $FILE
+
+# Find and Replace with Patterns - Replace multiple spaces with a single space
+    sed 's/\s\+/ /g' $FILE
+
+# Find and Replace with Patterns - Normalize whitespace using character class
+    sed 's/[[:space:]]\+/ /g' $FILE
+
+# Adding and Modifying Lines - Insert "Header Line" at the beginning
+    sed '1i\Header Line' $FILE
+
+# Adding and Modifying Lines - Append "Footer Line" at the end
+    sed '$a\Footer Line' $FILE
+
+# Adding and Modifying Lines - Add a prefix to each line
+    sed 's/^/PREFIX: /' $FILE
+
+# Adding and Modifying Lines - Add a suffix to each line
+    sed 's/$/ :SUFFIX/' $FILE
+
+# Adding and Modifying Lines - Replace only line 3 entirely
+    sed '3s/.*/REPLACED LINE/' $FILE
+
+# Text Extraction - Extract text between 'start' and 'end'
+    sed -n 's/.*start\(.*\)end.*/\1/p' $FILE
+
+# Text Extraction - Extract text matching 'pattern'
+    sed -n 's/^.*\(pattern\).*$/\1/p' $FILE
+
+# Text Extraction - Extract 'important' only from lines with 'pattern'
+    sed -n '/pattern/{s/.*\(important\).*/\1/;p;}' $FILE
+
+# Text Extraction - Extract error messages from logs
+    sed -n 's/.*\(ERROR:.*\)/\1/p' $FILE
+
+# Text Extraction - Extract HTML title tag content
+    sed -n '/<title>/s/<title>\(.*\)<\/title>/\1/p' $FILE
+
+# Whitespace Manipulation - Trim trailing whitespace
+    sed 's/[[:space:]]*$//' $FILE
+
+# Whitespace Manipulation - Trim leading whitespace
+    sed 's/^[[:space:]]*//' $FILE
+
+# Whitespace Manipulation - Reduce multiple spaces to a single space
+    sed 's/[[:space:]]\+/ /g' $FILE
+
+# Whitespace Manipulation - Convert tabs to spaces
+    sed 's/\t/    /g' $FILE
+
+# Whitespace Manipulation - Remove carriage returns (DOS to UNIX conversion)
+    sed 's/\r$//' $FILE
+
+# Rearranging Fields - Swap first two whitespace-separated words
+    sed 's/\([^ ]*\) \([^ ]*\)/\2 \1/' $FILE
+
+# Rearranging Fields - Swap fields in a CSV row
+    sed 's/\([^,]*\),\([^,]*\),\([^,]*\)/\3,\2,\1/' $FILE
+
+# Rearranging Fields - Swap two comma-separated values per line
+    sed 's/^\(.*\),\(.*\)$/\2,\1/' $FILE
+
+# Rearranging Fields - Swap numbers separated by ':'
+    sed 's/\([0-9]\+\):\([0-9]\+\)/\2:\1/' $FILE
+
+# Rearranging Fields - Swap 'word1' and 'word2' while keeping text between them
+    sed -E 's/(word1)(.*)(word2)/\3\2\1/' $FILE
+
+# Advanced Pattern Matching - Print everything between 'pattern1' and 'pattern2'
+    sed -n '/pattern1/,/pattern2/p' $FILE
+
+# Advanced Pattern Matching - Delete everything between 'pattern1' and 'pattern2'
+    sed '/pattern1/,/pattern2/d' $FILE
+
+# Advanced Pattern Matching - Print everything between 'BEGIN' and 'END' except those lines
+    sed -n '/BEGIN/,/END/{//!p}' $FILE
+
+# Advanced Pattern Matching - Print lines that contain both 'pattern1' and 'pattern2'
+    sed '/pattern1/!d; /pattern2/!d' $FILE
+
+# Advanced Pattern Matching - Replace duplicate consecutive words with 'REPEAT'
+    sed -E 's/([a-z]+) \1/REPEAT/g' $FILE
+
+# Working with Multiple Commands - Apply multiple substitutions in one command
+    sed -e 's/foo/bar/g' -e 's/baz/qux/g' $FILE
+
+# Working with Multiple Commands - Perform two substitutions sequentially
+    sed 's/apple/orange/;s/dog/cat/' $FILE
+
+# Working with Multiple Commands - Conditionally apply multiple changes on matching lines
+    sed '/pattern/{s/old/new/;s/foo/bar/}' $FILE
+
+# Working with Multiple Commands - Use multiple `-e` expressions for clarity
+    sed -e 's/foo/bar/' -e 's/abc/xyz/' $FILE
+
+# Working with Multiple Commands - Comment out every line by adding '# '
+    sed 's/^/# /' $FILE
+
+# Using Hold and Pattern Space - Append the next line to the current line before printing
+    sed -n 'h;n;G;p' $FILE
+
+# Using Hold and Pattern Space - Join two consecutive lines into one
+    sed 'N;s/\n/ /' $FILE
+
+# Using Hold and Pattern Space - Extract and merge everything between 'START' and 'END'
+    sed '/START/,/END/{H;$!d};x;s/\n/ /g' $FILE
+
+# Using Hold and Pattern Space - Print only lines that match a pattern in the hold space
+    sed -n 'x;/pattern/p' $FILE
+
+# Using Hold and Pattern Space - Convert paragraphs into single comma-separated lines
+    sed '/^$/b end; H; $!d; :end x; s/\n/, /g' $FILE
+

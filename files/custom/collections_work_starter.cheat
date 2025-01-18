@@ -1,0 +1,10 @@
+% collections_work_starter 
+
+# Run make targets and test gitlab jobs
+    make test-gitlab 
+
+# Run rspec (idempotent)
+    echo make rspec (look for ssh/tmux integration)
+
+# Run pytest (idempotent)
+    echo make pytest (look for ssh/tmux integration)

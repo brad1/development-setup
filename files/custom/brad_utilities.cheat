@@ -1,0 +1,28 @@
+% brad_utilities
+
+; Next: extract to collections_navigations, make run in zsh for function access
+
+# s to connect to server
+    s
+
+# h to edit hostfile
+    h
+
+# d to open bookmarked dir
+    d
+
+# j to open next bookmarked dir
+    j
+
+# f to open function menu
+    f
+
+# e to edit pinned file
+    e
+
+# c to open legacy cheatsheets
+    c
+
+# cw to open work cheatsheets
+    cw
+

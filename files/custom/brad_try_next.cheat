@@ -1,0 +1,34 @@
+% brad_try_next
+
+# Command Palettes
+    Ctrl-g
+
+# Show Vim patterns and navigation
+    vim-usage
+    vim-goto
+
+# Column Formatting - Adjust text alignment
+    column
+
+# Autojump and quick access
+    j sitem
+
+# File explorer alternatives
+    mc
+    exa
+
+# View login history
+    last [reboot]
+
+# Clipboard Management - Store temporary terminal captures
+    arc scratch.txt
+
+# File Search - Search with type filtering
+    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print"
+
+# Process Management - Resume background jobs
+    rj
+
+# Local Chat & Voice - Twinny dev tools
+    echo https://github.com/twinnydotdev/twinny
+

@@ -1,0 +1,167 @@
+% advanced_awk
+
+# Basic Usage - Print entire file content
+    awk '{print}' $FP
+
+# Basic Usage - Print the first column of a file
+    awk '{print $1}' $FP
+
+# Basic Usage - Print the first and third column
+    awk '{print $1, $3}' $FP
+
+# Basic Usage - Print line numbers along with lines
+    awk '{print NR, $0}' $FP
+
+# Basic Usage - Print only the 5th line
+    awk 'NR==5' $FP
+
+# Filtering Rows - Print lines where the first column matches 'pattern'
+    awk '$1 ~ /pattern/' $FP
+
+# Filtering Rows - Print lines longer than 50 characters
+    awk 'length($0) > 50' $FP
+
+# Filtering Rows - Print lines where the second column is greater than 100
+    awk '$2 > 100' $FP
+
+# Filtering Rows - Print lines from 10 to 20
+    awk 'NR >= 10 && NR <= 20' $FP
+
+# Filtering Rows - Print lines that have exactly 3 fields
+    awk 'NF==3' $FP
+
+# Column Manipulation - Print first, second, and last column
+    awk '{print $1, $2, $NF}' $FP
+
+# Column Manipulation - Print the second-to-last column
+    awk '{print $(NF-1)}' $FP
+
+# Column Manipulation - Convert the second column to uppercase
+    awk '{print toupper($2)}' $FP
+
+# Column Manipulation - Convert the first column to lowercase
+    awk '{print tolower($1)}' $FP
+
+# Column Manipulation - Replace first occurrence of 'foo' with 'bar' per line
+    awk '{sub(/foo/, "bar"); print}' $FP
+
+# Mathematical Operations - Add first and second column
+    awk '{print $1 + $2}' $FP
+
+# Mathematical Operations - Multiply the third column by 2
+    awk '{print $3 * 2}' $FP
+
+# Mathematical Operations - Print the square root of the second column
+    awk '{print sqrt($2)}' $FP
+
+# Mathematical Operations - Sum the third column and print the result
+    awk '{sum+=$3} END {print sum}' $FP
+
+# Mathematical Operations - Calculate the average of the third column
+    awk '{sum+=$3} END {print sum/NR}' $FP
+
+# String Processing - Print the first 5 characters of the second column
+    awk '{print substr($2, 1, 5)}' $FP
+
+# String Processing - Replace all occurrences of 'old' with 'new'
+    awk '{gsub(/old/, "new"); print}' $FP
+
+# String Processing - Print lines between "start" and "end" (inclusive)
+    awk '/start/,/end/' $FP
+
+# String Processing - Print the length of the third column
+    awk '{print length($3)}' $FP
+
+# String Processing - Print lines where the first column is numeric
+    awk '{if ($1 ~ /^[0-9]+$/) print $1}' $FP
+
+# Field Separators - Use ',' as the field separator
+    awk -F ',' '{print $1, $2}' $FP
+
+# Field Separators - Use '|' as the field separator and print the last column
+    awk -F '|' '{print $NF}' $FP
+
+# Field Separators - Use multiple delimiters ':' and '='
+    awk -F '[:=]' '{print $1, $2}' $FP
+
+# Field Separators - Set field separator to ':' within the script
+    awk 'BEGIN {FS=":"} {print $1}' $FP
+
+# Field Separators - Set output field separator to a tab
+    awk 'BEGIN {OFS="\t"} {print $1, $2}' $FP
+
+# Multi-file Processing - Print filename before processing each file
+    awk 'FNR==1 {print "Processing file:", FILENAME}' $FP $FP2
+
+# Multi-file Processing - Process first file separately before second
+    awk 'FNR==NR {sum+=$2; next} {print $1, sum}' $FP $FP2
+
+# Multi-file Processing - Join two files on the first column
+    awk 'NR==FNR {map[$1]=$2; next} {print $1, map[$1]}' $FP1 $FP2
+
+# Multi-file Processing - Differentiate output by file
+    awk '{if (FILENAME=="file1") print "File1:", $0; else print "File2:", $0}' $FP1 $FP2
+
+# Multi-file Processing - Lookup values from the first file in the second
+    awk 'FNR==NR{arr[$1]=$2; next} {print $1, arr[$1]}' $FP1 $FP2
+
+# Control Flow - Print labels based on conditions
+    awk '{if ($2 > 100) print $1, "High"; else print $1, "Low"}' $FP
+
+# Control Flow - Print only even-numbered lines
+    awk 'NR % 2 == 0' $FP
+
+# Control Flow - Count occurrences of the first column
+    awk '{count[$1]++} END {for (k in count) print k, count[k]}' $FP
+
+# Control Flow - Sum the second column grouped by the first column
+    awk '{sum[$1]+=$2} END {for (k in sum) print k, sum[k]}' $FP
+
+# Control Flow - Find the maximum value in the third column
+    awk '{if (max < $3) max = $3} END {print "Max:", max}' $FP
+
+# Output Formatting - Add a header and footer
+    awk 'BEGIN {print "Header"} {print $1, $2} END {print "Footer"}' $FP
+
+# Output Formatting - Print formatted output with column alignment
+    awk '{printf "%-10s %5d\n", $1, $2}' $FP
+
+# Output Formatting - Pretty-print tabular data
+    awk 'BEGIN {printf "%-10s %-10s\n", "Name", "Score"} {printf "%-10s %10d\n", $1, $2}' $FP
+
+# Output Formatting - Print tab-separated output
+    awk '{print $1 "\t" $2}' $FP
+
+# Output Formatting - Print line number, field count, and the entire line
+    awk '{print NR, NF, $0}' $FP
+
+# Working with JSON and CSV - Convert CSV to JSON format
+    awk -F ',' '{print "{\"name\":\"" $1 "\", \"age\":" $2 "}"}' $FP
+
+# Working with JSON and CSV - Extract values from a structured CSV
+    awk -F '[:,]' '{print $2, $4}' $FP
+
+# Working with JSON and CSV - Format key-value pairs
+    awk -F '[:,]' '{print "{ \"key\": \"" $1 "\", \"value\": \"" $2 "\" }"}' $FP
+
+# Working with JSON and CSV - Wrap JSON array formatting
+    awk 'BEGIN {print "["} {print "  {\"id\": " NR ", \"name\": \"" $1 "\"},"} END {print "]"}' $FP
+
+# Working with JSON and CSV - Reorder CSV columns
+    awk 'BEGIN {FS=","; OFS=","} {print $3, $1, $2}' $FP
+
+# Miscellaneous and Fun - Generate a random number between 0 and 99
+    awk 'BEGIN {srand(); print int(rand()*100)}'
+
+# Miscellaneous and Fun - Print the current timestamp
+    awk 'BEGIN {print strftime("%Y-%m-%d %H:%M:%S", systime())}'
+
+# Miscellaneous and Fun - Generate a sequence with squares
+    awk 'BEGIN {for (i=1; i<=5; i++) print i, i*i}'
+
+# Miscellaneous and Fun - Print a greeting with the current user’s name
+    awk 'BEGIN {print "Hello, " ENVIRON["USER"]}'
+
+# Miscellaneous and Fun - Print environment variable value
+    awk 'BEGIN {print "The system has " ENVIRON["HOME"] " as the home directory."}'
+

@@ -532,73 +532,9 @@ function down_widget() {
 zle -N down_widget
 bindkey "^j" down_widget
 
-
-# consider a new pattern:
-# thread readme # opens file
-# thread readme a new comment # appends to file
-# thread read...  # with autocomplete
-readme () {
-  cd ~/Documents/vim
-  vim raw/log
-}
-
-#readme () {
-#  cd ~/Documents/vim/raw
-#  list=$(ls | grep -v collapse)
-#  terminal_height=$(tput lines)
-#  file_length=$(cat $(echo $list | tail -1) | wc -l)
-#  if [[ "$file_length" -gt "$terminal_height" ]]; then
-#    echo $(date +%Y%m%d) >> $(date +%Y%m%d)
-#  fi
-#  vim $(ls | grep -v collapse | xargs)
-#}
-
-# readme () {
-#  vim readme     # no
-#  vim **/readme  # maybe
-#  vim ~/Projects/**/readme # better
-#  vim ~/Documents/vim/raw/...  ~/Projects/**/readme # start with the global, than add others
-#  ...
-#}
-
-# Use vimf instead
-# vimm () {
-#  vim $(find . -name \*$1\*)
-#}
-#
-#
-function cd-vmass () {
-  cd ~/Projects/vmass
-}
-
-function cd-recent () {
-  cd "$(dirs|xargs -n1|fzf|sed 's/~/\/home\/brad/')"
-}
-
-function copy-artifacts () {
-  cp ~/Downloads/artifacts* .
-}
-
 function du-ch () {
   du -ch * | sort -h
 }
-
-function vimf () {
-  vim $(fzf)
-}
-
-function rmf () {
-  rm $(fzf)
-}
-
-function catf () {
-  cat $(fzf)
-}
-
-function linkf () {
-  ln -sf $(fzf)
-}
-
 
 # # # menu
 
@@ -639,11 +575,14 @@ vim_insert_function() {
   grep 'SELECTME' $(find /home/brad/.command_palettes/ -type f | fzf ) > /tmp/commandspals 
   cat /tmp/commandspals | fzf > /tmp/command
   #LBUFFER+=$( cat /tmp/command | awk -F '$' '{print $1}' )
-  LBUFFER+=$( cat /tmp/command | awk -F '#' '{print $1}' )
-}
+  command=$( cat /tmp/command | awk -F '#' '{print $1}' )
 
-zle -N vim_insert_function
-bindkey '^v' vim_insert_function
+  LBUFFER+="$command"
+  return
+}
+# old
+zle -N  vim_insert_function 
+bindkey '^v'  vim_insert_function
 
 # Alternative to fzf-history-widget
 #fzf_insert_history() {
@@ -769,28 +708,20 @@ shell-status2() {
     # Clear the screen
     clear
 
-    # Set some formatting
-    local line="+------------------------+------------------------+"
-    local format="| %-22s | %-22s |"
-
-    # Print the layout using formatted printf statements
-    echo $line
-    printf "$format\n" "'a' default command pallette" "'gh' git commands"
-    printf "$format\n" "'s' connect to server" "'h' edit hostfile"
-    printf "$format\n" "'d' bookmarked dir" "'j' ..."
-    printf "$format\n" "'Ctrl-f' full command menu" "'k' ..."
-    echo $line
-    printf "$format\n" "'e' edit pinned file" "'l' ..."
-    printf "$format\n" "'c' cheatsheets" "" 
-    printf "$format\n" "'cw' work cheatsheets" ""
-    echo $line
+    echo 'Ctrl-g for all shell cheatsheets ---'
+    echo 'Ctrl-v for command palettes ---'
+    ( cd /home/brad/.local/share/navi/cheats/custom/ ; echo collections*.cheat | sed 's/collections_//g'| awk -F. '{ print "    " $1 }' )
+    echo '    ...'
+    echo 'Ctrl-a for terminal shortcuts'
+    cat /home/brad/.local/share/navi/cheats/custom/brad_utilities.cheat | grep '^#' | head -n3 | sed 's/# //g' | awk -F. '{ print "    " $1 }'
+    echo '    ...'
 
     echo
     echo 'New commands to try (preview):'
-    grep 'SELECTME' ~/.command_palettes/to_try.txt | awk '{print "    " $0}' | head -n5
+    grep '^    ' /home/brad/.local/share/navi/cheats/custom/brad_try_next.cheat | head -n5
     echo '    ...'
     echo 'Commands to remember (preview):'
-    grep 'SELECTME' ~/.command_palettes/simple.txt | awk '{print "    " $0}' | head -n5
+    grep '^    ' /home/brad/.local/share/navi/cheats/custom/brad_reminder.cheat | head -n5
     echo '    ...'
     echo 'Things to add:'
     echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
@@ -811,7 +742,142 @@ shell-status2() {
 
     # TODO test and expand
     shell_login_overview 
+
+    #fzf_menu_exp
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### [Sat 18 Jan 2025 11:33:54 AM EST]
+
+# control g
+
+navi-widget-g() {
+    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
+
+    local cmd=$(navi --print --query "$cheatsheet")
+    LBUFFER+="$cmd"
+}
+zle -N navi-widget-g
+bindkey '^g' navi-widget-g
+
+# control v
+
+navi-widget-v() {
+    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
+
+    local cmd=$(navi --print --query "$cheatsheet")
+    LBUFFER+="$cmd"
+}
+zle -N navi-widget-v
+bindkey '^v' navi-widget-v
+
+navi-widget-a() {
+    navi --query "brad_utilities"
+}
+zle -N navi-widget-a
+bindkey '^a' navi-widget-a
+
+
+# Not quite there
+# - open found command to vi mode
+#navi-vim-widget() {
+#    local cmd=$(navi --print | tail -n 1)
+#    BUFFER="vim -c 'startinsert' -c \"normal! i$cmd\" scratchpad"
+#    zle accept-line
+#}
+#zle -N navi-vim-widget
+#bindkey '^g' navi-vim-widget
+
+# Tab complete for palette discovery?
+ncp_git() {
+  navi --print --query git
+}
+
+ncp_vim() {
+  navi --print --query vim
+}
+
+fzf_menu_exp() {
+
+# Define commands and corresponding functions using an indexed array
+MENU_ITEMS=(
+    "Connect to Server" "connect_server"
+    "Edit Hostfile" "edit_hostfile"
+    "Bookmarked Directories" "open_bookmarks"
+    "Search functions and aliases" "open_full_menu"
+    "Command Palettes" "open_palettes"
+    "Edit Pinned File" "edit_pinned"
+    "Cheatsheets" "open_cheatsheets"
+    "Work Cheatsheets" "open_work_cheatsheets"
+    "Drop to Shell" "not_a_function"
+)
+
+# Function placeholders
+connect_server() { s ; }
+edit_hostfile() { h ; }
+open_bookmarks() { d ; }
+open_full_menu() { f ;}
+open_palettes() { echo "Open command palette widget with Ctrl-G";}
+edit_pinned() { e ; }
+open_cheatsheets() { c ; }
+open_work_cheatsheets() { cw ; }
+not_a_function() { echo "Why are you calling this? Do not use"; }
+
+# Generate a properly formatted list
+MENU_LIST=""
+for ((i = 1; i < ${#MENU_ITEMS[@]}; i+=2)); do
+    MENU_LIST+="${MENU_ITEMS[i]}\n"
+done
+
+
+CHOICE=$(echo -e "$MENU_LIST" | fzf --prompt="Select an option: " --layout=reverse --height=50% --preview-window=wrap)
+
+if [[ "Drop to Shell" == "$CHOICE" ]]; then
+  return
+fi
+
+# Execute and quit
+if [[ -n "$CHOICE" ]]; then
+    for ((i = 1; i < ${#MENU_ITEMS[@]}; i+=2)); do
+        if [[ "${MENU_ITEMS[i]}" == "$CHOICE" ]]; then
+            ${MENU_ITEMS[i+1]}
+            break
+        fi
+    done
+fi
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # More commands
 # echo '    pstree $(pgrep -f postinstall | head -n1)'
@@ -890,12 +956,6 @@ h () {
 }
 
 # consider replacing with 'autojump'
-e () {
-  file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
-  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
-  $EDITOR $evaluated_path
-}
-
 e () {
   file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
   evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")

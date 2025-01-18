@@ -1,0 +1,197 @@
+% collections_network_diagnostics_chatgpt
+
+# Show all network interfaces and their IP addresses
+    ip a
+
+# Display the routing table
+    ip r
+
+# Show the local IP address of the machine
+    hostname -I
+
+# Display DNS resolver configuration
+    cat /etc/resolv.conf
+
+# Show network connection status using NetworkManager
+    nmcli dev status
+
+# Show open ports and listening services
+    ss -tuln
+
+# Show active network connections with process IDs
+    ss -tunp
+
+# Show all listening ports with associated processes
+    netstat -tulnp
+
+# Show which process is using a specific port
+    lsof -i :$PORT
+
+# Display the system’s routing table
+    netstat -rn
+
+# Send 5 ICMP echo requests to a host
+    ping -c 5 $HOST
+
+# Send 10 pings at 0.2s intervals
+    ping -i 0.2 -c 10 $HOST
+
+# Ping all hosts in a subnet
+    fping -g $SUBNET
+
+# Show the route packets take to a destination
+    traceroute $HOST
+
+# Continuous ping and traceroute analysis in real-time
+    mtr --report $HOST
+
+# Query DNS for an IP address
+    nslookup $DOMAIN
+
+# Get the IP address of a domain using dig
+    dig $DOMAIN +short
+
+# Perform a reverse DNS lookup
+    dig -x $IP
+
+# Look up DNS records for a domain
+    host $DOMAIN
+
+# Get WHOIS information for a domain
+    whois $DOMAIN
+
+# Capture network packets on a specific interface
+    tcpdump -i $INTERFACE
+
+# Capture packets on a specific port
+    tcpdump -n -i $INTERFACE port $PORT
+
+# Capture packets and display raw ASCII output
+    tcpdump -A -i $INTERFACE
+
+# Save captured packets to a file
+    tcpdump -w capture.pcap -i $INTERFACE
+
+# Capture HTTP traffic on an interface
+    ngrep -d $INTERFACE "HTTP"
+
+# Get HTTP headers from a URL
+    curl -I $URL
+
+# Download a web page and follow redirects
+    curl -L -o output.html $URL
+
+# Test if a website is reachable without downloading
+    wget --spider $URL
+
+# Test connectivity to a specific port (if telnet is installed)
+    telnet $HOST $PORT
+
+# Check if a remote host is listening on a specific port
+    nc -zv $HOST $PORT
+
+# Run a network bandwidth test to a server
+    iperf3 -c $SERVER
+
+# Start an iperf3 server to measure bandwidth
+    iperf3 -s
+
+# Run an internet speed test from the terminal
+    speedtest-cli
+
+# Measure download speed of a file
+    wget -O /dev/null $URL
+
+# Check download speed in bytes per second
+    curl -o /dev/null -s -w "%{speed_download}" $URL
+
+# Show all iptables rules with details
+    sudo iptables -L -v
+
+# Show firewall status and rules (UFW)
+    sudo ufw status verbose
+
+# Show active firewalld rules
+    firewalld-cmd --list-all
+
+# View firewalld logs
+    sudo journalctl -u firewalld --no-pager
+
+# Block incoming traffic from an IP
+    sudo iptables -I INPUT -s $IP -j DROP
+
+# Show wireless interface details
+    iwconfig
+
+# Scan for available Wi-Fi networks
+    iwlist $INTERFACE scan | grep SSID
+
+# List Wi-Fi networks using NetworkManager
+    nmcli device wifi list
+
+# Show all saved network connections
+    nmcli connection show
+
+# Check if wireless interfaces are blocked
+    rfkill list
+
+# Connect to a VPN using OpenVPN
+    openvpn --config $CONFIG.ovpn
+
+# Display WireGuard VPN status
+    wg show
+
+# Route all traffic through an SSH tunnel
+    sshuttle -r $USER@$VPN_HOST 0/0
+
+# Restart OpenVPN service
+    sudo systemctl restart openvpn
+
+# Manually add a route for a VPN connection
+    sudo ip route add $DEST via $GATEWAY
+
+# Measure packet loss and round-trip time
+    ping -q -c 10 $HOST
+
+# Display detailed network statistics
+    netstat -s
+
+# Show detailed TCP connection statistics
+    ss -i dst $HOST
+
+# Show detailed Ethernet interface statistics
+    ethtool $INTERFACE
+
+# Scan a host and show why ports are open or closed
+    nmap --reason $HOST
+
+# Scan all devices in a subnet without ICMP ping
+    nmap -Pn $IP_RANGE
+
+# Send SYN packets to a target port
+    hping3 -S $HOST -p $PORT -c 3
+
+# Show the ARP table for local network devices
+    arp -a
+
+# Display the routing table
+    route -n
+
+# Show established HTTP connections
+    ss -o state established '( dport = :80 or sport = :80 )'
+
+# Connect to a remote machine via SSH
+    ssh $USER@$HOST
+
+# Forward local port 8080 to remote host port 80
+    ssh -L 8080:$HOST:80 $USER@$SSH_SERVER
+
+# Copy a file to a remote machine via SCP
+    scp $FILE $USER@$HOST:$DEST
+
+# Sync files between local and remote systems
+    rsync -avz $SRC $USER@$HOST:$DEST
+
+# SSH alternative with better network resilience
+    mosh $USER@$HOST
+
