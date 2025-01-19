@@ -1,25 +1,63 @@
+# conventions 
+# <context>-<object>-<verb>
+# shell-vbox-list
+
+
+
+
+
+
 # # # # # # #
-# Local variables
+# Section: Local variables
 #
 
 
 fp_copied_paths=/var/brad/copied-paths.list
 jobsd=/var/brad/login-splash-jobs
+zsh_functions_debug=0
 
 #
 #
-# # # # # # #
+# # # # # # # # # #
 
-#
-## expansion:
-# dump grep result to csv so that I can math w/ excel
-#
 
-# <context>-<object>-<verb>
-# shell-vbox-list
-procs-vbox-list() {
-  echo "try: ps aux | grep -i vboxman"
+
+
+# # # # # # # # # #
+# Section: misc
+#
+vpn-start () {
+  nohup /opt/cisco/secureclient/bin/vpnui &
 }
+#
+#
+# # # # # # # # # #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # # # # # # #
+# Section: tmux, terminal mgmt, workflow
+# 
+
 
 # run in one tmux tab to keep the task separate and tracked
 # expand
@@ -33,21 +71,116 @@ git-portal() {
     export HISTFILE=$HOME/.git_portal_history
 }
 
+set-vi-mode() {
+   set -o vi
+   echo "vi mode enabled."
+   echo "'/' to reverse search shell history, or:"
+   echo 'bindkey "^R" history-incremental-search-backward'
+   echo "then 'v' to edit."
+}
+
+unset-vi-mode() {
+   set +o vi
+   echo "vi mode disabled"
+}
+
 tmux-options() {
   echo "man tmux | grep -iE '(key bindings are|rename)'"
   man tmux | grep -iE '(key bindings are|rename)'
 }
 
+function du-ch () {
+  du -ch * | sort -h
+}
 
-#### keyword search
+cdd () {
+  echo "Use cd Ctrl-t instead"
+}
+
+list-functions() { # and aliases, for selection
+  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh; print -l ${(ok)functions}'
+  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias | cut -d= -f1'
+}
+
+list-aliases() { # for definition 
+  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias'
+}
+
+function start_long_running_process {
+    local job_name=$1
+    /path/to/your/script_$job_name.sh > ~/background_jobs/${job_name}_output.txt &
+    echo $! > ~/background_jobs/${job_name}_pid.txt
+}
+
+am_I_in_ranger() {
+  ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
+}
+
+# Problem: using Ctrl-R to search for a file open in vim does not work
+# unless absolute filepaths are used.  Solution:
+# Instead of holding many files in one vim buffer, open them as you go,
+# Ctrl-Z.
+#resume_job() {
+rj() {
+  local job_id
+  job_id=$(jobs -l | fzf --height 40% --layout=reverse --prompt="Select job: " | awk '{print $2}')
+  if [[ -n "$job_id" ]]; then
+    fg %"$job_id"
+  else
+    echo "No job selected."
+  fi
+}
+
+save () {
+  revision="$(git log --oneline | head -n1)"
+
+  echo "# Generated on $(date)"      >  stdout.log
+  echo "# git revision: ${revision}" >> stdout.log
+  echo "# run in $(pwd)"             >> stdout.log
+  echo "# standard out of \"$@\""    >> stdout.log
+  echo ""                            >> stdout.log
+
+  echo "# Generated on $(date)"      >  stderr.log
+  echo "# git revision: ${revision}" >> stderr.log
+  echo "# run in $(pwd)"             >> stderr.log
+  echo "# standard err of \"$@\""    >> stderr.log
+  echo ""                            >> stderr.log
+
+  "$@" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+}
+
 #
+#
+# # # # # # #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # # # # # # # # # # # #
+# Section: Finding special tags
 #
 #
 
 ignored_dirs="_archived tmp"
 #keywords_to_crawl="todo ##consider thought"
 keywords_to_crawl="##starred ##todo"
+# ##washere
+# see: vim-usage for more of this pattern
 
+#### keyword search
 search_files() {
     keyword=$1
     shift  # Remove the first argument and shift the rest to the left
@@ -71,58 +204,34 @@ do_crawl() {
     done
 }
 
-shell_login_overview() {
-  do_crawl $(echo $keywords_to_crawl)
+find-with() {
+  # better way!
+  find . -iname "*$1*" -not -path "./.git/*" -not -path "./release/*"
 }
 
-##################
+#
+#
+# # # # # # # # 
 
 
-debug=0  # set to 1 for debugging output
 
-cdd () {
-    if (( $debug )); then
-        echo "Searching for directory '$1'..."
-    fi
-    target=$(timeout 2 find . -type d \( -name ".git" -o -name "release" \) -prune -o -name $1 -print -quit 2> /dev/null)
-    if [[ -z $target ]]
-    then
-        echo "Directory '$1' not found or operation timed out."
-    else
-        cd $target
-        if (( $debug )); then
-            echo "Changed directory to '$target'."
-        fi
-    fi
-}
 
-archive() {
-  # consider prompting for archive reason, tack onto beginning of file
-  mv "$1" "$ARCHIVE"
-}
 
-gcof() {
-  git checkout $(git-branches-list | fzf)
-}
 
-gcobf() {
-  git checkout -b $(git-branches-list | fzf)
-}
 
-bash-builtins() {
-  man dirs
-}
 
-cp-from-downloads() {
-  cp ~/Downloads/vmass*$1*bin ~/Projects/vmass
-}
 
-browse-journal() {
-  (
-    cd ~/Documents/txt/archive/journal
-    ranger
-  )
-}
+
+
+
+
+
+
+# # # # # #  
+# Section: File mgmt
+#
+#
+#
 
 paste-paths() {
   while read item; do
@@ -141,13 +250,64 @@ copy-path() {
   path-of $1 >> $fp_copied_paths
 }
 
-path-of() {
-  echo `pwd`/$1
+# copy from commit
+cfc () {    
+  for item in $(git show --name-only --format= $1) ; do    
+    copy-path $item
+  done    
 }
 
-make-list-targets() {
-  make -pRrq -f Makefile | awk -F: '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {print $1}' | sort | uniq
+# favor ln -s /usr/bin/batcat ~/.local/bin/bat 
+#bat() {
+#  batcat
+#}
+
+archive() {
+  # consider prompting for archive reason, tack onto beginning of file
+  mv "$1" "$ARCHIVE"
 }
+
+# More commands
+# echo '    pstree $(pgrep -f postinstall | head -n1)'
+# echo '    compgen -c | fzf | xargs man'
+#  cd $(ls | head -n1) ; vagrant destroy -f ; cd .. ; rm -rf $(ls | head -n1) # mass delete
+
+
+#archive_file() {
+arc() {
+    local source_file="$1"
+    if [[ ! -f "$source_file" ]]; then
+        echo "Error: $source_file does not exist or is not a regular file."
+        return 1
+    fi
+    
+    local timestamp="$(date +%Y%m%d%H%M)"
+    local renamed_filename="${source_file}-archived-${timestamp}.txt"
+    
+    mv "$source_file" "$renamed_filename"
+    touch "$source_file"
+    
+    echo "File archived as ${renamed_filename}"
+}
+
+#
+#
+# # # # # # # 
+
+
+
+
+
+
+
+
+
+
+
+
+# # # # # # # # 
+# Section: git functions
+#
 
 git-list-merges() {
   git log --merges --pretty=format:"%H %ad %s" --date=short
@@ -177,21 +337,6 @@ git-show-file-diffs() {
   git log -p -- "$1"
 }
 
-# neat, but use :Tags from fzf.vim 
-vim-goto() {
-  local pattern="$1"
-  vim -c "/$pattern" -c "normal zt" "$(rg -l $pattern | head -n1)"
-}
-
-vim-files-changed-in-branch() {
-  git diff $(git branch --show-current) master --name-only > /tmp/asdf
-  vim $(cat /tmp/asdf | fzf)
-}
-
-vim-files-modified () {
-  vim "$(git status --short | awk "{print \$2}" | fzf)"
-}
-
 git-branch() {
   git checkout -b "$1"
   echo "$1" >> /var/brad/lists/branches.list
@@ -210,50 +355,90 @@ git-branch-hop() {
   git checkout "$(cat /var/brad/tmp/branch)"
 }
 
-# subshell variable data
-# (stickied snippets)
-sub-var() {
-  mkdir -p /var/brad
-  lastpwd="$(pwd)"
-  cd /var/brad
-  /usr/bin/zsh
-  cd $lastpwd
+gcof() {
+  git checkout $(git-branches-list | fzf)
 }
 
-set-vi-mode() {
-   set -o vi
-   echo "vi mode enabled."
-   echo "'/' to reverse search shell history, or:"
-   echo 'bindkey "^R" history-incremental-search-backward'
-   echo "then 'v' to edit."
+#
+#
+#
+# # # # # # # # 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # # # # # # # # # 
+# Section: build utilities
+#
+
+make-list-targets() {
+  make -pRrq -f Makefile | awk -F: '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {print $1}' | sort | uniq
 }
 
-unset-vi-mode() {
-   set +o vi
-   echo "vi mode disabled"
+#
+#
+# # # # # # #
+
+
+
+
+
+
+# # # # # # # #
+# Section: editor shortcuts vim
+#
+
+vtmp() {
+  vim $(mktemp)
 }
 
-#prompt-journal() {
-#  datestr="$(date +'%m-%d-%Y')"
-#  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
-#  if ! [[ -e "$jpath" ]] ; then
-#    echo 'no journal entry... make one? (y/n)'
-#    read var
-#    if [[ "$var" = "y" ]] ; then
-#      open-journal
-#    fi
-#  else
-#    # print out the last thing I was doing
-#    cat "$jpath/start" | tail -n15
-#  fi
-#}
+vim-tmp() {
+  vim $(mktemp)
+}
 
-#open-journal() {
-#  datestr="$(date +'%m-%d-%Y')"
-#  jpath="/home/brad/Documents/txt/archive/journal/$datestr"
-#  mkdir -p $jpath
-#  vim "$jpath/start"
-#}
+# neat, but use :Tags from fzf.vim 
+vim-goto() {
+  local pattern="$1"
+  vim -c "/$pattern" -c "normal zt" "$(rg -l $pattern | head -n1)"
+}
+
+vim-files-changed-in-branch() {
+  git diff $(git branch --show-current) master --name-only > /tmp/asdf
+  vim $(cat /tmp/asdf | fzf)
+}
+
+vim-files-modified () {
+  vim "$(git status --short | awk "{print \$2}" | fzf)"
+}
 
 prompt-clipboard() {
   if ! [[ -e ~/Documents/txt/var/.clipboard.swp ]] ; then
@@ -265,10 +450,217 @@ prompt-clipboard() {
   fi
 }
 
-function start_long_running_process {
-    local job_name=$1
-    /path/to/your/script_$job_name.sh > ~/background_jobs/${job_name}_output.txt &
-    echo $! > ~/background_jobs/${job_name}_pid.txt
+#
+#
+# # # # # # # # # # #
+
+
+
+
+# # # # # # # # # # # #
+# Section: Shortcuts and control keys
+#
+
+# control g
+
+navi-widget-g() {
+    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
+
+    local cmd=$(navi --print --query "$cheatsheet")
+    LBUFFER+="$cmd"
+}
+zle -N navi-widget-g
+bindkey '^g' navi-widget-g
+
+# control v
+
+navi-widget-v() {
+    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
+
+    local cmd=$(navi --print --query "$cheatsheet")
+    LBUFFER+="$cmd"
+}
+zle -N navi-widget-v
+bindkey '^v' navi-widget-v
+
+navi-widget-a() {
+    navi --query "brad_utilities"
+}
+zle -N navi-widget-a
+bindkey '^a' navi-widget-a
+
+# Not quite there
+# - open found command to vi mode
+#navi-vim-widget() {
+#    local cmd=$(navi --print | tail -n 1)
+#    BUFFER="vim -c 'startinsert' -c \"normal! i$cmd\" scratchpad"
+#    zle accept-line
+#}
+#zle -N navi-vim-widget
+#bindkey '^g' navi-vim-widget
+
+a () {
+  auto
+}
+
+s () {
+  echo "Use: sshf for valcom servers"
+  echo "Use: ssh-gitlab-web for gitlab"
+  #ssh brad@$(cat /var/brad/lists/servers.txt | fzf)'
+
+}
+
+# consider replacing with 'cdargs' or 'z' or 'autojump'
+d () {
+  dest="$(cat /var/brad/lists/dirs.list | fzf)"
+  dest="${dest/#\~/$HOME}"
+  cd "$dest"
+}
+
+gh () {
+  $(cat /var/brad/lists/commands-git.list|fzf)
+}
+
+h () {
+  # Move to 'j', fix the full filepath displaying
+  # view $(echo /var/brad/running-lists/*.list|fzf)
+  sudo vim /etc/hosts
+}
+
+# consider replacing with 'autojump'
+e () {
+  file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
+  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
+  $EDITOR $evaluated_path
+}
+
+c () {
+  fn=$(cd /opt/chef/cookbooks/development-setup/files/cheatsheets/; ls | fzf)
+  # Next: use bat or glow to view MDs
+  # from cheatsheets.list ?
+  # evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
+  $EDITOR /opt/chef/cookbooks/development-setup/files/cheatsheets/$fn
+}
+
+cw () {
+  fn=$(cd ~/Projects/cheatsheets/; ls | fzf)
+  $EDITOR ~/Projects/cheatsheets/$fn
+}
+
+o () {
+  oi_dir="/home/brad/Projects/_projects-research/open_interpreter"
+  gnome-terminal --tab -- bash -c "cd '$oi_dir' && . ./init.sh; exec bash"
+
+}
+
+p () {
+   echo "python3 manage.py showmigrations"
+   echo "python3 manage.py migrate database 0040_file_name_handling"
+   echo "ln -sf /opt/vmass/server_api"
+}
+
+
+co () {
+  pth=/var/brad/contexts
+  fn=$(ls $pth|fzf)
+  fp=$pth/$fn
+  echo "Opening $fn, press enter within 2 seconds to cat instead."
+  if read -t 2; then
+    #cat "$fp"
+    cat "$fp"
+  else
+    $EDITOR "$fp"
+  fi
+}
+
+
+f () {
+  list-functions|fzf > /var/brad/tmp/command
+  eval $(cat /var/brad/tmp/command)
+}
+
+fzf_insert_function() {
+  LBUFFER+=$( ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf )
+}
+zle -N fzf_insert_function
+bindkey '^f' fzf_insert_function
+
+vim_insert_function() {
+  grep 'SELECTME' $(find /home/brad/.command_palettes/ -type f | fzf ) > /tmp/commandspals 
+  cat /tmp/commandspals | fzf > /tmp/command
+  #LBUFFER+=$( cat /tmp/command | awk -F '$' '{print $1}' )
+  command=$( cat /tmp/command | awk -F '#' '{print $1}' )
+
+  LBUFFER+="$command"
+  return
+}
+# old
+zle -N  vim_insert_function 
+bindkey '^v'  vim_insert_function
+
+# Alternative to fzf-history-widget
+#fzf_insert_history() {
+#  LBUFFER+=$(fc -l 1 | fzf | sed 's/^[ ]*[0-9]*[ ]*//')
+#}
+#zle -N fzf_insert_history
+#bindkey '^r' fzf_insert_history
+#
+
+#
+#
+# # # # # # # # # # # #
+
+
+
+
+# # # # # # # # # # # #
+# Section: login splash and discoverability
+#
+
+# see section: Shortcuts and control keys
+# see section: interactive selection
+
+# Tab complete for palette discovery?
+ncp_git() {
+  navi --print --query git
+}
+
+ncp_vim() {
+  navi --print --query vim
+}
+
+# # # # deprecated use navi
+
+fzf-commands () {
+  cat /var/brad/lists/commands-fzf.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+git-commands () {
+  $(cat /var/brad/lists/commands-git.list|fzf)
+}
+
+zsh-commands () {
+  cat /var/brad/lists/commands-zsh.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+auto () {
+  cat /var/brad/lists/commands.list|fzf > /var/brad/tmp/command
+  command=$(cat /var/brad/tmp/command)
+  $command
+}
+
+vim-usage() {
+  grep '##' ~/.vimrc # inspired by make usage
+}
+
+shell_login_overview() {
+  do_crawl $(echo $keywords_to_crawl)
 }
 
 shell-status() {
@@ -400,8 +792,6 @@ cheatsheet() {
 
 }
 
-# TODO factor these out
-
 cheat-vim() {
   cheatsheet "$1" "vim" "$2"
 }
@@ -433,206 +823,6 @@ cheat-sed() {
 
 cheat-bash() {
   cheatsheet "$1" "bash" "$2"
-}
-
-#cdf() {
-#  cd "$(find . -type d | fzf)"
-#}
-
-find-with() {
-  # better way!
-  find . -iname "*$1*" -not -path "./.git/*" -not -path "./release/*"
-}
-
-am_I_in_ranger() {
-  ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
-}
-
-# temporary one-off
-lnb() {
-  #files="$(find `pwd`/vipsched -type f -name \*cap\* | grep -v capybara | grep -v capabilities | grep -v vendor)"
-  #files="$(ag -l ':class_name')"
-  files="$(find `pwd`/vipsched -type f -name \*ldap\* | grep -v capybara | grep -v capabilities | grep -v vendor)"
-  mkdir -p ldap_links
-  for f in $(echo $files | xargs); do ln -sf "$f" ldap_links; done
-}
-
-# related: find `pwd`/vipsched -name \*cap\* | grep -v capybara | grep -v capabilities | grep -v vendor
-lna() {
-  ln -sf `pwd`/$1 links
-}
-
-lsg() {
-  ls -lah | grep "$1"
-}
-
-ln-first() {
-  ln -sf $(find . -name "$1" | head -n1)
-}
-
-grebase () {
-  echo favor git rebase master then git rebase -i master
-}
-
-grebase-master () {
-  branch=$(git rev-parse --abbrev-ref HEAD)
-  git stash
-  git checkout master
-  git pull
-  git checkout $branch
-  git rebase master
-}
-
-git-append () {
-  git commit --amend --no-edit
-}
-
-save () {
-  revision="$(git log --oneline | head -n1)"
-
-  echo "# Generated on $(date)"      >  stdout.log
-  echo "# git revision: ${revision}" >> stdout.log
-  echo "# run in $(pwd)"             >> stdout.log
-  echo "# standard out of \"$@\""    >> stdout.log
-  echo ""                            >> stdout.log
-
-  echo "# Generated on $(date)"      >  stderr.log
-  echo "# git revision: ${revision}" >> stderr.log
-  echo "# run in $(pwd)"             >> stderr.log
-  echo "# standard err of \"$@\""    >> stderr.log
-  echo ""                            >> stderr.log
-
-  "$@" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
-}
-
-function goto_devsetup() {
- BUFFER="cd $DEVSETUP"$BUFFER
- zle end-of-line
- zle accept-line
-}
-zle -N goto_devsetup
-bindkey "^g" goto_devsetup
-function goto_home() {
- BUFFER="cd ~/"$BUFFER
- zle end-of-line
- zle accept-line
-}
-zle -N goto_home
-bindkey "^h" goto_home
-function up_widget() {
-	BUFFER="pushd . >/dev/null; cd .."
-	zle accept-line
-}
-zle -N up_widget
-bindkey "^k" up_widget
-function down_widget() {
-	BUFFER="popd > /dev/null"
-	zle accept-line
-}
-zle -N down_widget
-bindkey "^j" down_widget
-
-function du-ch () {
-  du -ch * | sort -h
-}
-
-# # # menu
-
-fzf-commands () {
-  cat /var/brad/lists/commands-fzf.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
-  $command
-}
-
-git-commands () {
-  $(cat /var/brad/lists/commands-git.list|fzf)
-}
-
-zsh-commands () {
-  cat /var/brad/lists/commands-zsh.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
-  $command
-}
-
-auto () {
-  cat /var/brad/lists/commands.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
-  $command
-}
-
-f () {
-  list-functions|fzf > /var/brad/tmp/command
-  eval $(cat /var/brad/tmp/command)
-}
-
-fzf_insert_function() {
-  LBUFFER+=$( ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf )
-}
-zle -N fzf_insert_function
-bindkey '^f' fzf_insert_function
-
-vim_insert_function() {
-  grep 'SELECTME' $(find /home/brad/.command_palettes/ -type f | fzf ) > /tmp/commandspals 
-  cat /tmp/commandspals | fzf > /tmp/command
-  #LBUFFER+=$( cat /tmp/command | awk -F '$' '{print $1}' )
-  command=$( cat /tmp/command | awk -F '#' '{print $1}' )
-
-  LBUFFER+="$command"
-  return
-}
-# old
-zle -N  vim_insert_function 
-bindkey '^v'  vim_insert_function
-
-# Alternative to fzf-history-widget
-#fzf_insert_history() {
-#  LBUFFER+=$(fc -l 1 | fzf | sed 's/^[ ]*[0-9]*[ ]*//')
-#}
-#zle -N fzf_insert_history
-#bindkey '^r' fzf_insert_history
-
-vpn-start () {
-  nohup /opt/cisco/secureclient/bin/vpnui &
-}
-
-# copy from commit
-cfc () {    
-  for item in $(git show --name-only --format= $1) ; do    
-    copy-path $item
-  done    
-}
-
-# Main menu
-
-#shell-status2() {
-shell-status2-bak() {
-  echo "press 'a' for a command menu"
-  echo "press 's' to connect to a server"
-  echo "press 'd' to select a bookmarked directory" # consider using ranger bookmarks going forward
-  echo "press 'f' for a function menu" 
-  echo "press 'g' to edit these lists"
-  echo
-  echo "press 'gh' for git commands"
-  echo "press 'h' to edit hostfile"
-  echo
-  echo "press 'j' "
-  echo "press 'k' ..."
-  echo "press 'l' ..."
-  echo
-  echo "press 'e' to edit a pinned file"
-  echo "press 'c' to cheatsheets"
-  echo "press 'o' for open-interpreter"
-  echo
-  echo "press 'co' contexts"
-}
-
-list-functions() { # and aliases, for selection
-  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh; print -l ${(ok)functions}'
-  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias | cut -d= -f1'
-}
-
-list-aliases() { # for definition 
-  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias'
 }
 
 
@@ -746,6 +936,10 @@ shell-status2() {
     #fzf_menu_exp
 }
 
+#
+# end section login splash and discoverability
+#
+# # # # # # # # # # # #
 
 
 
@@ -758,58 +952,10 @@ shell-status2() {
 
 
 
-
-### [Sat 18 Jan 2025 11:33:54 AM EST]
-
-# control g
-
-navi-widget-g() {
-    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
-    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
-
-    local cmd=$(navi --print --query "$cheatsheet")
-    LBUFFER+="$cmd"
-}
-zle -N navi-widget-g
-bindkey '^g' navi-widget-g
-
-# control v
-
-navi-widget-v() {
-    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
-    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
-
-    local cmd=$(navi --print --query "$cheatsheet")
-    LBUFFER+="$cmd"
-}
-zle -N navi-widget-v
-bindkey '^v' navi-widget-v
-
-navi-widget-a() {
-    navi --query "brad_utilities"
-}
-zle -N navi-widget-a
-bindkey '^a' navi-widget-a
-
-
-# Not quite there
-# - open found command to vi mode
-#navi-vim-widget() {
-#    local cmd=$(navi --print | tail -n 1)
-#    BUFFER="vim -c 'startinsert' -c \"normal! i$cmd\" scratchpad"
-#    zle accept-line
-#}
-#zle -N navi-vim-widget
-#bindkey '^g' navi-vim-widget
-
-# Tab complete for palette discovery?
-ncp_git() {
-  navi --print --query git
-}
-
-ncp_vim() {
-  navi --print --query vim
-}
+# # # # # # # # # # # #
+# Section: interactive selection
+#
+# principle: favor selection over definition
 
 fzf_menu_exp() {
 
@@ -862,6 +1008,9 @@ fi
 
 }
 
+#
+#
+# # # # # # # # # # # #
 
 
 
@@ -879,145 +1028,40 @@ fi
 
 
 
-# More commands
-# echo '    pstree $(pgrep -f postinstall | head -n1)'
-# echo '    compgen -c | fzf | xargs man'
-#  cd $(ls | head -n1) ; vagrant destroy -f ; cd .. ; rm -rf $(ls | head -n1) # mass delete
 
 
-#archive_file() {
-arc() {
-    local source_file="$1"
-    if [[ ! -f "$source_file" ]]; then
-        echo "Error: $source_file does not exist or is not a regular file."
-        return 1
-    fi
-    
-    local timestamp="$(date +%Y%m%d%H%M)"
-    local renamed_filename="${source_file}-archived-${timestamp}.txt"
-    
-    mv "$source_file" "$renamed_filename"
-    touch "$source_file"
-    
-    echo "File archived as ${renamed_filename}"
-}
+# # # # # # # ## # # # # #
+# Section: deprecated control keys
+#
+#
 
-
-
-vim-usage() {
-  grep '##' ~/.vimrc # inspired by make usage
-}
-
-vtmp() {
-  vim $(mktemp)
-}
-
-vim-tmp() {
-  vim $(mktemp)
-}
-
-
-# aliases are weak!
-a () {
-  auto
-}
-
-s () {
-  echo "Use: sshf for valcom servers"
-  echo "Use: ssh-gitlab-web for gitlab"
-  #ssh brad@$(cat /var/brad/lists/servers.txt | fzf)'
-
-}
-
-# consider replacing with 'cdargs' or 'z' or 'autojump'
-d () {
-  dest="$(cat /var/brad/lists/dirs.list | fzf)"
-  dest="${dest/#\~/$HOME}"
-  cd "$dest"
-}
-
-#g () {
-#   $EDITOR /var/brad/lists/$(ls /var/brad/lists|fzf)
+#function goto_devsetup() {
+# BUFFER="cd $DEVSETUP"$BUFFER
+# zle end-of-line
+# zle accept-line
 #}
-
-# already used by git
-#g () {
-#   $view /var/brad/running-lists/$(ls /var/brad/running-lists|fzf)
+#zle -N goto_devsetup
+#bindkey "^g" goto_devsetup
+#function goto_home() {
+# BUFFER="cd ~/"$BUFFER
+# zle end-of-line
+# zle accept-line
 #}
-
-gh () {
-  $(cat /var/brad/lists/commands-git.list|fzf)
-}
-
-h () {
-  # Move to 'j', fix the full filepath displaying
-  # view $(echo /var/brad/running-lists/*.list|fzf)
-  sudo vim /etc/hosts
-}
-
-# consider replacing with 'autojump'
-e () {
-  file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
-  evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
-  $EDITOR $evaluated_path
-}
-
-c () {
-  fn=$(cd /opt/chef/cookbooks/development-setup/files/cheatsheets/; ls | fzf)
-  # Next: use bat or glow to view MDs
-  # from cheatsheets.list ?
-  # evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
-  $EDITOR /opt/chef/cookbooks/development-setup/files/cheatsheets/$fn
-}
-
-cw () {
-  fn=$(cd ~/Projects/cheatsheets/; ls | fzf)
-  $EDITOR ~/Projects/cheatsheets/$fn
-}
-
-o () {
-  oi_dir="/home/brad/Projects/_projects-research/open_interpreter"
-  gnome-terminal --tab -- bash -c "cd '$oi_dir' && . ./init.sh; exec bash"
-
-}
-
-p () {
-   echo "python3 manage.py showmigrations"
-   echo "python3 manage.py migrate database 0040_file_name_handling"
-   echo "ln -sf /opt/vmass/server_api"
-}
-
-
-co () {
-  pth=/var/brad/contexts
-  fn=$(ls $pth|fzf)
-  fp=$pth/$fn
-  echo "Opening $fn, press enter within 2 seconds to cat instead."
-  if read -t 2; then
-    #cat "$fp"
-    cat "$fp"
-  else
-    $EDITOR "$fp"
-  fi
-}
-
-# Problem: using Ctrl-R to search for a file open in vim does not work
-# unless absolute filepaths are used.  Solution:
-# Instead of holding many files in one vim buffer, open them as you go,
-# Ctrl-Z.
-#resume_job() {
-rj() {
-  local job_id
-  job_id=$(jobs -l | fzf --height 40% --layout=reverse --prompt="Select job: " | awk '{print $2}')
-  if [[ -n "$job_id" ]]; then
-    fg %"$job_id"
-  else
-    echo "No job selected."
-  fi
-}
-
-# favor ln -s /usr/bin/batcat ~/.local/bin/bat 
-#bat() {
-#  batcat
+#zle -N goto_home
+#bindkey "^h" goto_home
+#function up_widget() {
+#	BUFFER="pushd . >/dev/null; cd .."
+#	zle accept-line
 #}
+#zle -N up_widget
+#bindkey "^k" up_widget
+#function down_widget() {
+#	BUFFER="popd > /dev/null"
+#	zle accept-line
+#}
+#zle -N down_widget
+#bindkey "^j" down_widget
 
+#
+#
+# # # # # # # #
