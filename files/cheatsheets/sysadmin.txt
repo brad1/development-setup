@@ -1085,3 +1085,6 @@ docker run -d \
 
 browse to http://your-host-ip:5800
 
+
+LDAP Active directory
+# Get-ChildItem -Path Cert:\LocalMachine\My # list windows server certificates

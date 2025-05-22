@@ -3,6 +3,11 @@
 # shell-vbox-list
 
 
+#
+# Section: new, experimental
+sssh() {
+  ssh ubuntu.local # add .ssh/config to loop
+}
 
 
 
@@ -29,11 +34,20 @@ zsh_functions_debug=0
 vpn-start () {
   nohup /opt/cisco/secureclient/bin/vpnui &
 }
+
 #
 #
 # # # # # # # # # #
 
 
+#
+# Section: invariants
+#
+# Example: automatically run on login:
+# - enforce navi...custom/example.cheat <--- title MUST match filename
+#
+#
+# # # # # # # # # #
 
 
 
@@ -458,38 +472,45 @@ prompt-clipboard() {
 
 
 # # # # # # # # # # # #
-# Section: Shortcuts and control keys
+# Section: Shortcuts
 #
+# (ohmyzsh maps all control keys by default)
 
-# control g
+# Keep Ctrl-K kill-line,
+# double tap K to cd ..
+bindkey -s '^K^K' 'cd ..^M'
 
-navi-widget-g() {
+
+# Allow:
+# Ctrl-G --> command palette search --> LBUFFER --> ^X^E --> vi mode edit
+eval "$(navi widget zsh)"
+
+# search all custom navi cheatsheets
+# NO EDIT :(
+navi-custom() {
     local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
-    local cmd=$(navi --print --query "$cheatsheet")
-    LBUFFER+="$cmd"
+    #local cmd=$(navi --print --query "$cheatsheet ")
+    navi --print --query "$cheatsheet "
+    #LBUFFER+="$cmd"
+    #zle redisplay
 }
-zle -N navi-widget-g
-bindkey '^g' navi-widget-g
+zle -N navi-custom
 
-# control v
-
-navi-widget-v() {
+# search command palettes
+# works, but would be better to --print to vi mode for easier editing
+# - for now, ^x^e to edit the printed command
+# see: vi mode
+# NO EDIT :(
+navi-palettes() {
     local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
-    local cmd=$(navi --print --query "$cheatsheet")
-    LBUFFER+="$cmd"
+    #local cmd=$(navi --print --query "$cheatsheet ")
+    navi --print --query "$cheatsheet "
+    #LBUFFER+="$cmd"
 }
-zle -N navi-widget-v
-bindkey '^v' navi-widget-v
-
-navi-widget-a() {
-    navi --query "brad_utilities"
-}
-zle -N navi-widget-a
-bindkey '^a' navi-widget-a
 
 # Not quite there
 # - open found command to vi mode
@@ -501,8 +522,13 @@ bindkey '^a' navi-widget-a
 #zle -N navi-vim-widget
 #bindkey '^g' navi-vim-widget
 
+# show_on_login
 a () {
   auto
+}
+
+b () {
+  fzf_menu_exp
 }
 
 s () {
@@ -527,6 +553,10 @@ h () {
   # Move to 'j', fix the full filepath displaying
   # view $(echo /var/brad/running-lists/*.list|fzf)
   sudo vim /etc/hosts
+}
+
+k () {
+    bindkey | grep -E '"\^[^[]{1}"'
 }
 
 # consider replacing with 'autojump'
@@ -585,7 +615,20 @@ fzf_insert_function() {
   LBUFFER+=$( ( print -l ${(ok)functions} ; alias | cut -d= -f1 ) | fzf )
 }
 zle -N fzf_insert_function
-bindkey '^f' fzf_insert_function
+# Control-F - Search all functions
+#bindkey '^f' fzf_insert_function
+
+v () {
+  fn=$(ls /var/brad/filegroups/|fzf)
+  $EDITOR $(cat /var/brad/filegroups/$fn)
+}
+
+ve () {
+  fn=$(ls /var/brad/filegroups/ | fzf)
+  for f in $(cat /var/brad/filegroups/$fn); do
+    gnome-terminal --tab -- bash -c "$EDITOR $f; exec bash"
+  done
+}
 
 vim_insert_function() {
   grep 'SELECTME' $(find /home/brad/.command_palettes/ -type f | fzf ) > /tmp/commandspals 
@@ -597,8 +640,9 @@ vim_insert_function() {
   return
 }
 # old
-zle -N  vim_insert_function 
-bindkey '^v'  vim_insert_function
+# favor navi collections_.*cheat
+#zle -N  vim_insert_function 
+#bindkey '^v'  vim_insert_function
 
 # Alternative to fzf-history-widget
 #fzf_insert_history() {
@@ -831,22 +875,6 @@ shell-status2-2024() {
     # Clear the screen
     clear
 
-    # Set some formatting
-    local line="+------------------------+------------------------+"
-    local format="| %-22s | %-22s |"
-
-    # Print the layout using formatted printf statements
-    echo $line
-    printf "$format\n" "'a' command menu" "'gh' git commands"
-    printf "$format\n" "'s' connect to server" "'h' edit hostfile"
-    printf "$format\n" "'d' bookmarked dir" "'j' ..."
-    printf "$format\n" "'f' function menu" "'k' ..."
-    printf "$format\n" "'Ctrl-f' full command menu" "'k' ..."
-    echo $line
-    printf "$format\n" "'e' edit pinned file" "'l' ..."
-    printf "$format\n" "'c' cheatsheets" "'o' open-interpreter"
-    printf "$format\n" "'co' contexts" "'cw' work cheatsheets"
-    echo $line
 
     echo
     echo 'New commands to try:'
@@ -893,20 +921,22 @@ shell-status2-2024() {
     # TODO test and expand
     shell_login_overview 
 }
+    
 
 shell-status2() {
-    # Clear the screen
     clear
 
-    echo 'Ctrl-g for all shell cheatsheets ---'
-    echo 'Ctrl-v for command palettes ---'
-    ( cd /home/brad/.local/share/navi/cheats/custom/ ; echo collections*.cheat | sed 's/collections_//g'| awk -F. '{ print "    " $1 }' )
-    echo '    ...'
-    echo 'Ctrl-a for terminal shortcuts'
-    cat /home/brad/.local/share/navi/cheats/custom/brad_utilities.cheat | grep '^#' | head -n3 | sed 's/# //g' | awk -F. '{ print "    " $1 }'
-    echo '    ...'
+    # NExt - Control - ? workflow selection
+    # List simple control kep mappings
+    # bindkey | grep -E '"\^[^[]{1}'
 
-    echo
+    # not quite there, plus other utilities above aren't control keys
+    #fn=/opt/chef/cookbooks/development-setup/files/zsh/functions.zsh
+    #echo 'Custom control keys:'
+    #grep '^bindkey' $fn | awk -F'#' '{if ($2) print $2, $3 }'
+    
+    echo 'Shortcuts:'
+    echo '    b()   Ctrl-G (navi search)' 
     echo 'New commands to try (preview):'
     grep '^    ' /home/brad/.local/share/navi/cheats/custom/brad_try_next.cheat | head -n5
     echo '    ...'
@@ -922,6 +952,8 @@ shell-status2() {
     echo '     AutoUpdates - outline and labels for next meeting'
     echo '     Expand end to end tests'
     echo '     PDP - friday kubernetes practice' 
+    echo '          left off on fastbuilder: microk8s kubectl logs -f kibana-kibana-7445df7ffb-kgqnc'
+    echo '            http://192.168.46.156:5601/'
     echo '     Stress.sql'
     echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
     echo "-  Parnas' 1972 paper 'On the Criteria To Be Used in Decomposing Systems into Modules'"
@@ -932,6 +964,9 @@ shell-status2() {
 
     # TODO test and expand
     shell_login_overview 
+
+    # vagrant snapshot list already does this!
+    # vagrant_snapshot_status /home/brad/Projects/sitemanager 
 
     #fzf_menu_exp
 }
@@ -956,32 +991,24 @@ shell-status2() {
 # Section: interactive selection
 #
 # principle: favor selection over definition
+# also quicker and easier than:
+# - clobbering an existing control key sequence
+# - composing a long CKS like "^[Xdf...."
 
 fzf_menu_exp() {
 
-# Define commands and corresponding functions using an indexed array
-MENU_ITEMS=(
-    "Connect to Server" "connect_server"
-    "Edit Hostfile" "edit_hostfile"
-    "Bookmarked Directories" "open_bookmarks"
-    "Search functions and aliases" "open_full_menu"
-    "Command Palettes" "open_palettes"
-    "Edit Pinned File" "edit_pinned"
-    "Cheatsheets" "open_cheatsheets"
-    "Work Cheatsheets" "open_work_cheatsheets"
-    "Drop to Shell" "not_a_function"
-)
-
-# Function placeholders
-connect_server() { s ; }
-edit_hostfile() { h ; }
-open_bookmarks() { d ; }
-open_full_menu() { f ;}
-open_palettes() { echo "Open command palette widget with Ctrl-G";}
-edit_pinned() { e ; }
-open_cheatsheets() { c ; }
-open_work_cheatsheets() { cw ; }
-not_a_function() { echo "Why are you calling this? Do not use"; }
+    MENU_ITEMS=(
+        "function 'k' to list simple control keys" "k"
+        "function 's' to connect to server" "s"
+        "function 'h' to edit hostfile" "h"
+        "function 'd' to open bookmarked dir" "d"
+        "function 'f' for full function search" "f"
+        "function 'navi-custom' for custom command search" "navi-custom"
+        "function 'navi-palettes' for command palettes" "navi-palettes"
+        "function 'e' to edit pinned file" "e"
+        "function 'c' for cheatsheets" "c"
+        "function 'cw' for work cheatsheets" "cw"
+    )
 
 # Generate a properly formatted list
 MENU_LIST=""

@@ -13,6 +13,12 @@ grep -c '.' file
 sed -i "/^IFACE=/ c IFACE=$IFACE" $FN
 ```
 
+### Append to a Line Based on a Pattern
+```bash
+sed -i '/^ExecStart=.*systemd-networkd-wait-online/ s/$/ --timeout=10/' $FN 
+```
+
+
 ### Duplicate a Line and Modify the Next Line (Pattern Match)
 ```bash
 sed -n 'p; s/thing1/thing2/p'

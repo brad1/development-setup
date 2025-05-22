@@ -1,0 +1,98 @@
+# Selenium Selectors Cheatsheet
+
+## General Imports
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+```
+
+## Selectors
+
+### 1. Selecting `<div>` with class `modal-content`
+
+- **CSS Selector:**
+
+```python
+driver.find_element(By.CSS_SELECTOR, 'div.modal-content')
+```
+
+- **XPath:**
+
+```python
+driver.find_element(By.XPATH, '//div[contains(@class, "modal-content")]')
+```
+
+### 2. Selecting elements by ID
+
+- **CSS Selector:**
+
+```python
+driver.find_element(By.CSS_SELECTOR, '#element_id')
+```
+
+- **XPath:**
+
+```python
+driver.find_element(By.XPATH, '//*[@id="element_id"]')
+```
+
+### 3. Selecting elements by Class Name
+
+- **CSS Selector:**
+
+```python
+driver.find_element(By.CLASS_NAME, 'class_name')
+```
+
+### 4. Selecting elements by Tag Name
+
+- **CSS Selector:**
+
+```python
+driver.find_element(By.TAG_NAME, 'tag_name')
+```
+
+### 5. Selecting elements by Name Attribute
+
+- **CSS Selector:**
+
+```python
+driver.find_element(By.NAME, 'element_name')
+```
+
+### 6. URL Path Check (Hostname-Agnostic)
+
+```python
+from urllib.parse import urlparse
+
+def is_root_path(url):
+    return urlparse(url).path == '/'
+
+if not is_root_path(driver.current_url):
+    import ipdb; ipdb.set_trace()
+```
+
+### 7. Breakpoint using IPDB
+
+```python
+import ipdb; ipdb.set_trace()
+```
+
+### 8. Built-in Python Breakpoint (Python 3.7+)
+
+```python
+breakpoint()
+```
+
+Environment Variable Configuration:
+
+```sh
+export PYTHONBREAKPOINT=ipdb.set_trace
+```
+
+---
+
+Add more selectors as needed.
+
+

@@ -54,6 +54,47 @@ SELECT SUM(columnname) FROM tablename;
 SELECT MIN(columnname) FROM tablename;
 SELECT MAX(columnname) FROM tablename;
 
+-- SUBSCRIPTIONS ---
+CREATE SUBSCRIPTION subname CONNECTION 'host=ip port=5432 dbname=db user=user password=*' PUBLICATION pubname WITH (copy_data = false);"
+SELECT * FROM pg_stat_subscription;
+SELECT * FROM pg_subscription;
+DELETE FROM pg_subscription; # fix missing replication slots
+SELECT * FROM pg_stat_replication;
+ALTER SUBSCRIPTION <subname> REFRESH PUBLICATION;
+ALTER SUBSCRIPTION <subname> DISABLE;
+-- wait for replication to stop
+ALTER SUBSCRIPTION <subname> ENABLE;
+view /var/log/postgresql/postgresql-14-main.log
+
+--- PUBLICATIONS ---
+SELECT pg_drop_replication_slot('vip_sub'); # fix missing replication slots
+# drop inactive slots
+SELECT pg_drop_replication_slot(slot_name)
+FROM pg_replication_slots
+WHERE active = false;
+
+SELECT * FROM pg_publication;
+SELECT * FROM pg_publication_tables;
+CREATE PUBLICATION pubname FOR ALL TABLES;
+DROP PUBLICATION pubname;
+
+--- PUBLICATIONS (per table) ---
+DO $$
+DECLARE
+    tbl RECORD;
+BEGIN
+    EXECUTE 'CREATE PUBLICATION pubname FOR TABLE ' ||
+    (
+        SELECT string_agg(quote_ident(schemaname) || '.' || quote_ident(tablename), ', ')
+        FROM pg_tables
+        WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+    );
+END$$;
+
+ALTER PUBLICATION pubname ADD TABLE ...;
+ALTER PUBLICATION pubname DROP TABLE ...;
+
+
 -- TRANSACTION CONTROL --
 BEGIN;
 COMMIT;
@@ -146,6 +187,9 @@ pg_ctl status -D /path/to/data_directory
 
 -- Starting PostgreSQL in single-user mode --
 postgres --single -D /path/to/data_directory dbname
+- followup: chown -R postgres.postgres /data
+- find /path/to/target -type d -exec chmod 700 {} +
+- find /path/to/target -type f -exec chmod 600 {} +
 
 -- Create a new PostgreSQL cluster --
 initdb -D /path/to/new_data_directory
@@ -356,6 +400,14 @@ select * from pg_catalog.pg_tables where tableowner != 'postgres';       # list 
                                                                          # describe table
 select column_name, data_type, character_maximum_length from
   INFORMATION_SCHEMA.COLUMNS where table_name = 'destinations'
+
+[constraints list]
+SELECT
+    conname AS constraint_name,
+    contype AS constraint_type,
+    pg_get_constraintdef(oid) AS constraint_definition
+FROM pg_constraint
+WHERE conrelid = 'schema.table_name'::regclass;
 
 [replace]
 UPDATE etable SET name = replace(name, 'string', 'newstring')

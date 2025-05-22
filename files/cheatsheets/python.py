@@ -1,5 +1,11 @@
 # Python Cheatsheet
 
+# OS
+HOST = os.getenv('HOST', 'http://localhost')
+val = os.getenv(key).lower() == 'true'
+exit(0) # no 'os' or 'sys' for this
+
+
 # String Operations
 "Hello, World!".upper()                      # Uppercase
 "Hello" + " World!"                           # Concatenate
@@ -10,6 +16,39 @@
 "   Hello   ".strip()                         # Trim whitespace
 list("Hello")                                 # Characters list
 import re; re.findall(r'[a-z]', "abc123")    # Scan letters
+
+# String Encodings:
+# --> Convert string to bytes
+"Hello, World!".encode("utf-8")   # b'Hello, World!'
+"你好".encode("utf-8")             # b'\xe4\xbd\xa0\xe5\xa5\xbd'
+
+# --> Convert bytes to string
+b"Hello, World!".decode("utf-8")  # 'Hello, World!'
+b'\xe4\xbd\xa0\xe5\xa5\xbd'.decode("utf-8")  # '你好'
+
+# --> ASCII representation of bytes
+b"Hello".hex()                    # '48656c6c6f'
+bytes.fromhex('48656c6c6f')        # b'Hello'
+
+# --> Manual byte sequence creation
+bytes([72, 101, 108, 108, 111])    # b'Hello'
+
+# --> Encoding differences
+b'\x48\x65\x6C\x6C\x6F\x2C\x20\x57\x6F\x72\x6C\x64\x21'
+# is equivalent to:
+"Hello, World!"
+# ---
+"Hello".encode("ascii")            # b'Hello'
+"Hello".encode("utf-16")           # b'\xff\xfeH\x00e\x00l\x00l\x00o\x00'
+"Hello".encode("utf-32")           # b'\xff\xfe\x00\x00H\x00\x00\x00e\x00\x00\x00l\x00\x00\x00l\x00\x00\x00o\x00\x00\x00'
+
+# ---> Check if bytes object
+isinstance(b"Hello", bytes)        # True
+
+# --> Convert bytes to list of ASCII values
+list(b"Hello")                     # [72, 101, 108, 108, 111]
+
+# End of Strings Encodings
 
 # List Manipulations
 [1, 2, 3].map(lambda x: x * 2)                # Map
@@ -57,7 +96,7 @@ os.path.exists('file.txt')                            # Check existence
 os.path.getsize('file.txt')                           # File size
 
 # Exception Handling
-try: risky_action() 
+try: risky_action()
 except Exception as e: print(e)                       # Rescue
 raise Exception("Error")                              # Raise error
 finally: print("Cleanup")                             # Ensure block
@@ -92,6 +131,16 @@ lst.insert(1, 4)                                   # Insert at index
 hello = "hello"                                    # String representation
 hello_id = id(hello)                               # ID of string
 print(hello)                                       # Print symbol
+
+# Checksums, digest
+data = b"Hello, World!"
+import hashlib
+hashlib.md5(data).hexdigest()      # MD5 checksum  
+hashlib.sha1(data).hexdigest()     # SHA-1 checksum  
+hashlib.sha256(data).hexdigest()   # SHA-256 checksum  
+hashlib.sha512(data).hexdigest()   # SHA-512 checksum  
+import zlib
+zlib.crc32(data)                   # CRC32 checksum
 
 
 

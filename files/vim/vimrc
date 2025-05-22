@@ -31,6 +31,7 @@ function! InsertDebugStatement()
 endfunction
 
 " ## tips: 
+" ## :%s/\s\+/\r/g   put each string on its own line
 " ## :%s/\s\+$//g    for deleting trailing whitespace
 " ## :Tags           for fuzzy searching method names 
 " ##

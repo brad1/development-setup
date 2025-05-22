@@ -43,7 +43,6 @@ alias vscp='vagrant scp ubuntu:~/file .'
 # in your ~/.bash_profile. You also may need to `mkdir "${HOME}/bash_logs_$(hostname)"`
 # I took this command from a Hacker News thread of the past. I don't have a link to it any more.
 
-alias rd='rdesktop -u user ipaddress'
 alias stack='pstree -s $$'
 
 # ps aux | grep -E 'ping|ha' | grep -v grep | awk '{ print $1 " " $2 " " substr($0, index($0,$11)) }'
@@ -78,8 +77,6 @@ alias vim-var='cd ~/Documents/txt/var; vimf; cd -'
 alias vim-queue='cd ~/Documents/txt/var; vim queue; cd -'
 alias vimrc="vim $DEVSETUP/files/vim/vimrc"
 alias vim-open-modified='vim $(git status | grep modified | cut -f2 | cut -d" " -f4)'
-alias vim-clipboard='vim ~/Documents/txt/var/clipboard'
-alias vim-clipboard-2='vim ~/Documents/txt/clipboard/'
 alias vim-one-on-one='vim ~/Documents/txt/var/one-on-one'
 alias vim-status='vim ~/Documents/txt/var/status'
 # TODO autoreload these
@@ -124,7 +121,7 @@ alias laptop-model="dmidecode | grep -A 9 'System Information' "
 # [vagrant]
 alias vgs="vagrant global-status"
 alias vs="vagrant status"
-alias vssh="vagrant ssh"
+alias vsh="vagrant ssh"
 alias vup="vagrant up"
 alias vd="vagrant destroy"
 alias vsus="vagrant suspend"
@@ -221,7 +218,6 @@ alias git-files-changed-since='git log --after="March 25" --name-only  --pretty=
 
 # frequentuse
 alias vopen='xdg-open $(vip)' # TODO extract IP regex
-alias vssh='vagrant ssh bootstrap'
 
 #
 # [virtualbox]
