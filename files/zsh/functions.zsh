@@ -564,6 +564,7 @@ e () {
   file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
   evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
   $EDITOR $evaluated_path
+  echo $evaluated_path
 }
 
 c () {
