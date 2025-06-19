@@ -1,6 +1,7 @@
 % brad_discoverability
 
 # List custom zsh control keys
+# keep: user prefers sourcing the aggregate functions.zsh file
     awk '/^bindkey/ { key=$0 } /# Control-/ { print key "\n" $0 }' /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh
 
 ; Next: extract to collections_navigations, make run in zsh for function access

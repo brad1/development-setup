@@ -5,7 +5,8 @@ This directory contains a modular zsh setup used by the cookbook.
 - **zshrc** – top level file that loads the rest of the configuration.
 - **oh-my-zsh.zsh** – bootstraps oh-my-zsh with the `powerlevel9k` theme and enables the `git` and `fzf` plugins.
 - **aliases.zsh** – large collection of aliases for git, editing and system tasks.
-- **functions.zsh** – custom helper functions and fzf based utilities.
+- **fn_core.zsh**, **fn_file.zsh**, **fn_shortcuts.zsh**, **fn_login.zsh** –
+  the main helper modules sourced from `functions.zsh`.
 - **variables.zsh** – environment variables such as `$DEVSETUP` and `$ARCHIVE`.
 - **history.zsh** – settings for history sharing and size.
 - **numpad.zsh** – key bindings for numeric keypad usage.

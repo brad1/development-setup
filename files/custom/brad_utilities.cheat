@@ -54,6 +54,7 @@
     source "$DEVSETUP/files/zsh/aliases.zsh"
 
 # Reload shell functions
+# keep: user prefers sourcing the aggregate functions.zsh file
     source "$DEVSETUP/files/zsh/functions.zsh"
 
 # Search files excluding .git and release directories
