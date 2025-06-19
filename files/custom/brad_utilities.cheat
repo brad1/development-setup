@@ -56,3 +56,18 @@
 # Reload shell functions
     source "$DEVSETUP/files/zsh/functions.zsh"
 
+# Search files excluding .git and release directories
+    find . -iname "*$FP*" -not -path "./.git/*" -not -path "./release/*"
+
+# Show stored branch names
+    cat /var/brad/lists/branches.list
+
+# Edit stored branch names
+    vim /var/brad/lists/branches.list
+
+# Checkout a branch from recent reflog entries
+    git checkout $(git reflog | grep -o 'moving from.*' | head -n25 | sed 's/moving //; s/from //; s/to //' | xargs -n1 | sort | uniq | fzf)
+
+# Checkout branch from stored list
+    git checkout $(cat /var/brad/lists/branches.list | fzf)
+
