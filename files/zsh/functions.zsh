@@ -339,9 +339,8 @@ git-backup-branch() {
   git checkout -b $(git branch --show-current)-backup_$(date +'%m-%d-%Y')
 }
 
-git-diff-main-summarize() {
-  git diff --stat main $(git branch --show-current)
-}
+# moved to navi cheat: advanced_git
+# git diff --stat main $(git branch --show-current)
 
 git-diff-main() {
   git diff main $(git branch --show-current)
