@@ -10,6 +10,8 @@
 
 # File Operations - Open file in read-only mode
     vim -R $FP
+# File Operations - Edit a new temporary file
+    vim $(mktemp)
 
 # File Operations - Open two files side by side in vertical splits
     vim -O $FP $FP2

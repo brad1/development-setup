@@ -111,9 +111,6 @@ tmux-options() {
   man tmux | grep -iE '(key bindings are|rename)'
 }
 
-function du-ch () {
-  du -ch * | sort -h
-}
 
 cdd () {
   echo "Use cd Ctrl-t instead"
@@ -331,32 +328,6 @@ arc() {
 # Section: git functions
 #
 
-git-list-merges() {
-  git log --merges --pretty=format:"%H %ad %s" --date=short
-}
-
-git-backup-branch() {
-  git checkout -b $(git branch --show-current)-backup_$(date +'%m-%d-%Y')
-}
-
-# moved to navi cheat: advanced_git
-# git diff --stat main $(git branch --show-current)
-
-git-diff-main() {
-  git diff main $(git branch --show-current)
-}
-
-git-diff-master-summarize() {
-  git diff --stat master $(git branch --show-current)
-}
-
-git-diff-master() {
-  git diff master $(git branch --show-current)
-}
-
-git-show-file-diffs() {
-  git log -p -- "$1"
-}
 
 git-branch() {
   git checkout -b "$1"
@@ -421,9 +392,6 @@ gcof() {
 # Section: build utilities
 #
 
-make-list-targets() {
-  make -pRrq -f Makefile | awk -F: '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {print $1}' | sort | uniq
-}
 
 #
 #
@@ -438,13 +406,6 @@ make-list-targets() {
 # Section: editor shortcuts vim
 #
 
-vtmp() {
-  vim $(mktemp)
-}
-
-vim-tmp() {
-  vim $(mktemp)
-}
 
 # neat, but use :Tags from fzf.vim 
 vim-goto() {
