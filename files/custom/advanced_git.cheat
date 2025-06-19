@@ -165,6 +165,9 @@
 # Diffing and Comparing - Show changes between local and remote main branch
     git diff origin/main
 
+# Diffing and Comparing - Summarize changes against main for the current branch
+    git diff --stat main $(git branch --show-current)
+
 # Submodules - Add a submodule to the repository
     git submodule add $FP
 
