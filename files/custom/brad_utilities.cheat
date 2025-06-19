@@ -77,3 +77,4 @@
 # Archive a file with a timestamped name then recreate an empty file
     mv $FP "${FP}-archived-$(date +%Y%m%d%H%M).txt" && touch $FP
 
+

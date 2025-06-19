@@ -72,17 +72,17 @@ zsh_functions_debug=0
 
 # # # # # # # #
 # Section: tmux, terminal mgmt, workflow
-# 
+#
 
+# Not good candidates for navi cheatsheets; they modify shell state.
+# Keep them as functions for convenience.
 
 # run in one tmux tab to keep the task separate and tracked
-# expand
 build-portal() {
     export HISTFILE=$HOME/.build_portal_history
 }
 
 # run in one tmux tab to keep the task separate and tracked
-# expand
 git-portal() {
     export HISTFILE=$HOME/.git_portal_history
 }
@@ -100,11 +100,12 @@ unset-vi-mode() {
    echo "vi mode disabled"
 }
 
-
-
 cdd () {
   echo "Use cd Ctrl-t instead"
 }
+
+# End of not-good-candidate functions
+
 
 list-functions() { # and aliases, for selection
   zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh; print -l ${(ok)functions}'
