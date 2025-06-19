@@ -17,3 +17,9 @@
 
 # Find unreadable files in apache group
     find /path/to/search -group apache ! -perm /o+r
+
+# Python manage commands
+    python3 manage.py showmigrations
+    python3 manage.py migrate database 0040_file_name_handling
+# Create symlink to server_api
+    ln -sf /opt/vmass/server_api
