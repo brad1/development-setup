@@ -13,9 +13,6 @@
 
 #
 # Section: new, experimental
-sssh() {
-  ssh ubuntu.local # add .ssh/config to loop
-}
 
 
 
@@ -39,9 +36,6 @@ zsh_functions_debug=0
 # # # # # # # # # #
 # Section: misc
 #
-vpn-start () {
-  nohup /opt/cisco/secureclient/bin/vpnui &
-}
 
 #
 #
@@ -106,10 +100,6 @@ unset-vi-mode() {
    echo "vi mode disabled"
 }
 
-tmux-options() {
-  echo "man tmux | grep -iE '(key bindings are|rename)'"
-  man tmux | grep -iE '(key bindings are|rename)'
-}
 
 
 cdd () {
@@ -517,15 +507,6 @@ gh () {
   $(cat /var/brad/lists/commands-git.list|fzf)
 }
 
-h () {
-  # Move to 'j', fix the full filepath displaying
-  # view $(echo /var/brad/running-lists/*.list|fzf)
-  sudo vim /etc/hosts
-}
-
-k () {
-    bindkey | grep -E '"\^[^[]{1}"'
-}
 
 # consider replacing with 'autojump'
 e () {
@@ -548,11 +529,6 @@ cw () {
   $EDITOR ~/Projects/cheatsheets/$fn
 }
 
-o () {
-  oi_dir="/home/brad/Projects/_projects-research/open_interpreter"
-  gnome-terminal --tab -- bash -c "cd '$oi_dir' && . ./init.sh; exec bash"
-
-}
 
 co () {
   pth=/var/brad/contexts
@@ -629,13 +605,6 @@ vim_insert_function() {
 # see section: interactive selection
 
 # Tab complete for palette discovery?
-ncp_git() {
-  navi --print --query git
-}
-
-ncp_vim() {
-  navi --print --query vim
-}
 
 # # # # deprecated use navi
 
@@ -764,13 +733,6 @@ shell-status() {
   echo "To change this, see run zsh-functions and see 'shell-status'"
 }
 
-reload-aliases() {
-  source "$DEVSETUP/files/zsh/aliases.zsh"
-}
-
-reload-functions() {
-  source "$DEVSETUP/files/zsh/functions.zsh"
-}
 
 summarize-cheatsheet() {
   cat "$DEVSETUP/files/cheatsheets/$1.txt" | grep context

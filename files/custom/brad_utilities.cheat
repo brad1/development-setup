@@ -26,3 +26,33 @@
 # cw to open work cheatsheets
     cw
 
+# Connect to local Ubuntu box
+    ssh ubuntu.local
+
+# Start Cisco VPN UI
+    nohup /opt/cisco/secureclient/bin/vpnui &
+
+# Search tmux man page for rename key bindings
+    man tmux | grep -iE '(key bindings are|rename)'
+
+# Edit /etc/hosts
+    sudo vim /etc/hosts
+
+# List custom control key bindings
+    bindkey | grep -E '"\^[^[]{1"'
+
+# Launch Open Interpreter in new terminal
+    gnome-terminal --tab -- bash -c "cd '/home/brad/Projects/_projects-research/open_interpreter' && . ./init.sh; exec bash"
+
+# Display Git cheat commands via navi
+    navi --print --query git
+
+# Display Vim cheat commands via navi
+    navi --print --query vim
+
+# Reload shell aliases
+    source "$DEVSETUP/files/zsh/aliases.zsh"
+
+# Reload shell functions
+    source "$DEVSETUP/files/zsh/functions.zsh"
+
