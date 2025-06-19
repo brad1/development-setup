@@ -186,7 +186,7 @@ ignored_dirs="_archived tmp"
 keywords_to_crawl="##starred ##todo"
 # ##washere
 # see: vim-usage for more of this pattern
-
+# NOTE skip: not a good navi cheatsheet candidate, keep as function
 #### keyword search
 search_files() {
     keyword=$1
@@ -196,9 +196,8 @@ search_files() {
         exclude_dirs="$exclude_dirs --exclude-dir=$dir"
     done
     # zsh does not split strings by default
-    grep -rniI --color $(echo $exclude_dirs) "$keyword" /var/brad/reports 
+    grep -rniI --color $(echo $exclude_dirs) "$keyword" /var/brad/reports
 }
-
 
 crawl_keywords() {
     local kw="$1"
