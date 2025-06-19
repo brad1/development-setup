@@ -121,9 +121,6 @@ function start_long_running_process {
     echo $! > ~/background_jobs/${job_name}_pid.txt
 }
 
-am_I_in_ranger() {
-  ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
-}
 
 # Problem: using Ctrl-R to search for a file open in vim does not work
 # unless absolute filepaths are used.  Solution:
@@ -265,10 +262,6 @@ cfc () {
 #  batcat
 #}
 
-archive() {
-  # consider prompting for archive reason, tack onto beginning of file
-  mv "$1" "$ARCHIVE"
-}
 
 # More commands
 # echo '    pstree $(pgrep -f postinstall | head -n1)'
@@ -277,40 +270,12 @@ archive() {
 
 
 #archive_file() {
-arc() {
-    local source_file="$1"
-    if [[ ! -f "$source_file" ]]; then
-        echo "Error: $source_file does not exist or is not a regular file."
-        return 1
-    fi
-    
-    local timestamp="$(date +%Y%m%d%H%M)"
-    local renamed_filename="${source_file}-archived-${timestamp}.txt"
-    
-    mv "$source_file" "$renamed_filename"
-    touch "$source_file"
-    
-    echo "File archived as ${renamed_filename}"
-}
 
 # Section: editor shortcuts vim
 #
 
 
 # neat, but use :Tags from fzf.vim 
-vim-goto() {
-  local pattern="$1"
-  vim -c "/$pattern" -c "normal zt" "$(rg -l $pattern | head -n1)"
-}
-
-vim-files-changed-in-branch() {
-  git diff $(git branch --show-current) master --name-only > /tmp/asdf
-  vim $(cat /tmp/asdf | fzf)
-}
-
-vim-files-modified () {
-  vim "$(git status --short | awk "{print \$2}" | fzf)"
-}
 
 prompt-clipboard() {
   if ! [[ -e ~/Documents/txt/var/.clipboard.swp ]] ; then

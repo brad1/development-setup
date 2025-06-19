@@ -58,6 +58,15 @@
 # Search and Navigation - Open file with line wrapping disabled
     vim +':set nowrap' $FP
 
+# Search and Navigation - Open first matching file for 'pattern'
+    vim -c "/pattern" -c "normal zt" "$(rg -l pattern | head -n1)"
+
+# Search and Navigation - Edit a file modified in git
+    vim "$(git status --short | awk '{print $2}' | fzf)"
+
+# Search and Navigation - Edit files changed from master
+    git diff $(git branch --show-current) master --name-only > /tmp/asdf && vim $(cat /tmp/asdf | fzf)
+
 # Multi-file Editing - Open multiple files in separate tabs
     vim -p $FP $FP2 $FP3
 
