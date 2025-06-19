@@ -21,7 +21,7 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   - `pseudocode/` - design notes and planning snippets.
   - `tmux/`, `vim/`, `zsh/` - configuration directories for these tools. The
     `zsh` folder includes an oh-my-zsh setup. Most custom helpers live in
-    `functions.zsh`, which now replaces many older aliases. Over time,
+    `functions.zsh` sources several `fn_*.zsh` modules that replace many older aliases. Over time,
     commands from `files/custom` can be searched with `navi`, making even the
     functions themselves optional (see `zsh/README.md`).
   - `unix.example.0` and `matches` - example command snippets.
