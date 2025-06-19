@@ -11,7 +11,7 @@
 
 # Show Vim patterns and navigation
     vim-usage
-    vim-goto
+    vim -c "/pattern" -c "normal zt" "$(rg -l pattern | head -n1)"
 
 # Column Formatting - Adjust text alignment
     column
@@ -27,7 +27,7 @@
     last [reboot]
 
 # Clipboard Management - Store temporary terminal captures
-    arc scratch.txt
+    mv scratch.txt "scratch.txt-archived-$(date +%Y%m%d%H%M).txt" && touch scratch.txt
 
 # File Search - Search with type filtering
     rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print"

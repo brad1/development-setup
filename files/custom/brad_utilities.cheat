@@ -71,3 +71,9 @@
 # Checkout branch from stored list
     git checkout $(cat /var/brad/lists/branches.list | fzf)
 
+# Check if the current shell was launched from ranger
+    ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"
+
+# Archive a file with a timestamped name then recreate an empty file
+    mv $FP "${FP}-archived-$(date +%Y%m%d%H%M).txt" && touch $FP
+

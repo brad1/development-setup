@@ -3,13 +3,13 @@ exa # Modern replacement for ls with better formatting and git integration. SELE
 
 # <Vim Usage>
 vim-usage # Show Vim usage patterns and commands. SELECTME
-vim-goto # Hop to a pattern within Vim. SELECTME
+vim -c "/pattern" -c "normal zt" "$(rg -l pattern | head -n1)" # Hop to a pattern within Vim. SELECTME
 
 # <System Monitoring and Logs>
 last [reboot] # Show system reboots and user login history. SELECTME
 
 # <Clipboard and Text Management>
-arc scratch.txt # Store arbitrary terminal captures in "reports" to keep clipboard clean. SELECTME
+mv scratch.txt "scratch.txt-archived-$(date +%Y%m%d%H%M).txt" && touch scratch.txt # Store arbitrary terminal captures in "reports" to keep clipboard clean. SELECTME
 
 # <File Search and Filtering>
 rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print" # Search using file type filtering. SELECTME
