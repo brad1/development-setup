@@ -1,0 +1,30 @@
+% brad_discoverability
+
+# List custom zsh control keys
+    awk '/^bindkey/ { key=$0 } /# Control-/ { print key "\n" $0 }' /opt/chef/cookbooks/development-setup/files/zsh/functions.zsh
+
+; Next: extract to collections_navigations, make run in zsh for function access
+;# s to connect to server
+;   s
+;
+;# h to edit hostfile
+;    h
+;
+;# d to open bookmarked dir
+;    d
+;
+;# j to open next bookmarked dir
+;    j
+;
+;# f to open function menu
+;    f
+;
+;# e to edit pinned file
+;    e
+;
+;# c to open legacy cheatsheets
+;    c
+;
+;# cw to open work cheatsheets
+;    cw
+

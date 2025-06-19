@@ -1,0 +1,4 @@
+% collections_git
+
+# Checkout all the files that are deleted locally 
+    git checkout $(git ls-files --deleted)

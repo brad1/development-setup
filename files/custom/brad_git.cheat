@@ -1,0 +1,7 @@
+% brad_git
+
+# Search recent git branches
+    git-branch-hop 
+
+# Show recent work branches commits head
+    (cd ~/Projects/sitemanager && for b in $(git reflog | grep 'checkout:' | awk '{print $NF}' | awk '!seen[$0]++' | head -n10); do printf "%-40s %s\n" "$b:" "$(git rev-parse "$b")"; done)

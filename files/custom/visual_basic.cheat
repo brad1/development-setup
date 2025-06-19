@@ -1,0 +1,109 @@
+% visual_basic 
+
+# Generate UML
+    echo 'see: https://gitlab.valcom.com/-/snippets/74'
+
+# Find the vb files (other than forms) with the most LOC
+    cloc --by-file . | grep .vb | grep -v Form
+
+# ctags requires custom configuration
+    ctags --list-languages
+
+# List all function definitions
+    grep -rwnI --include="*.vb" -E '\bFunction\b' .
+
+# List all subroutine definitions
+    grep -rwnI --include="*.vb" -E '\bSub\b' .
+
+# Find all class definitions
+    grep -rwnI --include="*.vb" -E '\bClass\b' .
+
+# Find all module definitions
+    grep -rwnI --include="*.vb" -E '\bModule\b' .
+
+# Find all interface definitions
+    grep -rwnI --include="*.vb" -E '\bInterface\b' .
+
+# Find all enum definitions
+    grep -rwnI --include="*.vb" -E '\bEnum\b' .
+
+# Find all structure definitions
+    grep -rwnI --include="*.vb" -E '\bStructure\b' .
+
+# Find all property definitions
+    grep -rwnI --include="*.vb" -E '\bProperty\b' .
+
+# Find all event definitions
+    grep -rwnI --include="*.vb" -E '\bEvent\b' .
+
+# Find all delegate definitions
+    grep -rwnI --include="*.vb" -E '\bDelegate\b' .
+
+# List all variable declarations (Dim, Public, Private, Static)
+    grep -rwnI --include="*.vb" -E '\b(Dim|Public|Private|Static)\b' .
+
+# List all constants (Const)
+    grep -rwnI --include="*.vb" -E '\bConst\b' .
+
+# Find all Imports statements (external libraries)
+    grep -rwnI --include="*.vb" -E '^\s*Imports\b' .
+
+# Find all Implements statements (class interface implementations)
+    grep -rwnI --include="*.vb" -E '\bImplements\b' .
+
+# Find all Inherits statements (class inheritance)
+    grep -rwnI --include="*.vb" -E '\bInherits\b' .
+
+# Find all function return types (functions with "As" return type)
+    grep -rwnI --include="*.vb" -E '\bFunction\b.*\bAs\b' .
+
+# List all ByRef parameters
+    grep -rwnI --include="*.vb" -E '\bByRef\b' .
+
+# List all ByVal parameters
+    grep -rwnI --include="*.vb" -E '\bByVal\b' .
+
+# Find all Try...Catch error handling blocks
+    grep -rwnI --include="*.vb" -E '\b(Try|Catch|Finally|Throw)\b' .
+
+# Find all Select Case statements
+    grep -rwnI --include="*.vb" -E '\bSelect Case\b' .
+
+# Find all If...Then conditions
+    grep -rwnI --include="*.vb" -E '\b(If|Then|Else|ElseIf|End If)\b' .
+
+# Find all For loops
+    grep -rwnI --include="*.vb" -E '\b(For|Next)\b' .
+
+# Find all While loops
+    grep -rwnI --include="*.vb" -E '\b(While|End While)\b' .
+
+# Find all Do loops
+    grep -rwnI --include="*.vb" -E '\b(Do|Loop)\b' .
+
+# Find all LINQ queries
+    grep -rwnI --include="*.vb" -E '\b(From|Where|Select|Join|Order By|Group By)\b' .
+
+# Find all regions (code organization markers)
+    grep -rwnI --include="*.vb" -E '#Region|#End Region' .
+
+# Find all TODO and FIXME comments
+    grep -rwnI --include="*.vb" -E '\b(TODO|FIXME)\b' .
+
+# Find all Console.WriteLine() statements
+    grep -rwnI --include="*.vb" -E 'Console\.WriteLine' .
+
+# Find all MsgBox() calls
+    grep -rwnI --include="*.vb" -E 'MsgBox\(' .
+
+# Find all Return statements
+    grep -rwnI --include="*.vb" -E '\bReturn\b' .
+
+# Find all Exit statements (Exit Function, Exit Sub, Exit For, etc.)
+    grep -rwnI --include="*.vb" -E '\bExit\b' .
+
+# Find all GoTo statements (bad practice, but useful for audits)
+    grep -rwnI --include="*.vb" -E '\bGoTo\b' .
+
+# Find all End statements
+    grep -rwnI --include="*.vb" -E '\bEnd\b' .

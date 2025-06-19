@@ -1,5 +1,11 @@
 % brad_try_next
 
+# quick webserver
+    sudo python3 -m http.server 80
+
+# filegroups with v and ve
+    v
+
 # Command Palettes
     Ctrl-g
 

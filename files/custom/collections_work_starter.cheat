@@ -1,10 +1,75 @@
 % collections_work_starter 
 
+# ssh to local ip
+  sshv 192.168.0.
+
+# Example of Open file group in vim
+  vim $(cat /var/brad/filegroups/gitlab.list)
+
+# Select and Open file group in vim
+  v
+
+# Select and Open file group in terminal tabs
+  ve
+
+# RDP remote active directory access for LDAP
+  rdesktop -u Administrator 192.168.46.151
+
+# cd update unpack vipschedsystem 
+  echo 'cd $(update.sh --unpack /root/vipschedsystem.bin)/update'
+
+# bash shell cascading sorts
+  tac text | sort -h | sort -k3,3
+
+# bash shell list files by extension
+  ls -R | awk -F'.' '{print $NF, $0}' | sort | cut -d' ' -f2-
+
+# postgres sitemanager smtp settings lookup
+  echo "psql -Upostgres vip_db -c \"select * from information where label like '%smtp%';\""
+
+# postgres list constraints from a table
+  echo "SELECT conname, contype, pg_get_constraintdef(oid) FROM pg_constraint WHERE conrelid = 'events'::regclass;"
+
+# git fuzzy match recent branches
+   git-branch-hop
+
+# visual branch logging pretty
+   git log --oneline --decorate --graph --all
+
+# Find when a directory was deleted
+   git log --diff-filter=D --summary -- vipsched/web/
+
+# Tail output of local builds, migration, logs
+   du -sc *log
+
+# Restore most recent vagrant snapshot
+    vagrant snapshot restore $(vagrant snapshot list | tail -n1)
+
+# Exit when any complaints are detected and set -e is in play
+    ( ! echo 'complaints' 2>&1 | grep -Ev 'expected|noise' | grep -qs . )
+
+# Why is the software upgrade stuck? (tags: where hung stopped) 
+    pstree -ap "$(pgrep -f update.sh | head -n1)" | less
+
+; next project and task specific patterns:
+; 
+; # Action Item - list django TODOs
+;     grep 'TODO' server_api/api_root 
+;
+; # Watch - list ruby issue branches
+;     git branch | grep '[0-9]{4}.*ruby.*' 
+;  
+; These can be organized by project or concern
+; to document points of interest and action items
+;
+; use:
+; navi --query 'project_name action item'
+
 # Run make targets and test gitlab jobs
     make test-gitlab 
 
 # Run rspec (idempotent)
-    echo make rspec (look for ssh/tmux integration)
+    make rspec
 
 # Run pytest (idempotent)
-    echo make pytest (look for ssh/tmux integration)
+    make pytest
