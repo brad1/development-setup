@@ -29,6 +29,8 @@
 
 # Branching - Switch to an existing branch named $FP
     git switch $FP
+# Branching - Backup current branch with date suffix
+    git checkout -b $(git branch --show-current)-backup_$(date +'%m-%d-%Y')
 
 # Committing Changes - Stage a file for commit
     git add $FP
@@ -137,6 +139,8 @@
 
 # Logging and History - Show a concise commit history
     git log --oneline --graph
+# Logging and History - List merge commits with dates
+    git log --merges --pretty=format:"%H %ad %s" --date=short
 
 # Logging and History - Show commit history with file changes
     git log --stat
@@ -149,6 +153,9 @@
 
 # Logging and History - Show reference log (actions affecting HEAD)
     git reflog
+
+# Logging and History - Show diffs for a specific file
+    git log -p -- $FP
 
 # Diffing and Comparing - Show unstaged changes
     git diff
@@ -167,6 +174,12 @@
 
 # Diffing and Comparing - Summarize changes against main for the current branch
     git diff --stat main $(git branch --show-current)
+# Diffing and Comparing - Compare current branch to main
+    git diff main $(git branch --show-current)
+# Diffing and Comparing - Compare current branch to master
+    git diff master $(git branch --show-current)
+# Diffing and Comparing - Summarize differences with master
+    git diff --stat master $(git branch --show-current)
 
 # Submodules - Add a submodule to the repository
     git submodule add $FP
