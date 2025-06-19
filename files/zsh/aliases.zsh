@@ -1,5 +1,10 @@
 # Bookmarks:
 # frequentuse, updatedaily
+#
+# Many of these aliases are now superseded by functions or plugins.
+# The oh-my-zsh `git` plugin offers shortcuts such as `gst` for `git status`.
+# You can also store command snippets in `navi` cheat sheets, e.g.:
+#   `navi --query "rsync"`
 
 g='git'
 

@@ -1,6 +1,14 @@
-# conventions 
+# conventions
 # <context>-<object>-<verb>
 # shell-vbox-list
+#
+# Many helpers in this file wrap basic tooling. You can often rely on
+# dedicated utilities instead:
+#   - `navi` to recall commands from cheat sheets. Example:
+#       `navi --query "git log"`
+#   - `zoxide` for directory jumping. Example:
+#       `zoxide add ~/projects/myapp` then `z myapp`
+#   - The oh-my-zsh `git` plugin provides aliases such as `gdiff`.
 
 
 #

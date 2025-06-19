@@ -13,12 +13,17 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   - `bash/` - shell examples and SSH helpers.
   - `bin/` - custom command line utilities and prototype scripts.
   - `cheatsheets/` - quick reference guides for tools (git, tmux, etc.).
-  - `custom/` - personal cheat entries consumed by the `cheat` utility.
+  - `custom/` - personal cheat entries for the `cheat` or `navi` utilities,
+    letting you fuzzy find frequently used commands.
   - `docs/` - assorted documentation like logs and setup notes.
   - `etc/` - sample configuration files such as `knife.rb.example`.
   - `notes/` - topic-specific notes (cron, virtualbox, etc.).
   - `pseudocode/` - design notes and planning snippets.
-  - `tmux/`, `vim/`, `zsh/` - configuration directories for these tools.
+  - `tmux/`, `vim/`, `zsh/` - configuration directories for these tools. The
+    `zsh` folder includes an oh-my-zsh setup. Most custom helpers live in
+    `functions.zsh`, which now replaces many older aliases. Over time,
+    commands from `files/custom` can be searched with `navi`, making even the
+    functions themselves optional (see `zsh/README.md`).
   - `unix.example.0` and `matches` - example command snippets.
 - `recipes/` - main Chef recipes to configure different platforms.
 - `templates/` - template files for configuration (e.g. `zshrc.erb`).

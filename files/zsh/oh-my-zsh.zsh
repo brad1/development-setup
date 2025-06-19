@@ -44,5 +44,7 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git fzf)
+# The git plugin supplies aliases such as `gst` (git status) and `gdiff`.
+# The fzf plugin adds fuzzy search widgets (CTRL-T, CTRL-R).
 
 source $ZSH/oh-my-zsh.sh
