@@ -238,3 +238,6 @@
 # Color Schemes and Themes - Enable syntax highlighting
     vim -c 'syntax enable' $FP
 
+# Display custom help tags in .vimrc
+    grep '##' ~/.vimrc
+

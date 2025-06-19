@@ -212,12 +212,6 @@ do_crawl() {
         crawl_keywords $kw
     done
 }
-
-find-with() {
-  # better way!
-  find . -iname "*$1*" -not -path "./.git/*" -not -path "./release/*"
-}
-
 #
 #
 # # # # # # # # 
@@ -299,100 +293,6 @@ arc() {
     echo "File archived as ${renamed_filename}"
 }
 
-#
-#
-# # # # # # # 
-
-
-
-
-
-
-
-
-
-
-
-
-# # # # # # # # 
-# Section: git functions
-#
-
-
-git-branch() {
-  git checkout -b "$1"
-  echo "$1" >> /var/brad/lists/branches.list
-}
-
-git-branches-list() {
-  cat /var/brad/lists/branches.list
-}
-
-git-branches-edit() {
-  vim /var/brad/lists/branches.list
-}
-
-git-branch-hop() {
-  git reflog | grep -o 'moving from.*' | head -n25 | sed 's/moving //; s/from // ; s/to //'  | xargs -n 1 | sort | uniq | fzf > /var/brad/tmp/branch
-  git checkout "$(cat /var/brad/tmp/branch)"
-}
-
-gcof() {
-  git checkout $(git-branches-list | fzf)
-}
-
-#
-#
-#
-# # # # # # # # 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # # # # # # # # # 
-# Section: build utilities
-#
-
-
-#
-#
-# # # # # # #
-
-
-
-
-
-
-# # # # # # # #
 # Section: editor shortcuts vim
 #
 
@@ -627,12 +527,6 @@ zsh-commands () {
 auto () {
   cat /var/brad/lists/commands.list|fzf > /var/brad/tmp/command
   command=$(cat /var/brad/tmp/command)
-  $command
-}
-
-vim-usage() {
-  grep '##' ~/.vimrc # inspired by make usage
-}
 
 shell_login_overview() {
   do_crawl $(echo $keywords_to_crawl)
