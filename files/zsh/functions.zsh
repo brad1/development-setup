@@ -594,13 +594,6 @@ o () {
 
 }
 
-p () {
-   echo "python3 manage.py showmigrations"
-   echo "python3 manage.py migrate database 0040_file_name_handling"
-   echo "ln -sf /opt/vmass/server_api"
-}
-
-
 co () {
   pth=/var/brad/contexts
   fn=$(ls $pth|fzf)
