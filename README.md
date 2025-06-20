@@ -16,6 +16,7 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   - `custom/` - personal cheat entries for the `cheat` or `navi` utilities,
     letting you fuzzy find frequently used commands.
   - `docs/` - assorted documentation like logs and setup notes.
+    See `docs/DECISIONS.md` for project choices.
   - `etc/` - sample configuration files such as `knife.rb.example`.
   - `notes/` - topic-specific notes (cron, virtualbox, etc.).
   - `pseudocode/` - design notes and planning snippets.

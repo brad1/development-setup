@@ -108,16 +108,16 @@ cdd () {
 
 
 list-functions() { # and aliases, for selection
-  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/fn_core.zsh; \
-          source /opt/chef/cookbooks/development-setup/files/zsh/fn_file.zsh; \
-          source /opt/chef/cookbooks/development-setup/files/zsh/fn_shortcuts.zsh; \
-          source /opt/chef/cookbooks/development-setup/files/zsh/fn_login.zsh; \
-          print -l ${(ok)functions}'
-  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias | cut -d= -f1'
+  zsh -c "source $INCLUDE/fn_core.zsh; \
+          source $INCLUDE/fn_file.zsh; \
+          source $INCLUDE/fn_shortcuts.zsh; \
+          source $INCLUDE/fn_login.zsh; \
+          print -l \${(ok)functions}"
+  zsh -c "source $INCLUDE/aliases.zsh; alias | cut -d= -f1"
 }
 
-list-aliases() { # for definition 
-  zsh -c 'source /opt/chef/cookbooks/development-setup/files/zsh/aliases.zsh; alias'
+list-aliases() { # for definition
+  zsh -c "source $INCLUDE/aliases.zsh; alias"
 }
 
 function start_long_running_process {

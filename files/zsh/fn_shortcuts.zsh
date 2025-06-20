@@ -109,11 +109,11 @@ e () {
 }
 
 c () {
-  fn=$(cd /opt/chef/cookbooks/development-setup/files/cheatsheets/; ls | fzf)
+  fn=$(cd $DEVSETUP/files/cheatsheets/; ls | fzf)
   # Next: use bat or glow to view MDs
   # from cheatsheets.list ?
   # evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
-  $EDITOR /opt/chef/cookbooks/development-setup/files/cheatsheets/$fn
+  $EDITOR $DEVSETUP/files/cheatsheets/$fn
 }
 
 cw () {
