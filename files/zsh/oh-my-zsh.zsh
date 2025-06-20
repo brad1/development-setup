@@ -3,7 +3,8 @@
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 #ZSH_THEME="robbyrussell"
-ZSH_THEME="powerlevel9k/powerlevel9k"
+OMZ_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="$OMZ_THEME"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -43,8 +44,11 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf)
+OMZ_PLUGINS=(git fzf zsh-autosuggestions zsh-syntax-highlighting)
+plugins=("${OMZ_PLUGINS[@]}")
 # The git plugin supplies aliases such as `gst` (git status) and `gdiff`.
 # The fzf plugin adds fuzzy search widgets (CTRL-T, CTRL-R).
+# zsh-autosuggestions offers command completion hints as you type.
+# zsh-syntax-highlighting highlights commands for readability.
 
 source $ZSH/oh-my-zsh.sh

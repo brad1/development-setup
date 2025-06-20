@@ -1,4 +1,5 @@
-INCLUDE=/opt/chef/cookbooks/development-setup/files/zsh
+: ${DEVSETUP:=/opt/chef/cookbooks/development-setup}
+: ${INCLUDE:=$DEVSETUP/files/zsh}
 
 source $INCLUDE/aliases.zsh
 source $INCLUDE/ruby.zsh
