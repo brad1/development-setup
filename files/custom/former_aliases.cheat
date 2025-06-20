@@ -1,0 +1,82 @@
+% former_aliases
+
+# b-journal - open systemd journal logs
+    browse-journal
+# validate_saml_cert - verify SAML XML signature
+    xmlsec1 --verify --pubkey-cert-pem saml-idp-public-key --id-attr:ID urn:oasis:names:tc:SAML:2.0:assertion:Assertion saml.xml
+# queue - edit queue notes in vim
+    (cd ~/Documents/txt/queues && vimf)
+# ss-q - launch queue shell
+    (cd ~/Documents/txt/queues && zsh)
+# {cs,ts,html,json,md} - open with $EDITOR
+    $EDITOR
+# vimrc - edit the devsetup vim configuration
+    vim $DEVSETUP/files/vim/vimrc
+# ls-merges-last-10 - show last 10 merge commits
+    git log --oneline | grep Merge | head -n10
+# ls-changed-files - list files changed in last commit
+    git diff --name-only HEAD HEAD~1
+# find-largest-dir - largest directory by file count
+    for dir in \$(find . -type d); do echo \$(ls -p \$dir | grep -v / | wc -l) \$dir; done | sort -nr | head -n 1
+# find-largest - largest files in tree
+    find . -type f | xargs du -sh  | sort -rn | head -n25
+# find-list-files - list files in current dir
+    find . -maxdepth 1 -type f
+# find-swap-files - locate vim swap files
+    find ~/Documents/txt -iname ".*.swp"
+# find-swap-files_remove - delete stray swap files
+    rm $(find-swap_files|xargs)
+# find-root-remove - remove root-owned files
+    find . -user root -exec rm -rf {} +
+# st - run shell-status2
+    shell-status2
+# r - open ranger file manager
+    ranger
+# disable-touchpad - disable laptop touchpad
+    org.gnome.desktop.peripherals.touchpad send-events disabled
+# enable-touchpad - enable laptop touchpad
+    org.gnome.desktop.peripherals.touchpad send-events enabled
+# hist-all - view all recorded history
+    cat ~/.history.d/**/*
+# cd-devsetup - go to development-setup directory
+    cd $DEVSETUP
+# git-count-file-changes - count commits touching each file
+    git log --pretty=format: --name-only -- . | sort | uniq -c | sort -nr 
+# git-cherrypick-branch - cherry pick a range of commits
+    git log master..2694-django-allow-ha-vip --oneline | awk '{print $1}' | tac | xargs -I {} git cherry-pick {}
+# gsno - git show only filenames
+    git show --name-only
+# git-not-staged - pick an unstaged file via fzf
+    git status --short | awk "{print \$2}" | fzf
+# gitf - fuzzy branch checkout
+    git checkout $(git branch | fzf)
+# git-compare-files-with-master - list files that differ from master
+    git diff --name-only HEAD..origin/master
+# git-compare-diffs-with-master - diff current branch with master
+    git diff HEAD..origin/master
+# git-compare-commits-with-master - count commits compared to master
+    git log master... --oneline; git log master... --oneline|wc -l
+# git-compare-commits-with-release - count commits compared to release
+    git log release... --oneline; git log release... --oneline|wc -l
+# git-compare-master-inspect - show files for commits not in master
+    git log master... --oneline | awk "{print \$1}" | xargs -n1 git show --name-only
+# git-list-aliases - list git config aliases
+    git config --global --list | grep alias
+# git-list-branch-moves - reminder about git-search-branch-moves
+    echo use git-search-branch-moves
+# git-search-branch-moves - search reflog for branch moves
+    git reflog | grep -o 'moving from.*' | head -n25 | fzf
+# git-rebase-abort-force - remove rebase-apply folder
+    rm -rf .git/rebase-apply
+# git-folder-compare - diff folder against master
+    git diff master..yourbranch path/to/folder
+# git-sq - commit with squash message
+    git commit -m squash
+# git-recent-files - list files from recent commits
+    git diff --name-only HEAD~10..HEAD
+# git-time-back - inspect recent merge history
+    git log --grep Merge | grep Date -B5 | head -n200 | tail -n4
+# git-files-changed-since - list files changed since a date
+    git log --after="March 25" --name-only  --pretty=format: -- server_api/api_root/database/migrations | sort | uniq
+# vopen - open path returned by vip
+    xdg-open $(vip) 

@@ -78,5 +78,11 @@
 # Archive a file with a timestamped name then recreate an empty file
     mv $FP "${FP}-archived-$(date +%Y%m%d%H%M).txt" && touch $FP
 
+# whereami - show the parent process chain for the current shell
+    pstree -s $$
+
+# date-today - print today's date in compact YYYYMMDD format
+    date +%Y%m%d
+
 
 
