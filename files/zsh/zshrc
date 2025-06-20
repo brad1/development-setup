@@ -18,7 +18,6 @@ source $INCLUDE/oh-my-zsh.zsh
 source $INCLUDE/sources.zsh
 
 #ZSH_THEME="robbyrussell"
-ZSH_THEME="random"
 
 
 source /usr/share/autojump/autojump.sh
