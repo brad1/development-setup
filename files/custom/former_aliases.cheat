@@ -79,4 +79,14 @@
 # git-files-changed-since - list files changed since a date
     git log --after="March 25" --name-only  --pretty=format: -- server_api/api_root/database/migrations | sort | uniq
 # vopen - open path returned by vip
-    xdg-open $(vip) 
+    xdg-open $(vip)
+# my-docker-build - build container and save output
+    sudo docker build . | tee /tmp/docker-build-out
+# my-docker-run-bash - run last built container with a shell
+    cat /tmp/docker-build-out | tail -n1 | awk '{print $3}' > /tmp/last-container && sudo docker run -it "$(cat /tmp/last-container)" /bin/bash
+# my-save - record stdout and stderr
+    command > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
+# my-vbox-screenshot - capture VM screenshot
+    VBoxManage controlvm name screenshotpng screenshot.jpg
+# my-vbox-screenshot-to-text - capture screenshot and OCR text
+    VBoxManage controlvm vmass screenshotpng screenshot.png && convert -colorspace gray -fill white -resize 600% -sharpen 0x2 screenshot.png screenshot.jpg && tesseract screenshot.jpg ocr && cat ocr.txt
