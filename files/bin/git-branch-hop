@@ -1,0 +1,12 @@
+#!/bin/bash
+# Fuzzy checkout of recently used git branches.
+
+set -e
+
+branch=$(git reflog | grep -o 'moving from.*' | head -n25 \
+  | sed 's/moving //; s/from //; s/to //' \
+  | xargs -n 1 | sort | uniq | fzf)
+
+if [ -n "$branch" ]; then
+  git checkout "$branch"
+fi

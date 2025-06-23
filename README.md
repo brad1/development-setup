@@ -11,7 +11,10 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 - `attributes/` - default configuration attributes for the cookbook.
 - `files/` - various helper scripts, notes and configuration files used by the cookbook:
   - `bash/` - shell examples and SSH helpers.
-  - `bin/` - custom command line utilities and prototype scripts.
+  - `bin/` - custom command line utilities and prototype scripts. The
+      `git-branch-hop` utility (requires `fzf`) lets you switch to a recent branch via fuzzy search. Two
+      zsh functions `git-branch-hop` and `git-branch-hop-old` provide the same
+      idea with different implementations for easy comparison.
   - `cheatsheets/` - quick reference guides for tools (git, tmux, etc.).
   - `custom/` - personal cheat entries for the `cheat` or `navi` utilities,
     letting you fuzzy find frequently used commands.
