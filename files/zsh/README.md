@@ -3,7 +3,7 @@
 This directory contains a modular zsh setup used by the cookbook.
 
 - **zshrc** – top level file that loads the rest of the configuration.
-- **oh-my-zsh.zsh** – bootstraps oh-my-zsh with the `powerlevel10k` theme and enables the `git`, `fzf`, `zsh-autosuggestions` and `zsh-syntax-highlighting` plugins.
+- **oh-my-zsh.zsh** – bootstraps oh-my-zsh with the `powerlevel10k` theme and enables the `git`, `fzf`, `zsh-autosuggestions` and `zsh-syntax-highlighting` plugins. The accompanying recipe clones these plugins and the theme into `~/.oh-my-zsh/custom`.
 - **aliases.zsh** – minimal alias list; most commands live in `navi` cheat sheets.
 - **fn_core.zsh**, **fn_file.zsh**, **fn_shortcuts.zsh**, **fn_login.zsh** –
   the main helper modules sourced from `functions.zsh`.

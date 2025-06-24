@@ -12,6 +12,30 @@ git "#{homedir}/.oh-my-zsh" do
   action :sync
 end
 
+# Install recommended plugins and theme under ~/.oh-my-zsh/custom
+custom_dir = "#{homedir}/.oh-my-zsh/custom"
+
+git "#{custom_dir}/plugins/zsh-autosuggestions" do
+  repository 'https://github.com/zsh-users/zsh-autosuggestions.git'
+  user node['development-setup']['user']['name']
+  reference 'master'
+  action :sync
+end
+
+git "#{custom_dir}/plugins/zsh-syntax-highlighting" do
+  repository 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+  user node['development-setup']['user']['name']
+  reference 'master'
+  action :sync
+end
+
+git "#{custom_dir}/themes/powerlevel10k" do
+  repository 'https://github.com/romkatv/powerlevel10k.git'
+  user node['development-setup']['user']['name']
+  reference 'master'
+  action :sync
+end
+
 link "#{homedir}/.zshrc" do
   to "/opt/chef/cookbooks/development-setup/files/zsh/zshrc"
 end
