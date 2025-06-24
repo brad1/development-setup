@@ -27,6 +27,7 @@ zsh-commands () {
 auto () {
   cat /var/brad/lists/commands.list|fzf > /var/brad/tmp/command
   command=$(cat /var/brad/tmp/command)
+}
 
 shell_login_overview() {
   do_crawl $(echo $keywords_to_crawl)

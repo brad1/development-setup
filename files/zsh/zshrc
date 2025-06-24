@@ -70,7 +70,7 @@ fi
 #echo '------------------------------------------------------------------------------'
 #echo
 #
-st
+# st # leftover debugging command
 
 # if screenfetch is here, call it first, discarded warnings
 # which screenfetch >/dev/null 2>/dev/null && screenfetch 2>/dev/null
