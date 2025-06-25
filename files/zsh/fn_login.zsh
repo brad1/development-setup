@@ -214,61 +214,7 @@ cheat-bash() {
   cheatsheet "$1" "bash" "$2"
 }
 
-
-#splash_screen() {
-shell-status2-2024() {
-    # Clear the screen
-    clear
-
-
-    echo
-    echo 'New commands to try:'
-    echo '    https://github.com/twinnydotdev/twinny - local chat complete + voice'
-    echo '    exa'
-    echo '    vim-usage'
-    echo '    last [reboot]'
-    echo '    arc scratch.txt # arbitrary terminal captures in "reports" to keep clipboard clean'  
-    echo '    rg -tsh -e "todo" -trb -e "function" -tjava -e "System.out.print" # file type filtering'
-    echo '    vim-goto # hop to a pattern'
-    echo '    rj # resume job fzf' 
-    echo '    column # -x, -t, -s, ...' 
-    echo 'Commands to remember:'
-    echo '    find /path/to/files -type f -mtime +7 -delete'
-    echo '    c -> chatgpt-general-document.txt # for shorthand, labeled instructions'
-    echo '    pgrep -af postinstall'
-    echo '    diff <(make -p) <(make -np)'
-    echo '    man -k systemd' 
-    echo '    find /path/to/search -group apache ! -perm /o+r'
-    echo 'Things to add:'
-    echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
-    echo '    Ctrl-R:'
-    echo '    - import sticking commands (for Ctrl-R) # over time these may become functions'
-    echo '    - fzf in reverse search...'
-    echo 'Glen initiatives:'
-    echo '     6.2 - audio/image file reboot, delete legacy SQL, move C code and scripts/'
-    echo '     Schedules export (Chad)' 
-    echo 'My initiatives:'
-    echo '     AutoUpdates - outline and labels for next meeting'
-    echo '     smoke test expand PM events are next? control packets?' 
-    echo '     PDP - friday kubernetes practice' 
-    echo '     Stress.sql'
-    echo '     tripwire'
-    echo '     smoke test expand (note that selenium job VM pcrunner missing default provider)'
-    echo 'Ubuntu:'
-    echo '     https://ubuntu.com/core/docs/networkmanager/networkmanager-and-netplan'
-    echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
-    echo "-  Parnas' 1972 paper 'On the Criteria To Be Used in Decomposing Systems into Modules'"
-    echo
-    echo
-    echo '---- Pending action items: ----'
-    echo
-
-    # TODO test and expand
-    shell_login_overview 
-}
-    
-
-shell-status2() {
+shell-status() {
     clear
 
     # NExt - Control - ? workflow selection
