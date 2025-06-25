@@ -99,33 +99,59 @@ shell-status() {
   echo
   echo
 
-  # don't run jobs at every new terminal
-  return
+  if [[ "$SHELL_STATUS_JOBS_ENABLED" == "1" ]]; then
+    local stamp_file="$jobsd/last_run"
+    local run_jobs=1
+    if [[ -f "$stamp_file" ]]; then
+      local last=$(date -r "$stamp_file" +%s)
+      local now=$(date +%s)
+      if (( now - last < 1800 )); then
+        run_jobs=0
+      fi
+    fi
 
-  # slow!
-  # vagrant status >/tmp/vagrant-status 2>/dev/null && echo "vagrant: $(grep bootstrap /tmp/vagrant-status)"
+    if (( run_jobs )); then
+      shell-status-jobs
+      touch "$stamp_file"
+    fi
+  fi
 
-  # suppress job complete messages, does this belong here?
-  # set +m
+  echo "To change this, see run zsh-functions and see 'shell-status'"
+}
 
-  # better, still slow and too verbose
+# Background tasks for shell-status. Runs only when
+# SHELL_STATUS_JOBS_ENABLED is set.
+shell-status-jobs() {
+  local pids=()
+
+  # Collect vagrant information without blocking startup
   echo -n "Checking vagrant VMs...   "
   vagrant global-status --prune >$jobsd/vagrant-global-status-prune.log 2>&1 &
+  pids+=($!)
 
+  # Fetch remote branch list if we are in a git repository
+  if git rev-parse --git-dir >/dev/null 2>&1; then
+    echo -n "Gathering remote branches...   "
+    git branch -r >$jobsd/git-remote-branches.log 2>&1 &
+    pids+=($!)
+  fi
+
+  # Search TODOs in the primary project
   echo -n "Timing search for TODOs...   "
   (
     date
     cd "$PRIMARY_PROJECT"
     grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,\*venv,\*java,\*vendor,\*server_env,\*node_modules,\*dist,\*release} -r "TODO" .
-    # TODO fix this if it gets too slow
-    #grep -r "TODO" "$PRIMARY_PROJECT"
     date
   ) > $jobsd/grep-todo.log 2>&1 &
+  pids+=($!)
 
-  # prompt-journal
-  # prompt-clipboard
-
-  echo "To change this, see run zsh-functions and see 'shell-status'"
+  (
+    for pid in $pids; do
+      wait $pid
+    done
+    shell-notify "Shell status background jobs complete"
+  ) &
 }
 
 
