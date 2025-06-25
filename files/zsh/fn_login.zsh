@@ -9,24 +9,24 @@
 # # # # deprecated use navi
 
 fzf-commands () {
-  cat /var/brad/lists/commands-fzf.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
+  cat "$PERSONAL_DIR/lists/commands-fzf.list" | fzf > "$PERSONAL_DIR/tmp/command"
+  command=$(cat "$PERSONAL_DIR/tmp/command")
   $command
 }
 
 git-commands () {
-  $(cat /var/brad/lists/commands-git.list|fzf)
+  $(cat "$PERSONAL_DIR/lists/commands-git.list" | fzf)
 }
 
 zsh-commands () {
-  cat /var/brad/lists/commands-zsh.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
+  cat "$PERSONAL_DIR/lists/commands-zsh.list" | fzf > "$PERSONAL_DIR/tmp/command"
+  command=$(cat "$PERSONAL_DIR/tmp/command")
   $command
 }
 
 auto () {
-  cat /var/brad/lists/commands.list|fzf > /var/brad/tmp/command
-  command=$(cat /var/brad/tmp/command)
+  cat "$PERSONAL_DIR/lists/commands.list" | fzf > "$PERSONAL_DIR/tmp/command"
+  command=$(cat "$PERSONAL_DIR/tmp/command")
 }
 
 shell_login_overview() {
@@ -77,7 +77,7 @@ shell-status() {
   echo '}'
   echo
 
-  mkdir -p /var/brad/login-splash-jobs
+  mkdir -p "$PERSONAL_DIR/login-splash-jobs"
 
   # tmux sessions
   echo 'Tmux sessions:'
@@ -93,7 +93,7 @@ shell-status() {
   echo
 
   echo "Outstanding Solveables:"
-  ls /var/brad/solveables/
+  ls "$PERSONAL_DIR/solveables/"
 
   echo
   echo
@@ -257,10 +257,10 @@ shell-status2() {
     echo 'Shortcuts:'
     echo '    b()   Ctrl-G (navi search)' 
     echo 'New commands to try (preview):'
-    grep '^    ' /home/brad/.local/share/navi/cheats/custom/brad_try_next.cheat | head -n5
+    grep '^    ' "$NAVI_CUSTOM_DIR/brad_try_next.cheat" | head -n5
     echo '    ...'
     echo 'Commands to remember (preview):'
-    grep '^    ' /home/brad/.local/share/navi/cheats/custom/brad_reminder.cheat | head -n5
+    grep '^    ' "$NAVI_CUSTOM_DIR/brad_reminder.cheat" | head -n5
     echo '    ...'
     echo 'Things to add:'
     echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
@@ -285,7 +285,7 @@ shell-status2() {
     shell_login_overview 
 
     # vagrant snapshot list already does this!
-    # vagrant_snapshot_status /home/brad/Projects/sitemanager 
+    # vagrant_snapshot_status "$HOME/Projects/sitemanager"
 
     #fzf_menu_exp
 }

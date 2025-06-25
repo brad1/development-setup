@@ -15,6 +15,14 @@ export PATH=$DEVSETUP/files/bin:$PATH
 export PATH=~/.local/bin:$PATH # for tmuxp, etc from pip
 export PATH=$HOME/.cargo/bin:$PATH
 
+# Personal files and scratch space
+: ${PERSONAL_DIR:=/var/brad}
+export PERSONAL_DIR
+
+# Location for custom navi cheat sheets
+: ${NAVI_CUSTOM_DIR:=$HOME/.local/share/navi/cheats/custom}
+export NAVI_CUSTOM_DIR
+
 export WORK_ZSHRC=~/Projects/sandbox/zshrc
 export TMPDIR=/tmp
 

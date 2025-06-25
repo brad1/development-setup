@@ -19,7 +19,7 @@
     vagrant snapshot restore sitemanager-public-ip placeholder
 
 # Change dir to vagrant vms home
-    cd /home/brad/Projects/sitemanager
+    cd $HOME/Projects/sitemanager
 
 # SSH into smoketest VM 
     vagrant ssh smoketest 
