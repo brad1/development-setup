@@ -22,8 +22,8 @@
 #
 
 
-fp_copied_paths=/var/brad/copied-paths.list
-jobsd=/var/brad/login-splash-jobs
+fp_copied_paths="$PERSONAL_DIR/copied-paths.list"
+jobsd="$PERSONAL_DIR/login-splash-jobs"
 zsh_functions_debug=0
 
 #
@@ -200,7 +200,7 @@ search_files() {
         exclude_dirs="$exclude_dirs --exclude-dir=$dir"
     done
     # zsh does not split strings by default
-    grep -rniI --color $(echo $exclude_dirs) "$keyword" /var/brad/reports
+    grep -rniI --color $(echo $exclude_dirs) "$keyword" "$PERSONAL_DIR/reports"
 }
 
 crawl_keywords() {

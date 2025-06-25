@@ -42,7 +42,7 @@
     bindkey | grep -E '"\^[^[]{1"'
 
 # Launch Open Interpreter in new terminal
-    gnome-terminal --tab -- bash -c "cd '/home/brad/Projects/_projects-research/open_interpreter' && . ./init.sh; exec bash"
+    gnome-terminal --tab -- bash -c "cd '$HOME/Projects/_projects-research/open_interpreter' && . ./init.sh; exec bash"
 
 # Display Git cheat commands via navi
     navi --print --query git
@@ -61,16 +61,16 @@
     find . -iname "*$FP*" -not -path "./.git/*" -not -path "./release/*"
 
 # Show stored branch names
-    cat /var/brad/lists/branches.list
+    cat $PERSONAL_DIR/lists/branches.list
 
 # Edit stored branch names
-    vim /var/brad/lists/branches.list
+    vim $PERSONAL_DIR/lists/branches.list
 
 # Checkout a branch from recent reflog entries
     git checkout $(git reflog | grep -o 'moving from.*' | head -n25 | sed 's/moving //; s/from //; s/to //' | xargs -n1 | sort | uniq | fzf)
 
 # Checkout branch from stored list
-    git checkout $(cat /var/brad/lists/branches.list | fzf)
+    git checkout $(cat $PERSONAL_DIR/lists/branches.list | fzf)
 
 # Check if the current shell was launched from ranger
     ps aux | grep "$PPID" | grep -qa ranger && echo "You are in ranger" || echo "not in ranger"

@@ -284,9 +284,9 @@ lvextend -l +100%FREE /dev/centos/root
 ------------------------------------------------------------------------------
 context: virtualbox errors
 
-command: ["import", "/home/brad/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf", "--vsys", "0", "--vmname", "vmass7_1637262441554_20283", "--vsys", "0", "--unit", "13", "--disk", "/home/brad/VirtualBox VMs/vmass7_1637262441554_20283/box-disk001.vmdk"]
+command: ["import", "$HOME/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf", "--vsys", "0", "--vmname", "vmass7_1637262441554_20283", "--vsys", "0", "--unit", "13", "--disk", "$HOME/VirtualBox VMs/vmass7_1637262441554_20283/box-disk001.vmdk"]
 Stderr: 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
-Interpreting /home/brad/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf...
+Interpreting $HOME/.vagrant.d/boxes/vmass7/0/virtualbox/box.ovf...
 OK.
 0%...
 Progress state: NS_ERROR_INVALID_ARG

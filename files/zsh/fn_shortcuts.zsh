@@ -37,8 +37,8 @@ eval "$(navi widget zsh)"
 
 # search all custom navi cheatsheets
 # NO EDIT :(
-navi-custom() {
-    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+  navi-custom() {
+      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
     #local cmd=$(navi --print --query "$cheatsheet ")
@@ -53,8 +53,8 @@ zle -N navi-custom
 # - for now, ^x^e to edit the printed command
 # see: vi mode
 # NO EDIT :(
-navi-palettes() {
-    local cheatsheet=$(ls /home/brad/.local/share/navi/cheats/custom/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+  navi-palettes() {
+      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
     #local cmd=$(navi --print --query "$cheatsheet ")
@@ -84,25 +84,25 @@ b () {
 s () {
   echo "Use: sshf for valcom servers"
   echo "Use: ssh-gitlab-web for gitlab"
-  #ssh brad@$(cat /var/brad/lists/servers.txt | fzf)'
+  #ssh brad@$(cat "$PERSONAL_DIR/lists/servers.txt" | fzf)'
 
 }
 
 # consider replacing with 'cdargs' or 'z' or 'autojump'
 d () {
-  dest="$(cat /var/brad/lists/dirs.list | fzf)"
+  dest="$(cat "$PERSONAL_DIR/lists/dirs.list" | fzf)"
   dest="${dest/#\~/$HOME}"
   cd "$dest"
 }
 
 gh () {
-  $(cat /var/brad/lists/commands-git.list|fzf)
+  $(cat "$PERSONAL_DIR/lists/commands-git.list" | fzf)
 }
 
 
 # consider replacing with 'autojump'
 e () {
-  file_path=$(cat /var/brad/lists/files-pinned.list|fzf)
+  file_path=$(cat "$PERSONAL_DIR/lists/files-pinned.list" | fzf)
   evaluated_path=$(echo "$file_path" | sed "s|~|$HOME|g")
   $EDITOR $evaluated_path
   echo $evaluated_path
@@ -123,7 +123,7 @@ cw () {
 
 
 co () {
-  pth=/var/brad/contexts
+  pth="$PERSONAL_DIR/contexts"
   fn=$(ls $pth|fzf)
   fp=$pth/$fn
   echo "Opening $fn, press enter within 2 seconds to cat instead."
@@ -137,8 +137,8 @@ co () {
 
 
 f () {
-  list-functions|fzf > /var/brad/tmp/command
-  eval $(cat /var/brad/tmp/command)
+  list-functions|fzf > "$PERSONAL_DIR/tmp/command"
+  eval $(cat "$PERSONAL_DIR/tmp/command")
 }
 
 fzf_insert_function() {
@@ -149,19 +149,19 @@ zle -N fzf_insert_function
 #bindkey '^f' fzf_insert_function
 
 v () {
-  fn=$(ls /var/brad/filegroups/|fzf)
-  $EDITOR $(cat /var/brad/filegroups/$fn)
+  fn=$(ls "$PERSONAL_DIR/filegroups/" | fzf)
+  $EDITOR $(cat "$PERSONAL_DIR/filegroups/$fn")
 }
 
 ve () {
-  fn=$(ls /var/brad/filegroups/ | fzf)
-  for f in $(cat /var/brad/filegroups/$fn); do
+  fn=$(ls "$PERSONAL_DIR/filegroups/" | fzf)
+  for f in $(cat "$PERSONAL_DIR/filegroups/$fn"); do
     gnome-terminal --tab -- bash -c "$EDITOR $f; exec bash"
   done
 }
 
 vim_insert_function() {
-  grep 'SELECTME' $(find /home/brad/.command_palettes/ -type f | fzf ) > /tmp/commandspals 
+  grep 'SELECTME' $(find "$HOME/.command_palettes/" -type f | fzf ) > /tmp/commandspals
   cat /tmp/commandspals | fzf > /tmp/command
   #LBUFFER+=$( cat /tmp/command | awk -F '$' '{print $1}' )
   command=$( cat /tmp/command | awk -F '#' '{print $1}' )
