@@ -26,6 +26,11 @@ export NAVI_CUSTOM_DIR
 export WORK_ZSHRC=~/Projects/sandbox/zshrc
 export TMPDIR=/tmp
 
+# Optional: run slow login jobs when launching the splash screen.
+# Set to 1 to enable background checks like vagrant status.
+: ${SHELL_STATUS_JOBS_ENABLED:=0}
+export SHELL_STATUS_JOBS_ENABLED
+
 # TODO: refactor to a list file or symlinks (persistance) w/ function to modify
 export ACTIVE_PROJECTS="~/Projects/vmass ~/Projects/_1_builds/vmass-integration-test"
 export ARCHIVE=~/Documents/txt/archive

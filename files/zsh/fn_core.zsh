@@ -26,6 +26,18 @@ fp_copied_paths="$PERSONAL_DIR/copied-paths.list"
 jobsd="$PERSONAL_DIR/login-splash-jobs"
 zsh_functions_debug=0
 
+# Display a message using desktop notifications when available.
+shell-notify() {
+  local msg="$1"
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send "$msg"
+  elif command -v terminal-notifier >/dev/null 2>&1; then
+    terminal-notifier -message "$msg"
+  else
+    echo "$msg"
+  fi
+}
+
 #
 #
 # # # # # # # # # #
