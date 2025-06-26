@@ -157,8 +157,21 @@ shell-status-jobs() {
       wait $pid
     done
 
+    shell-status-jobs-summary
+
     shell-notify "Shell status background jobs complete"
   } &
+}
+
+shell-status-jobs-summary() {
+  for log in "$jobsd"/*.log(N); do
+    if [[ -f "$log" ]]; then
+      local count=$(wc -l < "$log")
+      echo "---- $(basename "$log") ($count lines) ----"
+      head "$log"
+      echo
+    fi
+  done
 }
 
 
