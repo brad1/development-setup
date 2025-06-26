@@ -122,36 +122,43 @@ shell-status() {
 # Background tasks for shell-status. Runs only when
 # SHELL_STATUS_JOBS_ENABLED is set.
 shell-status-jobs() {
-  local pids=()
-
-  # Collect vagrant information without blocking startup
-  echo -n "Checking vagrant VMs...   "
-  vagrant global-status --prune >$jobsd/vagrant-global-status-prune.log 2>&1 &
-  pids+=($!)
-
-  # Fetch remote branch list if we are in a git repository
-  if git rev-parse --git-dir >/dev/null 2>&1; then
-    echo -n "Gathering remote branches...   "
-    git branch -r >$jobsd/git-remote-branches.log 2>&1 &
-    pids+=($!)
+  # ensure the log directory exists, falling back to a default
+  if [[ -z "$jobsd" ]]; then
+    jobsd="$PERSONAL_DIR/login-splash-jobs"
   fi
+  mkdir -p "$jobsd"
 
-  # Search TODOs in the primary project
-  echo -n "Timing search for TODOs...   "
-  (
-    date
-    cd "$PRIMARY_PROJECT"
-    grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,\*venv,\*java,\*vendor,\*server_env,\*node_modules,\*dist,\*release} -r "TODO" .
-    date
-  ) > $jobsd/grep-todo.log 2>&1 &
-  pids+=($!)
+  {
+    local pids=()
 
-  (
+    # Collect vagrant information without blocking startup
+    echo -n "Checking vagrant VMs...   "
+    vagrant global-status --prune >$jobsd/vagrant-global-status-prune.log 2>&1 &
+    pids+=($!)
+
+    # Fetch remote branch list if we are in a git repository
+    if git rev-parse --git-dir >/dev/null 2>&1; then
+      echo -n "Gathering remote branches...   "
+      git branch -r >$jobsd/git-remote-branches.log 2>&1 &
+      pids+=($!)
+    fi
+
+    # Search TODOs in the primary project
+    echo -n "Timing search for TODOs...   "
+    (
+      date
+      cd "$PRIMARY_PROJECT"
+      grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,\*venv,\*java,\*vendor,\*server_env,\*node_modules,\*dist,\*release} -r "TODO" .
+      date
+    ) > $jobsd/grep-todo.log 2>&1 &
+    pids+=($!)
+
     for pid in $pids; do
       wait $pid
     done
+
     shell-notify "Shell status background jobs complete"
-  ) &
+  } &
 }
 
 
