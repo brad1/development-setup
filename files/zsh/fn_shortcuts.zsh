@@ -89,8 +89,38 @@ s () {
 }
 
 # consider replacing with 'cdargs' or 'z' or 'autojump'
+bookmark_add() {
+  list="$PERSONAL_DIR/lists/dirs.list"
+  mkdir -p "$(dirname "$list")"
+  touch "$list"
+  dir="$(pwd -P)"
+  if ! grep -Fxq "$dir" "$list"; then
+    echo "$dir" >> "$list"
+  fi
+  awk '!seen[$0]++' "$list" > "$list.tmp" && mv "$list.tmp" "$list"
+}
+
+bookmark_rm() {
+  list="$PERSONAL_DIR/lists/dirs.list"
+  [[ -f "$list" ]] || return
+  dir="$(pwd -P)"
+  grep -Fvx "$dir" "$list" | awk '!seen[$0]++' > "$list.tmp"
+  mv "$list.tmp" "$list"
+}
+
 d () {
-  dest="$(cat "$PERSONAL_DIR/lists/dirs.list" | fzf)"
+  list="$PERSONAL_DIR/lists/dirs.list"
+  case "$1" in
+    add)
+      bookmark_add
+      return
+      ;;
+    rm|remove)
+      bookmark_rm
+      return
+      ;;
+  esac
+  dest="$(cat "$list" | fzf)"
   dest="${dest/#\~/$HOME}"
   cd "$dest"
 }
