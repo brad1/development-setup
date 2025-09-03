@@ -33,7 +33,32 @@ shell_login_overview() {
   do_crawl $(echo $keywords_to_crawl)
 }
 
+show_news() {
+  local stamp_file="$PERSONAL_DIR/news_timestamp"
+  local news_file
+
+  if [[ -f "$DEVSETUP/files/zsh/NEWS.md" ]]; then
+    news_file="$DEVSETUP/files/zsh/NEWS.md"
+  elif [[ -f "$DEVSETUP/files/custom/brad_discoverability.cheat" ]]; then
+    news_file="$DEVSETUP/files/custom/brad_discoverability.cheat"
+  else
+    return
+  fi
+
+  local now=$(date +%s)
+  local last=0
+  [[ -f "$stamp_file" ]] && last=$(date -r "$stamp_file" +%s)
+
+  if (( now - last > 86400 )); then
+    echo '---- News ----'
+    tail -n 5 "$news_file"
+    echo '--------------'
+    touch "$stamp_file"
+  fi
+}
+
 shell-status() {
+  show_news
   echo "date-time: $(date "+%D - %H:%M:%S")"
   echo "user: $(whoami)"
   echo "pwd: $(pwd)"
@@ -234,9 +259,11 @@ cheat-bash() {
 }
 
 shell-status() {
-    clear
+      clear
 
-    # NExt - Control - ? workflow selection
+      show_news
+
+      # NExt - Control - ? workflow selection
     # List simple control kep mappings
     # bindkey | grep -E '"\^[^[]{1}'
 
