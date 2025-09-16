@@ -35,26 +35,30 @@ shell_login_overview() {
 
 show_news() {
   local stamp_file="$PERSONAL_DIR/news_timestamp"
-  local news_file
+  local changelog="$DEVSETUP/CHANGELOG.md"
 
-  if [[ -f "$DEVSETUP/files/zsh/NEWS.md" ]]; then
-    news_file="$DEVSETUP/files/zsh/NEWS.md"
-  elif [[ -f "$DEVSETUP/files/custom/brad_discoverability.cheat" ]]; then
-    news_file="$DEVSETUP/files/custom/brad_discoverability.cheat"
-  else
-    return
-  fi
+  [[ -f "$changelog" ]] || return
 
-  local now=$(date +%s)
   local last=0
   [[ -f "$stamp_file" ]] && last=$(date -r "$stamp_file" +%s)
 
-  if (( now - last > 86400 )); then
+  local updates
+  updates=$(awk -v last="$last" '
+    /^## / {
+      split($2, d, "-");
+      t = mktime(d[1] " " d[2] " " d[3] " 00 00 00");
+      show = (t > last)
+    }
+    show { print }
+  ' "$changelog")
+
+  if [[ -n "$updates" ]]; then
     echo '---- News ----'
-    tail -n 5 "$news_file"
+    echo "$updates"
     echo '--------------'
-    touch "$stamp_file"
   fi
+
+  touch "$stamp_file"
 }
 
 shell-status() {
