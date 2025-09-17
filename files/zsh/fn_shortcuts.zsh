@@ -38,14 +38,22 @@ eval "$(navi widget zsh)"
 # search all custom navi cheatsheets
 # NO EDIT :(
   navi-custom() {
-      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+    local -a cheatsheets=()
+
+    while IFS= read -r -d '' cheat_file; do
+      cheatsheets+=("${cheat_file##*/}")
+    done < <(find "$NAVI_CUSTOM_DIR" -type f -name '*.cheat' -print0)
+
+    (( ${#cheatsheets[@]} )) || return
+
+    local cheatsheet=$(printf '%s\n' "${cheatsheets[@]/%.cheat/}" | sort -u | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
     #local cmd=$(navi --print --query "$cheatsheet ")
     navi --print --query "$cheatsheet "
     #LBUFFER+="$cmd"
     #zle redisplay
-}
+  }
 zle -N navi-custom
 
 # search command palettes
