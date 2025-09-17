@@ -38,8 +38,21 @@ eval "$(navi widget zsh)"
 # search all custom navi cheatsheets
 # NO EDIT :(
   navi-custom() {
-      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
-    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
+      local selection=$(find "$NAVI_CUSTOM_DIR" -type f -name '*.cheat' -print \
+        | sort \
+        | awk -v base="$NAVI_CUSTOM_DIR/" '{
+            rel=$0
+            sub(base, "", rel)
+            cheat=rel
+            sub(/\.cheat$/, "", cheat)
+            name=cheat
+            sub(/^.*\//, "", name)
+            printf "%s\t%s\n", cheat, name
+          }' \
+        | fzf --prompt="Select Cheatsheet: " --with-nth=1 --delimiter=$'\t')
+    [[ -z "$selection" ]] && return  # Exit if no selection
+
+    local cheatsheet=${selection##*$'\t'}
 
     #local cmd=$(navi --print --query "$cheatsheet ")
     navi --print --query "$cheatsheet "
@@ -54,8 +67,22 @@ zle -N navi-custom
 # see: vi mode
 # NO EDIT :(
   navi-palettes() {
-      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
-    [[ -z "$cheatsheet" ]] && return  # Exit if no selection
+      local palette_dir="$NAVI_CUSTOM_DIR/palettes"
+      local selection=$(find "$palette_dir" -type f -name '*.cheat' -print 2>/dev/null \
+        | sort \
+        | awk -v base="$palette_dir/" '{
+            rel=$0
+            sub(base, "", rel)
+            cheat="palettes/" rel
+            sub(/\.cheat$/, "", cheat)
+            name=cheat
+            sub(/^.*\//, "", name)
+            printf "%s\t%s\n", cheat, name
+          }' \
+        | fzf --prompt="Select Cheatsheet: " --with-nth=1 --delimiter=$'\t')
+    [[ -z "$selection" ]] && return  # Exit if no selection
+
+    local cheatsheet=${selection##*$'\t'}
 
     #local cmd=$(navi --print --query "$cheatsheet ")
     navi --print --query "$cheatsheet "
