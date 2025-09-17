@@ -17,7 +17,11 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
       idea with different implementations for easy comparison.
   - `cheatsheets/` - quick reference guides for tools (git, tmux, etc.).
   - `custom/` - personal cheat entries for the `cheat` or `navi` utilities,
-    letting you fuzzy find frequently used commands.
+    letting you fuzzy find frequently used commands. Sheets now live in
+    dedicated folders such as `personal/` for ad-hoc notes, `collections/` for
+    curated bundles, and topical groups under `topics/`. `navi` searches the
+    tree recursively, so the new taxonomy continues to be discovered without
+    extra configuration.
   - `docs/` - assorted documentation like logs and setup notes.
     See `docs/DECISIONS.md` for project choices.
   - `etc/` - sample configuration files such as `knife.rb.example`.
@@ -26,7 +30,7 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   - `tmux/`, `vim/`, `zsh/` - configuration directories for these tools. The
     `zsh` folder includes an oh-my-zsh setup. Most custom helpers live in
     `functions.zsh` sources several `fn_*.zsh` modules that replace many older aliases. Over time,
-    commands from `files/custom` can be searched with `navi`, making even the
+    commands from `files/custom` (and its subfolders) can be searched with `navi`, making even the
     functions themselves optional (see `zsh/README.md`).
   - `unix.example.0` and `matches` - example command snippets.
 - `recipes/` - main Chef recipes to configure different platforms.

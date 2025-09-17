@@ -13,7 +13,7 @@ This directory contains a modular zsh setup used by the cookbook.
 
 `functions.zsh` contains the main custom helpers and makes many entries in
 `aliases.zsh` redundant.  Most helpers rely on `fzf` for interactive selection.
-Over time the cheat sheets under `../custom` can be used with the `navi` tool,
+Over time the cheat sheets under `../custom/` (and its nested folders) can be used with the `navi` tool,
 making these functions optional.
 
 The recipe `recipes/zsh.rb` installs oh-my-zsh and links `~/.zshrc` to this configuration.

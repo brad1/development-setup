@@ -39,8 +39,8 @@ show_news() {
 
   if [[ -f "$DEVSETUP/files/zsh/NEWS.md" ]]; then
     news_file="$DEVSETUP/files/zsh/NEWS.md"
-  elif [[ -f "$DEVSETUP/files/custom/brad_discoverability.cheat" ]]; then
-    news_file="$DEVSETUP/files/custom/brad_discoverability.cheat"
+  elif [[ -f "$DEVSETUP/files/custom/personal/brad_discoverability.cheat" ]]; then
+    news_file="$DEVSETUP/files/custom/personal/brad_discoverability.cheat"
   else
     return
   fi
@@ -275,10 +275,10 @@ shell-status() {
     echo 'Shortcuts:'
     echo '    b()   Ctrl-G (navi search)' 
     echo 'New commands to try (preview):'
-    grep '^    ' "$NAVI_CUSTOM_DIR/brad_try_next.cheat" | head -n5
+    grep '^    ' "$NAVI_CUSTOM_DIR/personal/brad_try_next.cheat" | head -n5
     echo '    ...'
     echo 'Commands to remember (preview):'
-    grep '^    ' "$NAVI_CUSTOM_DIR/brad_reminder.cheat" | head -n5
+    grep '^    ' "$NAVI_CUSTOM_DIR/personal/brad_reminder.cheat" | head -n5
     echo '    ...'
     echo 'Things to add:'
     echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'

@@ -38,7 +38,11 @@ eval "$(navi widget zsh)"
 # search all custom navi cheatsheets
 # NO EDIT :(
   navi-custom() {
-      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+      local cheatsheet=$(find "$NAVI_CUSTOM_DIR" -type f -name '*.cheat' -print0 \
+        | xargs -0 -n 1 basename \
+        | sed 's/\.cheat$//' \
+        | sort -u \
+        | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
     #local cmd=$(navi --print --query "$cheatsheet ")
@@ -54,7 +58,11 @@ zle -N navi-custom
 # see: vi mode
 # NO EDIT :(
   navi-palettes() {
-      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+      local cheatsheet=$(find "$NAVI_CUSTOM_DIR" -type f -name 'collections_*.cheat' -print0 \
+        | xargs -0 -n 1 basename \
+        | sed 's/\.cheat$//' \
+        | sort -u \
+        | fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
     #local cmd=$(navi --print --query "$cheatsheet ")
