@@ -16,6 +16,11 @@ This directory contains a modular zsh setup used by the cookbook.
 Over time the cheat sheets under `../custom` can be used with the `navi` tool,
 making these functions optional.
 
+Several helpers call out to external search tools. The `search_files` crawler
+prefers [ripgrep](https://github.com/BurntSushi/ripgrep) (`rg`) when available
+for faster traversal of the reports directory, but it still falls back to the
+standard `grep` implementation if `rg` is not installed.
+
 The recipe `recipes/zsh.rb` installs oh-my-zsh and links `~/.zshrc` to this configuration.
 
 ## Design notes

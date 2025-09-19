@@ -205,25 +205,71 @@ keywords_to_crawl="##starred ##todo"
 # NOTE skip: not a good navi cheatsheet candidate, keep as function
 #### keyword search
 search_files() {
-    keyword=$1
-    shift  # Remove the first argument and shift the rest to the left
-    exclude_dirs=""
-    for dir in "$@"; do
-        exclude_dirs="$exclude_dirs --exclude-dir=$dir"
+    local -a keywords=()
+    local -a exclude_dirs=()
+    local parsing_excludes=0
+    local arg
+
+    for arg in "$@"; do
+        if [[ "$arg" == "--" ]]; then
+            parsing_excludes=1
+            continue
+        fi
+
+        if (( parsing_excludes )); then
+            exclude_dirs+=("$arg")
+        else
+            keywords+=("$arg")
+        fi
     done
-    # zsh does not split strings by default
-    grep -rniI --color $(echo $exclude_dirs) "$keyword" "$PERSONAL_DIR/reports"
+
+    if (( ${#keywords[@]} == 0 )); then
+        echo "search_files: at least one keyword is required" >&2
+        return 1
+    fi
+
+    local reports_dir="$PERSONAL_DIR/reports"
+    if command -v rg >/dev/null 2>&1; then
+        local -a rg_args=(--no-heading --line-number --ignore-case)
+        local dir
+        local kw
+        for dir in "${exclude_dirs[@]}"; do
+            rg_args+=(--glob "!$dir")
+        done
+
+        for kw in "${keywords[@]}"; do
+            rg_args+=(-e "$kw")
+        done
+
+        rg "${rg_args[@]}" "$reports_dir"
+    else
+        local -a grep_args=(-rniI --color=auto)
+        local dir
+        local kw
+        for dir in "${exclude_dirs[@]}"; do
+            grep_args+=("--exclude-dir=$dir")
+        done
+
+        for kw in "${keywords[@]}"; do
+            grep_args+=(-e "$kw")
+        done
+
+        grep "${grep_args[@]}" "$reports_dir"
+    fi
 }
 
 crawl_keywords() {
-    local kw="$1"
-    search_files "$kw" $(echo $ignored_dirs)
+    local -a keywords=("$@")
+    local -a exclude=( ${=ignored_dirs} )
+    if (( ${#exclude[@]} )); then
+        search_files "${keywords[@]}" -- "${exclude[@]}"
+    else
+        search_files "${keywords[@]}"
+    fi
 }
 
 do_crawl() {
-    for kw in $@; do
-        crawl_keywords $kw
-    done
+    crawl_keywords "$@"
 }
 #
 #
