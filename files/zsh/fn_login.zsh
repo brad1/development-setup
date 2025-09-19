@@ -30,6 +30,14 @@ auto () {
 }
 
 shell_login_overview() {
+  if [[ "$SHELL_STATUS_JOBS_ENABLED" == "1" ]]; then
+    echo "Deferring keyword crawl to shell-status background jobs..."
+  else
+    shell_status_job_crawl
+  fi
+}
+
+shell_status_job_crawl() {
   do_crawl $(echo $keywords_to_crawl)
 }
 
@@ -178,6 +186,15 @@ shell-status-jobs() {
     ) > $jobsd/grep-todo.log 2>&1 &
     pids+=($!)
 
+    # Crawl starred keywords without blocking startup
+    echo -n "Crawling saved keywords...   "
+    (
+      date
+      shell_status_job_crawl
+      date
+    ) > $jobsd/grep-crawl.log 2>&1 &
+    pids+=($!)
+
     for pid in $pids; do
       wait $pid
     done
@@ -189,11 +206,20 @@ shell-status-jobs() {
 }
 
 shell-status-jobs-summary() {
+  local log
   for log in "$jobsd"/*.log(N); do
     if [[ -f "$log" ]]; then
       local count=$(wc -l < "$log")
-      echo "---- $(basename "$log") ($count lines) ----"
-      head "$log"
+      local name=$(basename "$log")
+      echo "---- ${name} (${count} lines) ----"
+      case "$name" in
+        grep-crawl.log)
+          head -n 20 "$log"
+          ;;
+        *)
+          head "$log"
+          ;;
+      esac
       echo
     fi
   done
