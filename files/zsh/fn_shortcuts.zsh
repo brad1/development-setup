@@ -54,7 +54,12 @@ zle -N navi-custom
 # see: vi mode
 # NO EDIT :(
   navi-palettes() {
-      local cheatsheet=$(ls "$NAVI_CUSTOM_DIR"/collections*.cheat | xargs -n 1 basename | sed 's/\.cheat$//' | fzf --prompt="Select Cheatsheet: ")
+    local cheatsheet
+    [[ -d "$NAVI_CUSTOM_DIR/collections" ]] || return
+    cheatsheet=$(find "$NAVI_CUSTOM_DIR/collections" -maxdepth 1 -type f -name '*.cheat' \
+      -exec basename {} \; |
+      sed 's/\.cheat$//' |
+      fzf --prompt="Select Cheatsheet: ")
     [[ -z "$cheatsheet" ]] && return  # Exit if no selection
 
     #local cmd=$(navi --print --query "$cheatsheet ")
