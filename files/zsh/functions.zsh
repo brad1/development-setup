@@ -9,3 +9,4 @@ source $_dir/fn_file.zsh
 source $_dir/fn_shortcuts.zsh
 source $_dir/fn_login.zsh
 source $_dir/fn_git.zsh
+source $_dir/fn_inventory.zsh
