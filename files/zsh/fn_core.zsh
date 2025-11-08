@@ -132,6 +132,142 @@ list-aliases() { # for definition
   zsh -c "source $INCLUDE/aliases.zsh; alias"
 }
 
+shell-customizations-inventory() {
+  emulate -L zsh
+
+  local include_dir=${INCLUDE:-}
+  local repo_root=${DEVSETUP:-}
+  if [[ -z $include_dir ]]; then
+    if [[ -n $repo_root ]]; then
+      include_dir="$repo_root/files/zsh"
+    else
+      include_dir=${(%):-%N}
+      include_dir=${include_dir:A:h}
+    fi
+  fi
+
+  if [[ -z $repo_root && -n $include_dir ]]; then
+    repo_root=${include_dir:h:h}
+  fi
+
+  local INCLUDE=$include_dir
+  local DEVSETUP=${repo_root:-$DEVSETUP}
+
+  local print_section
+  print_section() {
+    print ""
+    print -- "$1"
+  }
+
+  print -- "Personal zsh customizations inventory"
+  print -- "Generated: $(command date -Iseconds 2>/dev/null || command date)"
+  print -- "Repository root: ${repo_root:-unknown}"
+  print -- "Include directory: $include_dir"
+
+  setopt localoptions null_glob extendedglob
+
+  print_section "--- Startup files"
+  local -a startup_files
+  startup_files=($include_dir/zshrc $include_dir/sources.zsh $include_dir/functions.zsh)
+  local file
+  for file in $startup_files; do
+    [[ -r $file ]] && print -- " - $file"
+  done
+
+  local sources_file=$include_dir/sources.zsh
+  if [[ -r $sources_file ]]; then
+    print_section "--- Files sourced from sources.zsh"
+    local line trimmed
+    while IFS= read -r line; do
+      trimmed=${line%%#*}
+      trimmed=${trimmed##[[:space:]]#}
+      trimmed=${trimmed%%[[:space:]]#}
+      [[ -z $trimmed ]] && continue
+      case $trimmed in
+        source\ *)
+          print -- " - ${trimmed#source }"
+          ;;
+        if\ \[\ -f\ *)
+          print -- " - conditional: ${trimmed#* -f }"
+          ;;
+      esac
+    done < "$sources_file"
+  fi
+
+  local variables_file=$include_dir/variables.zsh
+  if [[ -r $variables_file ]]; then
+    print_section "--- Environment defaults and exports"
+    while IFS= read -r line; do
+      [[ $line == \#* || -z ${line//[[:space:]]/} ]] && continue
+      case $line in
+        export\ *)
+          print -- " - ${line#export }"
+          ;;
+        :\ \{*)
+          print -- " - default: ${line#: }"
+          ;;
+      esac
+    done < "$variables_file"
+  fi
+
+  local history_file=$include_dir/history.zsh
+  if [[ -r $history_file ]]; then
+    print_section "--- History settings"
+    command grep -Ev '^[[:space:]]*(#|$)' "$history_file" | while IFS= read -r line; do
+      print -- " - $line"
+    done
+  fi
+
+  local alias_output
+  if (( $+functions[list-aliases] )); then
+    alias_output=$(list-aliases 2>/dev/null)
+    if [[ -n $alias_output ]]; then
+      print_section "--- Aliases"
+      while IFS= read -r line; do
+        [[ -z $line ]] && continue
+        print -- " - $line"
+      done <<< "$alias_output"
+    fi
+  fi
+
+  local modules module module_name module_functions
+  modules=($include_dir/fn_*.zsh(N))
+  if (( ${#modules} )); then
+    print_section "--- Function modules"
+    for module in $modules; do
+      module_name=${module:t}
+      module_functions=$(command awk '
+        /^[[:space:]]*#/ { next }
+        match($0, /^[[:space:]]*function[[:space:]]+([[:alnum:]_-]+)/, m) { print m[1]; next }
+        match($0, /^[[:space:]]*([[:alnum:]_-]+)[[:space:]]*\(\)[[:space:]]*\{/, m) { print m[1]; next }
+      ' "$module")
+      if [[ -n $module_functions ]]; then
+        print -- " - $module_name"
+        while IFS= read -r fn; do
+          [[ -z $fn ]] && continue
+          print -- "   - $fn"
+        done <<< "$module_functions"
+      else
+        print -- " - $module_name (no function definitions detected)"
+      fi
+    done
+  fi
+
+  local additional
+  additional=($include_dir/*.zsh(N))
+  if (( ${#additional} )); then
+    print_section "--- Additional zsh snippets"
+    for file in $additional; do
+      case ${file:t} in
+        fn_*|functions.zsh|variables.zsh|aliases.zsh|history.zsh|sources.zsh|zshrc)
+          continue
+          ;;
+      esac
+      print -- " - $file"
+    done
+  fi
+}
+
 function start_long_running_process {
     local job_name=$1
     /path/to/your/script_$job_name.sh > ~/background_jobs/${job_name}_output.txt &
