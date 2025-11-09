@@ -37,3 +37,20 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 - `run.sh` and `run.cmd` - helper scripts to run the cookbook on Linux or Windows.
 - `metadata.rb` - cookbook metadata.
 - `init.sh` - example bootstrap script.
+- `quick-start.sh` - bootstrap the oh-my-zsh setup from this repository without Chef.
+
+## Quick start
+
+To install the zsh configuration without running Chef, clone the repository and
+execute the helper script:
+
+```
+git clone git@github.com:brad1/development-setup.git
+cd development-setup
+./quick-start.sh
+```
+
+The script installs oh-my-zsh, pulls the recommended plugins (fzf, autosuggestions,
+syntax highlighting, and the powerlevel10k theme), and writes a `.zshrc` that
+sources the configuration in `files/zsh/`. Your previous `.zshrc` is backed up
+with a timestamped suffix if it existed.
