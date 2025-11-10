@@ -1,5 +1,14 @@
 # Helpers to inspect the personal zsh setup.
 
+typeset -gr _SHELL_INVENTORY_DOUBLE_QUOTE=$'"'
+typeset -gr _SHELL_INVENTORY_DEFAULT_PREFIX=': ${'
+typeset -gr _SHELL_INVENTORY_DEFAULT_DELIM=':='
+typeset -gr _SHELL_INVENTORY_DEFAULT_SUFFIX='}'
+typeset -gr _SHELL_INVENTORY_ALIAS_PREFIX='alias '
+typeset -gr _SHELL_INVENTORY_COMMENT_PREFIX='#'
+typeset -gr _SHELL_INVENTORY_EXPORT_PREFIX='export '
+typeset -gr _SHELL_INVENTORY_FUNCTION_KEYWORD='function '
+
 _shell_inventory_section_header() {
   local title="$1"
   print
@@ -8,8 +17,11 @@ _shell_inventory_section_header() {
 
 _shell_inventory_trim() {
   local value="$1"
-  value=${value#"${value%%[![:space:]]*}"}
-  value=${value%"${value##*[![:space:]]}"}
+  value=${${value##[[:space:]]#}%%[[:space:]]#}
+  if [[ $value == ${_SHELL_INVENTORY_DOUBLE_QUOTE}*${_SHELL_INVENTORY_DOUBLE_QUOTE} ]]; then
+    value=${value#${_SHELL_INVENTORY_DOUBLE_QUOTE}}
+    value=${value%${_SHELL_INVENTORY_DOUBLE_QUOTE}}
+  fi
   print -r -- "$value"
 }
 
@@ -87,7 +99,7 @@ shell-zsh-inventory() {
     local line
     while IFS= read -r line; do
       [[ -z $line ]] && continue
-      [[ $line == "#"* ]] && continue
+      [[ $line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]] && continue
       printf '  %s\n' "$line"
     done < "$sources_file"
   fi
@@ -100,11 +112,11 @@ shell-zsh-inventory() {
     local oh_line
     while IFS= read -r oh_line; do
       [[ -z $oh_line ]] && continue
-      [[ $oh_line == "#"* ]] && continue
+      [[ $oh_line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]] && continue
       if [[ $oh_line == "OMZ_THEME="* ]]; then
         omz_theme=${oh_line#OMZ_THEME=}
-        omz_theme=${omz_theme#"}
-        omz_theme=${omz_theme%"}
+        omz_theme=${omz_theme#${_SHELL_INVENTORY_DOUBLE_QUOTE}}
+        omz_theme=${omz_theme%${_SHELL_INVENTORY_DOUBLE_QUOTE}}
         break
       fi
     done < "$oh_my_file"
@@ -119,11 +131,11 @@ shell-zsh-inventory() {
     local oh_line omz_raw
     while IFS= read -r oh_line; do
       [[ -z $oh_line ]] && continue
-      [[ $oh_line == "#"* ]] && continue
+      [[ $oh_line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]] && continue
       if [[ $oh_line == "OMZ_PLUGINS="* ]]; then
         omz_raw=${oh_line#OMZ_PLUGINS=(}
         omz_raw=${omz_raw%)}
-        omz_raw=${omz_raw//"}
+        omz_raw=${omz_raw//${_SHELL_INVENTORY_DOUBLE_QUOTE}}
         omz_raw=$(_shell_inventory_trim "$omz_raw")
         IFS=' ' read -rA omz_plugins <<< "$omz_raw"
         break
@@ -139,11 +151,11 @@ shell-zsh-inventory() {
     local oh_line plugins_raw
     while IFS= read -r oh_line; do
       [[ -z $oh_line ]] && continue
-      [[ $oh_line == "#"* ]] && continue
+        [[ $oh_line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]] && continue
       if [[ $oh_line == "plugins="* ]]; then
         plugins_raw=${oh_line#plugins=(}
         plugins_raw=${plugins_raw%)}
-        plugins_raw=${plugins_raw//"}
+        plugins_raw=${plugins_raw//${_SHELL_INVENTORY_DOUBLE_QUOTE}}
         plugins_raw=$(_shell_inventory_trim "$plugins_raw")
         IFS=' ' read -rA effective_plugins <<< "$plugins_raw"
         break
@@ -160,15 +172,16 @@ shell-zsh-inventory() {
     local var_line name value
     while IFS= read -r var_line; do
       [[ -z $var_line ]] && continue
-      [[ $var_line == "#"* ]] && continue
-      if [[ $var_line == "export "* ]]; then
-        var_line=${var_line#export }
+      [[ $var_line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]] && continue
+      if [[ $var_line == ${_SHELL_INVENTORY_EXPORT_PREFIX}* ]]; then
+        var_line=${var_line#${_SHELL_INVENTORY_EXPORT_PREFIX}}
         printf '  %s\n' "$var_line"
-      elif [[ ${var_line:0:2} == ": " && $var_line == *":="* ]]; then
-        name=${var_line#": ${"}
-        name=${name%%:=*}
-        value=${var_line#*":="}
-        value=${value%?}
+      elif [[ ${var_line:0:2} == ': ' && $var_line == *${_SHELL_INVENTORY_DEFAULT_DELIM}* ]]; then
+        name=${var_line#${_SHELL_INVENTORY_DEFAULT_PREFIX}}
+        name=${name%%${_SHELL_INVENTORY_DEFAULT_DELIM}*}
+        value=${var_line#*${_SHELL_INVENTORY_DEFAULT_DELIM}}
+        value=${value%${_SHELL_INVENTORY_DEFAULT_SUFFIX}}
+        value=$(_shell_inventory_trim "$value")
         printf '  %s (default) = %s\n' "$name" "$value"
       else
         printf '  %s\n' "$var_line"
@@ -181,9 +194,9 @@ shell-zsh-inventory() {
     local alias_line
     while IFS= read -r alias_line; do
       [[ -z $alias_line ]] && continue
-      [[ $alias_line == "#"* ]] && continue
-      if [[ $alias_line == "alias "* ]]; then
-        alias_line=${alias_line#alias }
+      [[ $alias_line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]] && continue
+      if [[ $alias_line == ${_SHELL_INVENTORY_ALIAS_PREFIX}* ]]; then
+        alias_line=${alias_line#${_SHELL_INVENTORY_ALIAS_PREFIX}}
       fi
       printf '  %s\n' "$alias_line"
     done < "$aliases_file"
@@ -213,8 +226,8 @@ shell-zsh-inventory() {
           [[ -z $func_line ]] && continue
           stripped=$(_shell_inventory_trim "$func_line")
           [[ -z $stripped ]] && continue
-          if [[ $stripped == "function "* ]]; then
-            name=${stripped#function }
+          if [[ $stripped == ${_SHELL_INVENTORY_FUNCTION_KEYWORD}* ]]; then
+            name=${stripped#${_SHELL_INVENTORY_FUNCTION_KEYWORD}}
             name=${name%%(*}
             name=${name%%{*}
             name=${name%% *}
@@ -277,7 +290,7 @@ shell-zsh-inventory() {
       local sup_line
       while IFS= read -r sup_line; do
         [[ -z $sup_line ]] && continue
-        if [[ $sup_line == "#"* ]]; then
+        if [[ $sup_line == ${_SHELL_INVENTORY_COMMENT_PREFIX}* ]]; then
           desc=${sup_line:1}
           desc=$(_shell_inventory_trim "$desc")
           break
