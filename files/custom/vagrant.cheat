@@ -1,5 +1,8 @@
 % vagrant
 
+# vagrant reset sitemanager
+    vagrant destroy sitemanager -f ; vagrant up sitemanager ; vagrant snapshot save sitemanager initial
+
 # vagrant snapshots save sitemanager (Use Ctrl-W)
     vagrant snapshot save  <sitemanager> <snapname> 
 

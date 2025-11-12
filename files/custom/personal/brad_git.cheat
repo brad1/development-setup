@@ -5,3 +5,6 @@
 
 # Show recent work branches commits head
     (cd ~/Projects/sitemanager && for b in $(git reflog | grep 'checkout:' | awk '{print $NF}' | awk '!seen[$0]++' | head -n10); do printf "%-40s %s\n" "$b:" "$(git rev-parse "$b")"; done)
+
+# move untracked files to ~/misc-backups/git-untracked-<timestamp>
+    dest=~/misc-backups/git-untracked-$(date +%Y%m%d-%H%M%S) && mkdir -p "$dest" && git ls-files --others --exclude-standard -z | xargs -0 -I{} mv "{}" "$dest"/

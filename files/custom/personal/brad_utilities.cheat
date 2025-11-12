@@ -84,5 +84,5 @@
 # date-today - print today's date in compact YYYYMMDD format
     date +%Y%m%d
 
-
-
+# quick port scan of network segment
+    set +m; for i in {1..254}; do (timeout 0.5 bash -c "</dev/tcp/192.168.0.$i/22" 2>/dev/null && echo "192.168.0.$i open") & done; wait

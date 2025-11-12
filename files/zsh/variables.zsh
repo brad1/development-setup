@@ -16,7 +16,7 @@ export PATH=~/.local/bin:$PATH # for tmuxp, etc from pip
 export PATH=$HOME/.cargo/bin:$PATH
 
 # Personal files and scratch space
-: ${PERSONAL_DIR:=/var/brad}
+: ${PERSONAL_DIR:=/home/brad/.personal}
 export PERSONAL_DIR
 
 # Location for custom navi cheat sheets
@@ -34,3 +34,5 @@ export SHELL_STATUS_JOBS_ENABLED
 # TODO: refactor to a list file or symlinks (persistance) w/ function to modify
 export ACTIVE_PROJECTS="~/Projects/vmass ~/Projects/_1_builds/vmass-integration-test"
 export ARCHIVE=~/Documents/txt/archive
+
+export RSPEC_SEEDS="38588,54199,7108"
