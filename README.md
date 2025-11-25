@@ -54,3 +54,7 @@ The script installs oh-my-zsh, pulls the recommended plugins (fzf, autosuggestio
 syntax highlighting, and the powerlevel10k theme), and writes a `.zshrc` that
 sources the configuration in `files/zsh/`. Your previous `.zshrc` is backed up
 with a timestamped suffix if it existed.
+
+## Notes on Codex pull requests
+
+See `notes/codex-pr-notes.md` for a summary of the Codex-authored pull requests (#34 and #35) and the areas they touched.
