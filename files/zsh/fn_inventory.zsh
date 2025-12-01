@@ -191,6 +191,149 @@ shell-zsh-inventory-basic() {
     return 3
   fi
 
+  print -- "  Runtime checks:"
+
+  local -i runtime_failures=0 runtime_warnings=0
+  if [[ ${DEVSETUP:-} == "$devsetup" ]]; then
+    print -- "  ✓ DEVSETUP exported"
+  else
+    print -- "  ✗ DEVSETUP not set to expected path ($devsetup)"
+    (( runtime_failures++ ))
+  fi
+
+  if [[ ${INCLUDE:-} == "$include_dir" ]]; then
+    print -- "  ✓ INCLUDE exported"
+  else
+    print -- "  ✗ INCLUDE not set to expected path ($include_dir)"
+    (( runtime_failures++ ))
+  fi
+
+  if (( ${+aliases[ll]} )); then
+    print -- "  ✓ Aliases loaded (ll present)"
+  else
+    print -- "  ✗ Aliases not detected (ll missing)"
+    (( runtime_failures++ ))
+  fi
+
+  local -a expected_paths
+  expected_paths=(
+    "$devsetup/files/bin"
+    "$HOME/.local/bin"
+    "$HOME/.cargo/bin"
+  )
+  local path_entry
+  for path_entry in "${expected_paths[@]}"; do
+    if [[ :$PATH: == *:"$path_entry":* ]]; then
+      if [[ -d $path_entry ]]; then
+        print -- "  ✓ PATH includes $path_entry"
+      else
+        print -- "  ⚠ PATH includes $path_entry but directory missing"
+        (( runtime_warnings++ ))
+      fi
+    else
+      print -- "  ✗ PATH missing $path_entry"
+      (( runtime_failures++ ))
+    fi
+  done
+
+  if (( ${+parameters[HISTFILE]} )); then
+    print -- "  ✓ History variable set: $HISTFILE"
+  else
+    print -- "  ✗ History variable not set (check history.zsh)"
+    (( runtime_failures++ ))
+  fi
+
+  local -i required_opts=0
+  local opt
+  for opt in appendhistory sharehistory incappendhistory; do
+    if setopt | grep -q "^$opt$"; then
+      (( required_opts++ ))
+    fi
+  done
+  if (( required_opts == 3 )); then
+    print -- "  ✓ History options active"
+  else
+    print -- "  ✗ One or more history options missing"
+    (( runtime_warnings++ ))
+  fi
+
+  if (( ${+functions[shell-zsh-inventory-basic]} )); then
+    print -- "  ✓ Functions loaded (inventory available)"
+  else
+    print -- "  ✗ functions.zsh did not register inventory"
+    (( runtime_failures++ ))
+  fi
+
+  local -a declared_functions
+  declared_functions=()
+  local func_file func_line func_name
+  for func_file in "$include_dir"/fn_*.zsh; do
+    [[ -e $func_file ]] || break
+    [[ -r $func_file ]] || continue
+    while IFS= read -r func_line; do
+      [[ -z ${func_line//[[:space:]]/} || $func_line =~ '^[[:space:]]*#' ]] && continue
+      if [[ $func_line =~ '^[[:space:]]*([A-Za-z0-9_-]+)[[:space:]]*\(\)[[:space:]]*\{' ]]; then
+        func_name=${match[1]}
+        declared_functions+=("$func_name")
+      fi
+    done < "$func_file"
+  done
+
+  if (( ${#declared_functions} )); then
+    typeset -aU declared_functions
+    print -- "  Custom functions:"
+    for func_name in "${declared_functions[@]}"; do
+      if (( ${+functions[$func_name]} )); then
+        print -- "    ✓ $func_name"
+      else
+        print -- "    ✗ $func_name (not loaded)"
+        (( runtime_warnings++ ))
+      fi
+    done
+  else
+    print -- "  ⚠ No custom functions detected in $include_dir/fn_*.zsh"
+    (( runtime_warnings++ ))
+  fi
+
+  local personal_dir status_home
+  personal_dir=${PERSONAL_DIR:-}
+  if [[ -n $personal_dir ]]; then
+    if [[ -d $personal_dir ]]; then
+      print -- "  ✓ PERSONAL_DIR present: $personal_dir"
+    else
+      print -- "  ✗ PERSONAL_DIR missing: $personal_dir"
+      (( runtime_warnings++ ))
+    fi
+  else
+    print -- "  ⚠ PERSONAL_DIR not set"
+    (( runtime_warnings++ ))
+  fi
+
+  if [[ -n ${NAVI_CUSTOM_DIR:-} ]]; then
+    if [[ -d $NAVI_CUSTOM_DIR ]]; then
+      print -- "  ✓ NAVI_CUSTOM_DIR present: $NAVI_CUSTOM_DIR"
+    else
+      print -- "  ✗ NAVI_CUSTOM_DIR missing: $NAVI_CUSTOM_DIR"
+      (( runtime_warnings++ ))
+    fi
+  else
+    print -- "  ⚠ NAVI_CUSTOM_DIR not set"
+    (( runtime_warnings++ ))
+  fi
+
+  status_home=${WORK_ZSHRC:-}
+  if [[ -n $status_home ]]; then
+    if [[ -f $status_home ]]; then
+      print -- "  ✓ WORK_ZSHRC present: $status_home"
+    else
+      print -- "  ⚠ WORK_ZSHRC points to missing file: $status_home"
+      (( runtime_warnings++ ))
+    fi
+  else
+    print -- "  ⚠ WORK_ZSHRC not set"
+    (( runtime_warnings++ ))
+  fi
+
   local -i exit_code=0
   if (( unreadable_primary )); then
     print -u2 -- "${unreadable_primary} primary file(s) unreadable; check permissions"
@@ -203,6 +346,13 @@ shell-zsh-inventory-basic() {
   if (( missing_plugins )); then
     print -u2 -- "missing ${missing_plugins} plugin directory(ies); check ZSH path"
     exit_code=6
+  fi
+  if (( runtime_failures )); then
+    print -u2 -- "runtime check failures: ${runtime_failures}"
+    (( exit_code == 0 )) && exit_code=7
+  fi
+  if (( runtime_warnings )); then
+    print -u2 -- "runtime warnings: ${runtime_warnings}"
   fi
 
   return $exit_code
