@@ -15,6 +15,15 @@ export ZSH=$HOME/.oh-my-zsh
 
 source $INCLUDE/oh-my-zsh.zsh
 
+zsh-validate() {
+  ZSH_VALIDATE_RUNNING=1 \
+  ZDOTDIR=/nonexistent \
+  command zsh -f -c "$DEVSETUP/tools/zsh-validate.sh" "$@"
+}
+
+# test sources.zsh up front
+zsh-validate
+
 # Include this instead when using .oh-my-zsh/custom
 source $INCLUDE/sources.zsh
 

@@ -8,6 +8,13 @@ export SAVEHIST=100000
 
 # path to this repository
 : ${DEVSETUP:=/opt/chef/cookbooks/development-setup}
+# Alternatively:
+# : ${DEVSETUP:=${${(%):-%x}:a:h:h:h}}
+#
+# ${(%):-%x} is a zsh parameter expansion that yields the path of the current sourced file (analogous to a “current script path”).
+# :a turns that path into an absolute path.
+# :h repeatedly takes the directory (head) of the path. With :h:h:h, it goes up three levels.
+#
 export DEVSETUP
 : ${INCLUDE:=$DEVSETUP/files/zsh}
 export INCLUDE
@@ -16,7 +23,7 @@ export PATH=~/.local/bin:$PATH # for tmuxp, etc from pip
 export PATH=$HOME/.cargo/bin:$PATH
 
 # Personal files and scratch space
-: ${PERSONAL_DIR:=/home/brad/.personal}
+: ${PERSONAL_DIR:=$HOME/.personal}
 export PERSONAL_DIR
 
 # Location for custom navi cheat sheets
