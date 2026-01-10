@@ -7,6 +7,7 @@ source $INCLUDE/variables.zsh
 # keep: user prefers sourcing the aggregate functions.zsh file
 source $INCLUDE/functions.zsh
 source $INCLUDE/history.zsh
+source $INCLUDE/background-jobs.zsh
 # source $INCLUDE/moveme.zsh # left over from before
 # source $INCLUDE/numpad.zsh
 
