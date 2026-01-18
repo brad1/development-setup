@@ -7,7 +7,7 @@ placeholder-job-run-command() {
 
   echo "$cmd_text"
   if (( $# )); then
-    "$@"
+    "$@" &!
   else
     eval "$cmd_text"
   fi
