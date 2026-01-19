@@ -59,6 +59,8 @@ if ! [ -z "$CHF" ] ;  then
 fi
 
 
+
+
 #TODO
 #clear
 
@@ -87,3 +89,6 @@ fi
 # shows apple logo and some stats
 
 # end Splash page!!! ############
+# shell-status (commented out bc running in foreground)
+# SHELL_STATUS_JOBS_ENABLED=1 # intended for fn_jobs.sh
+shell-status

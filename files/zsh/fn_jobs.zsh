@@ -92,8 +92,31 @@ placeholder-jobs-run() {
       ) &
       pids+=($!)
     else
-      echo "Recent output for shell-status job '${job}' (completed within 12h):"
-      placeholder-job-run-command "cat '$log_path'" cat "$log_path"
+      #added undesired output count=5 etc cause unknown
+      #local count limit shown
+      count=$(wc -l < "$log_path")
+      if [[ $(basename "$log_path") == "vagrant-global-status-prune.log" ]]; then
+        limit=15
+      else
+        limit=6
+      fi
+      shown=$count
+      if (( shown > limit )); then
+        shown=$limit
+      fi
+      echo "${job} (recent output, showing ${shown} of ${count})"
+      #echo "  Total entries: ${count}"
+      if [[ $(basename "$log_path") == "vagrant-global-status-prune.log" ]]; then
+        echo "  Truncated (first 15 entries):"
+        awk '/^The above shows information about all known Vagrant environments/{exit} {print}' "$log_path" \
+          | head -n 15 \
+          | sed 's/^[ *]*//' \
+          | sed 's/^/  /'
+      else
+        #echo "  Truncated (first 3 entries):"
+        head -n ${shown} "$log_path" | sed 's/^[ *]*//' | sed 's/^/  /'
+      fi
+      echo
     fi
   done
 

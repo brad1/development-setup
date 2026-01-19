@@ -2,3 +2,6 @@
 
 # Checkout all the files that are deleted locally 
     git checkout $(git ls-files --deleted)
+
+# Jump between git worktrees
+    cd "$(git -C ~/Projects/sitemanager worktree list | fzf | awk '{print $1}')"

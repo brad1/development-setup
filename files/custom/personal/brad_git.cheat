@@ -8,3 +8,6 @@
 
 # move untracked files to ~/misc-backups/git-untracked-<timestamp>
     dest=~/misc-backups/git-untracked-$(date +%Y%m%d-%H%M%S) && mkdir -p "$dest" && git ls-files --others --exclude-standard -z | xargs -0 -I{} mv "{}" "$dest"/
+
+# partial cherry-pick 
+    git show 69407e56bfc13aaaa4e2683f16901091088492e6 -- vipsched/ruby/ | git apply

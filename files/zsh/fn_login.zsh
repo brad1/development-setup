@@ -176,14 +176,15 @@ shell-status-jobs-summary() {
       local count=$(wc -l < "$log")
       local name=$(basename "$log")
       echo "---- ${name} (${count} lines) ----"
-      case "$name" in
-        grep-crawl.log)
-          head -n 20 "$log"
-          ;;
-        *)
-          head "$log"
-          ;;
-      esac
+      if [[ "$name" == "vagrant-global-status-prune.log" ]]; then
+        echo "Total entries: ${count}"
+        echo "Truncated (first 15 entries):"
+        head -n 15 "$log" | sed 's/^[ *]*//'
+      else
+        echo "Total entries: ${count}"
+        echo "Truncated (first 3 entries):"
+        head -n 3 "$log" | sed 's/^[ *]*//'
+      fi
       echo
     fi
   done
