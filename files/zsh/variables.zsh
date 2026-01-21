@@ -43,3 +43,5 @@ export ACTIVE_PROJECTS="~/Projects/vmass ~/Projects/_1_builds/vmass-integration-
 export ARCHIVE=~/Documents/txt/archive
 
 export RSPEC_SEEDS="38588,54199,7108"
+
+export FZF_CTRL_T_COMMAND='fd --type f --hidden --exclude vendor --exclude venv --exclude server_env'
