@@ -1,0 +1,40 @@
+name: ReactDashboard CI
+
+on:
+  push:
+    paths:
+      - 'ReactDashboard/**'
+      - '.devcontainer/devcontainer.json'
+      - '.github/workflows/reactdashboard-ci.yml'
+  pull_request:
+    paths:
+      - 'ReactDashboard/**'
+      - '.devcontainer/devcontainer.json'
+      - '.github/workflows/reactdashboard-ci.yml'
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ReactDashboard
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: ReactDashboard/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
