@@ -1,0 +1,5 @@
+{
+  "name": "development-setup",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
+  "postCreateCommand": "cd ReactDashboard && if [ -f package-lock.json ]; then npm ci; else npm install --package-lock-only && npm ci; fi"
+}
