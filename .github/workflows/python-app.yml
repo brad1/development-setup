@@ -6,8 +6,16 @@ name: Python application
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - 'ReactDashboard/**'
+      - '.devcontainer/devcontainer.json'
+      - '.github/workflows/reactdashboard-ci.yml'
   pull_request:
     branches: [ "master" ]
+    paths-ignore:
+      - 'ReactDashboard/**'
+      - '.devcontainer/devcontainer.json'
+      - '.github/workflows/reactdashboard-ci.yml'
 
 permissions:
   contents: read
