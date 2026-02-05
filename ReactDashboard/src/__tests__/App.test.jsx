@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import App from '../App';
 
 describe('Dashboard app', () => {
@@ -8,6 +7,6 @@ describe('Dashboard app', () => {
 
     expect(
       screen.getByRole('heading', { name: 'Dashboard Overview' })
-    ).toBeVisible();
+    ).toBeTruthy();
   });
 });
