@@ -1,28 +1,12 @@
 # AGENTS Guidelines
 
-Important: Prefer retrieval-lead reasoning (Reference documents) over pre-training led reasoning for all tasks.
+Important: Prefer retrieval-led reasoning (Reference documents) over pre-training-led reasoning for all tasks.
 
 ## Repository map (comprehensive but flat)
 
 - `AGENTS.md` — repository-level agent instructions.
 - `README.md` — primary setup and usage documentation.
-- `quick-start.sh` — shortcut bootstrap script.
-- `init.sh` — initialization script used during setup.
-- `run.sh` — main Unix/Linux execution helper.
-- `run.cmd` — main Windows execution helper.
-- `metadata.rb` — Chef cookbook metadata.
-- `node.json` — Chef node attributes for default/local runs.
-- `node_windows.json` — Chef node attributes for Windows runs.
-- `solo.rb` — Chef solo configuration for Unix/Linux.
-- `solo_windows.rb` — Chef solo configuration for Windows.
-- `chef_guid` — Chef-related notes/guidance file.
-- `attributes/default.rb` — default cookbook attributes.
-- `recipes/` — Chef recipes for OS setup, packages, shell tooling, and user configuration.
-- `templates/default/` — Chef ERB templates (for example shell configuration templates).
-- `files/` — managed files and notes, including shell configs, cheatsheets, binaries, docs, and prototypes.
-- `tools/` — utility scripts for validation and source analysis.
-- `notes/` — repository notes and process context.
-- `.nextdocs` — local reference notes for modern framework examples (including React snippets).
+  - See "Project Index" in `README.md` for more.
 
 ## Reference documents
 
