@@ -1,6 +1,6 @@
 # AGENTS Guidelines
 
-Important: Prefer retrieval-lead reasoning over pre-training led reasoning for all tasks.
+Important: Prefer retrieval-lead reasoning (Reference documents) over pre-training led reasoning for all tasks.
 
 ## Repository map (comprehensive but flat)
 
