@@ -2,15 +2,7 @@ name: ReactDashboard CI
 
 on:
   push:
-    paths:
-      - 'ReactDashboard/**'
-      - '.devcontainer/devcontainer.json'
-      - '.github/workflows/reactdashboard-ci.yml'
   pull_request:
-    paths:
-      - 'ReactDashboard/**'
-      - '.devcontainer/devcontainer.json'
-      - '.github/workflows/reactdashboard-ci.yml'
 
 jobs:
   test-and-build:
@@ -27,12 +19,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Ensure lockfile exists
-        run: |
-          if [ ! -f package-lock.json ]; then
-            npm install --package-lock-only
-          fi
+          cache: 'npm'
+          cache-dependency-path: ReactDashboard/package-lock.json
 
       - name: Install dependencies
         run: npm ci
