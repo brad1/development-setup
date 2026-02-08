@@ -57,12 +57,11 @@ with a timestamped suffix if it existed.
 
 ## Flask dashboard backend
 
-`flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets` and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies.
+`flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets` and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies. Ignore the repository-local virtual environment with `.gitignore` so you can keep a per-machine copy without making commits.
 
 ## Local automation workflow
 
-To mirror `.github/workflows/reactdashboard-ci.yml`, run this sequence inside
-`ReactDashboard/` on a machine with npm registry access:
+To mirror `.github/workflows/reactdashboard-ci.yml`, run the same sequence used in CI from inside `ReactDashboard/`:
 
 ```
 cd ReactDashboard
@@ -71,15 +70,9 @@ npm test
 npm run build
 ```
 
-`npm ci` installs dependencies from `package-lock.json`, then `npm test` and
-`npm run build` exercise the same scripts as the CI job. If the registry is
-unreachable (DNS or proxy restrictions), install a mirror or open access before
-rerunning the commands; the job cannot complete without registry access.
+`npm ci` installs the dependencies listed in `package-lock.json`, `npm test` executes the `vitest` suite, and `npm run build` performs the production Vite build. These are the same commands that run on GitHub Actions, so their success signals the automation should pass locally as well. The job requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise the install and build steps will fail with network errors.
 
-After the dependencies are installed you can run the React dev server (`npm run
-dev`) and use `VITE_API_URL` (default `http://localhost:5000`) to keep the front
-end pointed at the local backend (set the variable via the environment or
-`ReactDashboard/.env.local`).
+Once the install step has run successfully you can run the React dev server (`npm run dev`) and point it at the local Flask backend by setting `VITE_API_URL` (default `http://localhost:5000`) in your shell or in `ReactDashboard/.env.local`. The front end also reads `/runtime-config.json` from `ReactDashboard/public/` for optional knobs, so keep that file in sync between environments.
 
 ## Notes on Codex pull requests
 

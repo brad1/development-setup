@@ -1,0 +1,5 @@
+{
+  "runtimeMessage": "Runtime config loaded",
+  "highlightKnob": true,
+  "popoverText": "Change this, content on page updates on refresh"
+}

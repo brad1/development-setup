@@ -8,6 +8,7 @@ WIDGETS = [
     {"id": 1, "title": "Active Users", "value": 1825, "trend": "+4%"},
     {"id": 2, "title": "Queued Jobs", "value": 48, "trend": "-2%"},
     {"id": 3, "title": "Errors", "value": 3, "trend": "stable"},
+    {"id": 4, "title": "Test::Convention", "value": 1, "trend": "added double colons to trigger a pattern match"},
 ]
 
 @app.route("/api/widgets")

@@ -1,0 +1,3 @@
+# While running 'npm run dev'
+# Causes the page to refresh, renders a new box under 'Build-time discovery'
+touch src/mydashFILENAME.txt
