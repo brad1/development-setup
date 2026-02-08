@@ -59,7 +59,27 @@ with a timestamped suffix if it existed.
 
 `flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets` and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies.
 
-See `docs/local-automation.md` for the sequence of commands that mirror `.github/workflows/reactdashboard-ci.yml` locally.
+## Local automation workflow
+
+To mirror `.github/workflows/reactdashboard-ci.yml`, run this sequence inside
+`ReactDashboard/` on a machine with npm registry access:
+
+```
+cd ReactDashboard
+npm ci
+npm test
+npm run build
+```
+
+`npm ci` installs dependencies from `package-lock.json`, then `npm test` and
+`npm run build` exercise the same scripts as the CI job. If the registry is
+unreachable (DNS or proxy restrictions), install a mirror or open access before
+rerunning the commands; the job cannot complete without registry access.
+
+After the dependencies are installed you can run the React dev server (`npm run
+dev`) and use `VITE_API_URL` (default `http://localhost:5000`) to keep the front
+end pointed at the local backend (set the variable via the environment or
+`ReactDashboard/.env.local`).
 
 ## Notes on Codex pull requests
 
