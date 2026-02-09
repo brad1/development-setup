@@ -18,4 +18,4 @@ pip install -r requirements.txt
 FLASK_APP=app flask run --port 5000
 ```
 
-The backend serves `GET /api/widgets` and `GET /health`, so the frontend can fetch `/api/widgets` (or proxy via React dev server) for panel data.
+The backend serves `GET /api/widgets`, `GET /api/runtime-config`, `GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`. The React frontend currently consumes `GET /api/widgets`, and the other endpoints are a draft to support the runtime config and telemetry table if you wire them up later.

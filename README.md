@@ -57,7 +57,7 @@ with a timestamped suffix if it existed.
 
 ## Flask dashboard backend
 
-`flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets` and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies. Ignore the repository-local virtual environment with `.gitignore` so you can keep a per-machine copy without making commits.
+`flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets`, `GET /api/runtime-config`, `GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies. Ignore the repository-local virtual environment with `.gitignore` so you can keep a per-machine copy without making commits.
 
 ## Local automation workflow
 

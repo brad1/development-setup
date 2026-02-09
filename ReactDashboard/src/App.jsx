@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
-const TABLE_URL = new URL('./table.csv', import.meta.url);
+const TABLE_URL = `${API_URL}/api/telemetry.csv`;
 
 const STATUS_COLORS = {
   ok: '#1f7a3e',
@@ -801,7 +801,7 @@ function TableWatcher() {
       try {
         const response = await fetch(TABLE_URL, { cache: 'no-store' });
         if (!response.ok) {
-          throw new Error('failed to load table.csv');
+          throw new Error('failed to load telemetry.csv');
         }
         const text = await response.text();
         if (!active) return;
@@ -829,7 +829,7 @@ function TableWatcher() {
   return (
     <div style={{ marginTop: '0.5rem' }}>
       <p style={{ marginTop: '0.35rem', color: '#64748b' }}>
-        Watching <code>src/table.csv</code> for updates.
+        Watching <code>/api/telemetry.csv</code> for updates.
         {lastUpdated && (
           <>
             {' '}
@@ -888,7 +888,7 @@ function KnobPanel({ widgets }) {
   useEffect(() => {
     let alive = true;
 
-    fetch('/runtime-config.json')
+    fetch(`${API_URL}/api/runtime-config`)
       .then((response) => {
         if (!response.ok) throw new Error('runtime config not reachable');
         return response.json();
