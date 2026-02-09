@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+const TABLE_URL = new URL('./table.csv', import.meta.url);
 
 export default function App() {
   const [widgets, setWidgets] = useState([]);
@@ -31,11 +32,122 @@ export default function App() {
         </ul>
       </section>
       <section>
+        <TableWatcher />
+      </section>
+      <section>
         {/* controllable, low-stakes variation points */}
         <KnobPanel widgets={widgets} />
         {/* end of knobs */}
       </section>
     </main>
+  );
+}
+
+function parseCsv(text) {
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length === 0) {
+    return { headers: [], rows: [] };
+  }
+
+  const cells = lines.map((line) => line.split(',').map((cell) => cell.trim()));
+  const headers = cells[0];
+  const rows = cells.slice(1).map((row) => headers.map((_, index) => row[index] ?? ''));
+
+  return { headers, rows };
+}
+
+function TableWatcher() {
+  const [tableData, setTableData] = useState({ headers: [], rows: [] });
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    let previousContent = null;
+
+    const fetchTable = async () => {
+      try {
+        const response = await fetch(TABLE_URL, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('failed to load table.csv');
+        }
+        const text = await response.text();
+        if (!active) return;
+        if (text !== previousContent) {
+          previousContent = text;
+          setTableData(parseCsv(text));
+          setLastUpdated(new Date());
+        }
+      } catch (err) {
+        if (active) {
+          setError(err);
+        }
+      }
+    };
+
+    fetchTable();
+    const intervalId = setInterval(fetchTable, 4000);
+
+    return () => {
+      active = false;
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  return (
+    <div style={{ marginTop: '2rem' }}>
+      <h2>Live CSV Table</h2>
+      <p style={{ marginTop: '0.35rem', color: '#555' }}>
+        Watching <code>src/table.csv</code> for updates.
+        {lastUpdated && (
+          <>
+            {' '}
+            Last updated: <strong>{lastUpdated.toLocaleTimeString()}</strong>.
+          </>
+        )}
+      </p>
+      {error && <p style={{ color: 'crimson' }}>{error.message}</p>}
+      {tableData.headers.length === 0 ? (
+        <p style={{ fontStyle: 'italic' }}>No rows found yet.</p>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '0.75rem' }}>
+            <thead>
+              <tr>
+                {tableData.headers.map((header) => (
+                  <th
+                    key={header}
+                    style={{
+                      textAlign: 'left',
+                      borderBottom: '2px solid #ccc',
+                      padding: '0.5rem',
+                      background: '#f7f7f7',
+                    }}
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.rows.map((row, rowIndex) => (
+                <tr key={row.join('-') || rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <td key={`${cell}-${cellIndex}`} style={{ padding: '0.45rem 0.5rem', borderBottom: '1px solid #eee' }}>
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 }
 
