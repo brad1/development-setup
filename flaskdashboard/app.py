@@ -12,7 +12,7 @@ from flask import Flask, Response, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, expose_headers=["X-Telemetry-Placeholder"])
 
 WIDGETS = [
     {"id": 1, "title": "Ingress::Active Users", "value": 1825, "trend": "+4%"},
@@ -140,12 +140,15 @@ def telemetry_csv():
 def telemetry_prometheus_csv():
     try:
         csv_text = _prometheus_query_range_csv()
+        used_fallback = False
     except Exception as exc:
         app.logger.error("telemetry.csv fallback: %s", exc)
         csv_text = FALLBACK_CSV
+        used_fallback = True
 
     response = Response(csv_text, mimetype="text/csv")
     response.headers["Content-Disposition"] = 'attachment; filename="telemetry.csv"'
+    response.headers["X-Telemetry-Placeholder"] = "true" if used_fallback else "false"
     return response
 
 @app.route("/health")

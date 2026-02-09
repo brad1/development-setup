@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
-const TABLE_URL = `${API_URL}/api/telemetry.csv`;
+const TABLE_URL = `${API_URL}/telemetry.csv`;
 
 const STATUS_COLORS = {
   ok: '#1f7a3e',
@@ -44,6 +44,12 @@ const formatUptime = (seconds) => {
 
 const buildHistory = (count, base, variance) =>
   Array.from({ length: count }, () => clamp(base + (Math.random() - 0.5) * variance, 0, 100));
+
+const FALLBACK_WIDGETS = [
+  { id: 'fallback-1', title: 'Ingress::Active Users', value: 1825, trend: '+4%' },
+  { id: 'fallback-2', title: 'Queues::Queued Jobs', value: 48, trend: '-2%' },
+  { id: 'fallback-3', title: 'Errors::Pager Triggers', value: 3, trend: 'stable' },
+];
 
 const makeInitialMetrics = () => ({
   timestamp: new Date(),
@@ -232,6 +238,8 @@ function useSimulatedMetrics() {
 export default function App() {
   const [widgets, setWidgets] = useState([]);
   const [error, setError] = useState(null);
+  const [backendFallback, setBackendFallback] = useState(false);
+  const [telemetryFallback, setTelemetryFallback] = useState(false);
   const { metrics, alertCounts } = useSimulatedMetrics();
 
   useEffect(() => {
@@ -240,8 +248,15 @@ export default function App() {
         if (!response.ok) throw new Error('failed to load widgets');
         return response.json();
       })
-      .then((data) => setWidgets(data.widgets ?? []))
-      .catch(setError);
+      .then((data) => {
+        setWidgets(data.widgets ?? []);
+        setBackendFallback(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setWidgets(FALLBACK_WIDGETS);
+        setBackendFallback(true);
+      });
   }, []);
 
   return (
@@ -254,6 +269,38 @@ export default function App() {
         padding: '2.5rem clamp(1.5rem, 4vw, 3.5rem)',
       }}
     >
+      {(backendFallback || telemetryFallback) && (
+        <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
+          {backendFallback && (
+            <div
+              style={{
+                background: '#fee2e2',
+                color: '#991b1b',
+                border: '1px solid #fecaca',
+                padding: '0.85rem 1rem',
+                borderRadius: '0.75rem',
+                fontWeight: 600,
+              }}
+            >
+              Backend unreachable. Showing placeholder widget data.
+            </div>
+          )}
+          {telemetryFallback && (
+            <div
+              style={{
+                background: '#ffedd5',
+                color: '#9a3412',
+                border: '1px solid #fed7aa',
+                padding: '0.85rem 1rem',
+                borderRadius: '0.75rem',
+                fontWeight: 600,
+              }}
+            >
+              Prometheus unreachable. Showing placeholder telemetry data.
+            </div>
+          )}
+        </div>
+      )}
       <Header metrics={metrics} />
 
       <Section title="System posture" subtitle="Live snapshot · simulated data for UI layout">
@@ -514,7 +561,7 @@ export default function App() {
       </Section>
 
       <Section title="Telemetry table" subtitle="CSV monitoring preview">
-        <TableWatcher />
+        <TableWatcher onTelemetryPlaceholderChange={setTelemetryFallback} onBackendDown={setBackendFallback} />
       </Section>
 
       <Section title="Knobs & runtime configuration" subtitle="Build-time discovery and runtime flags">
@@ -788,7 +835,7 @@ function parseCsv(text) {
   return { headers, rows };
 }
 
-function TableWatcher() {
+function TableWatcher({ onTelemetryPlaceholderChange, onBackendDown }) {
   const [tableData, setTableData] = useState({ headers: [], rows: [] });
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -803,6 +850,13 @@ function TableWatcher() {
         if (!response.ok) {
           throw new Error('failed to load telemetry.csv');
         }
+        if (onTelemetryPlaceholderChange) {
+          const usedFallback = response.headers.get('x-telemetry-placeholder') === 'true';
+          onTelemetryPlaceholderChange(usedFallback);
+        }
+        if (onBackendDown) {
+          onBackendDown(false);
+        }
         const text = await response.text();
         if (!active) return;
         if (text !== previousContent) {
@@ -813,6 +867,12 @@ function TableWatcher() {
       } catch (err) {
         if (active) {
           setError(err);
+          if (onBackendDown) {
+            onBackendDown(true);
+          }
+          if (onTelemetryPlaceholderChange) {
+            onTelemetryPlaceholderChange(false);
+          }
         }
       }
     };
