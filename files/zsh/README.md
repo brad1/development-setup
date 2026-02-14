@@ -23,6 +23,13 @@ standard `grep` implementation if `rg` is not installed.
 
 The recipe `recipes/zsh.rb` installs oh-my-zsh and links `~/.zshrc` to this configuration.
 
+## Startup Background Jobs
+The startup background jobs loader lives in `background-jobs.zsh` and runs for interactive shells.
+
+- Default path: existing `background-jobs-*` functions and startup guard `DEVSETUP_BACKGROUND_JOBS_STARTED`.
+- Alternate path: set `CODEX_53_JOBS=true` before opening zsh to use `codex-53-background-jobs-*`.
+- Debug logs: alternate mode prints step-by-step logs to the terminal and appends them to `~/.personal/login-splash-jobs/codex-53-background-jobs-debug.log` (or `$PERSONAL_DIR/login-splash-jobs/codex-53-background-jobs-debug.log`).
+
 ## Design notes
 The helper files remain plain `.zsh` modules instead of oh-my-zsh custom plugins.
 This keeps the setup usable even when oh-my-zsh is not installed and avoids extra

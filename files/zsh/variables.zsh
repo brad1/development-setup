@@ -38,6 +38,10 @@ export TMPDIR=/tmp
 : ${SHELL_STATUS_JOBS_ENABLED:=0}
 export SHELL_STATUS_JOBS_ENABLED
 
+# Optional: enable alternate startup background jobs with detailed debug logs.
+# Set CODEX_53_JOBS=true before sourcing zsh startup files.
+# export CODEX_53_JOBS=true
+
 # TODO: refactor to a list file or symlinks (persistance) w/ function to modify
 export ACTIVE_PROJECTS="~/Projects/vmass ~/Projects/_1_builds/vmass-integration-test"
 export ARCHIVE=~/Documents/txt/archive
