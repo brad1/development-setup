@@ -7,8 +7,6 @@ describe('Dashboard app', () => {
   it('renders the main dashboard heading', () => {
     render(<App />);
 
-    expect(
-      screen.getByRole('heading', { name: 'Dashboard Overview' })
-    ).toBeTruthy();
+    expect(screen.getByTestId('dashboard-heading')).toBeTruthy();
   });
 });

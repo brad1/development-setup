@@ -269,40 +269,60 @@ export default function App() {
         padding: '2.5rem clamp(1.5rem, 4vw, 3.5rem)',
       }}
     >
-      {(backendFallback || telemetryFallback) && (
-        <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          {backendFallback && (
-            <div
-              style={{
-                background: '#fee2e2',
-                color: '#991b1b',
-                border: '1px solid #fecaca',
-                padding: '0.85rem 1rem',
-                borderRadius: '0.75rem',
-                fontWeight: 600,
-              }}
-            >
-              Backend unreachable. Showing placeholder widget data.
-            </div>
-          )}
-          {telemetryFallback && (
-            <div
-              style={{
-                background: '#ffedd5',
-                color: '#9a3412',
-                border: '1px solid #fed7aa',
-                padding: '0.85rem 1rem',
-                borderRadius: '0.75rem',
-                fontWeight: 600,
-              }}
-            >
-              Prometheus unreachable. Showing placeholder telemetry data.
-            </div>
-          )}
+      <PlaceholderBanner backendFallback={backendFallback} telemetryFallback={telemetryFallback} />
+      <Header metrics={metrics} />
+      <MetricsSections metrics={metrics} alertCounts={alertCounts} />
+      <WidgetsSection widgets={widgets} error={error} />
+      <TelemetrySection onTelemetryPlaceholderChange={setTelemetryFallback} onBackendDown={setBackendFallback} />
+      <Section title="Knobs & runtime configuration" subtitle="Build-time discovery and runtime flags">
+        <KnobPanel widgets={widgets} />
+      </Section>
+    </main>
+  );
+}
+ 
+function PlaceholderBanner({ backendFallback, telemetryFallback }) {
+  if (!backendFallback && !telemetryFallback) {
+    return null;
+  }
+
+  return (
+    <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
+      {backendFallback && (
+        <div
+          style={{
+            background: '#fee2e2',
+            color: '#991b1b',
+            border: '1px solid #fecaca',
+            padding: '0.85rem 1rem',
+            borderRadius: '0.75rem',
+            fontWeight: 600,
+          }}
+        >
+          Backend unreachable. Showing placeholder widget data.
         </div>
       )}
-      <Header metrics={metrics} />
+      {telemetryFallback && (
+        <div
+          style={{
+            background: '#ffedd5',
+            color: '#9a3412',
+            border: '1px solid #fed7aa',
+            padding: '0.85rem 1rem',
+            borderRadius: '0.75rem',
+            fontWeight: 600,
+          }}
+        >
+          Prometheus unreachable. Showing placeholder telemetry data.
+        </div>
+      )}
+    </div>
+  );
+}
 
+function MetricsSections({ metrics, alertCounts }) {
+  return (
+    <>
       <Section title="System posture" subtitle="Live snapshot · simulated data for UI layout">
         <div
           style={{
@@ -545,29 +565,33 @@ export default function App() {
           </div>
         </div>
       </Section>
+    </>
+  );
+}
 
-      <Section title="Service widgets" subtitle="Data from the backend widget API">
-        {error && <p style={{ color: 'crimson' }}>{error.message}</p>}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-          {widgets.length === 0 && !error && <p>Loading widgets...</p>}
-          {widgets.map((widget) => (
-            <Panel key={widget.id}>
-              <h4 style={{ marginTop: 0 }}>{widget.title}</h4>
-              <p style={{ margin: '0.35rem 0', fontSize: '1.5rem', fontWeight: 600 }}>{widget.value}</p>
-              <p style={{ margin: 0, color: '#64748b' }}>{widget.trend}</p>
-            </Panel>
-          ))}
-        </div>
-      </Section>
+function WidgetsSection({ widgets, error }) {
+  return (
+    <Section title="Service widgets" subtitle="Data from the backend widget API">
+      {error && <p style={{ color: 'crimson' }}>{error.message}</p>}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+        {widgets.length === 0 && !error && <p>Loading widgets...</p>}
+        {widgets.map((widget) => (
+          <Panel key={widget.id}>
+            <h4 style={{ marginTop: 0 }}>{widget.title}</h4>
+            <p style={{ margin: '0.35rem 0', fontSize: '1.5rem', fontWeight: 600 }}>{widget.value}</p>
+            <p style={{ margin: 0, color: '#64748b' }}>{widget.trend}</p>
+          </Panel>
+        ))}
+      </div>
+    </Section>
+  );
+}
 
-      <Section title="Telemetry table" subtitle="CSV monitoring preview">
-        <TableWatcher onTelemetryPlaceholderChange={setTelemetryFallback} onBackendDown={setBackendFallback} />
-      </Section>
-
-      <Section title="Knobs & runtime configuration" subtitle="Build-time discovery and runtime flags">
-        <KnobPanel widgets={widgets} />
-      </Section>
-    </main>
+function TelemetrySection({ onTelemetryPlaceholderChange, onBackendDown }) {
+  return (
+    <Section title="Telemetry table" subtitle="CSV monitoring preview">
+      <TableWatcher onTelemetryPlaceholderChange={onTelemetryPlaceholderChange} onBackendDown={onBackendDown} />
+    </Section>
   );
 }
 
@@ -587,7 +611,9 @@ function Header({ metrics }) {
         <p style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.18em', fontSize: '0.7rem', color: '#64748b' }}>
           Host resource monitor
         </p>
-        <h1 style={{ margin: '0.35rem 0' }}>Nebula OS Control Deck</h1>
+        <h1 data-testid="dashboard-heading" style={{ margin: '0.35rem 0' }}>
+          Nebula OS Control Deck
+        </h1>
         <p style={{ margin: 0, color: '#64748b' }}>
           {metrics.host.name} · {metrics.host.os} · Kernel {metrics.host.kernel} · Uptime {formatUptime(metrics.uptimeSeconds)}
         </p>
