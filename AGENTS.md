@@ -2,6 +2,9 @@
 
 Important: Prefer retrieval-led reasoning (Reference documents) over pre-training-led reasoning for all tasks.
 
+## Current goal:
+see pytorch/goals.md
+
 ## Repository map (comprehensive but flat)
 
 - `AGENTS.md` — repository-level agent instructions.
