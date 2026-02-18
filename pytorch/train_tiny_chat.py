@@ -38,9 +38,11 @@ class BigramLanguageModel(nn.Module):
             loss = F.cross_entropy(logits.view(b * t, c), targets.view(b * t))
         return logits, loss
 
-    @torch.no_grad()
+
+    @torch.no_grad() # agent: explain this line
     def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
         for _ in range(max_new_tokens):
+            # agent: extract function
             logits, _ = self(idx)
             next_token_logits = logits[:, -1, :]
             probs = F.softmax(next_token_logits, dim=-1)
@@ -59,7 +61,7 @@ def build_vocab(text: str):
     chars = sorted(set(text))
     stoi = {ch: i for i, ch in enumerate(chars)}
     itos = {i: ch for i, ch in enumerate(chars)}
-    return stoi, itos
+    return stoi, itos # agent: explain acronym
 
 
 def encode(text: str, stoi: dict[str, int]) -> torch.Tensor:
@@ -70,6 +72,7 @@ def decode(tokens: torch.Tensor, itos: dict[int, str]) -> str:
     return "".join(itos[int(i)] for i in tokens)
 
 
+# agent: better name, get batch of what?
 def get_batch(data: torch.Tensor, batch_size: int, block_size: int, device: torch.device):
     ix = torch.randint(len(data) - block_size - 1, (batch_size,))
     x = torch.stack([data[i : i + block_size] for i in ix]).to(device)
@@ -78,6 +81,7 @@ def get_batch(data: torch.Tensor, batch_size: int, block_size: int, device: torc
 
 
 def train(args):
+    # agent: extract function select device
     torch.manual_seed(args.seed)
     if args.device == "cuda":
         device = torch.device("cuda")
@@ -86,6 +90,7 @@ def train(args):
     else:
         device = torch.device("cpu")
 
+    # agent: extract function, populate context object
     text = load_text(args.data)
     stoi, itos = build_vocab(text)
     data = encode(text, stoi)
@@ -94,6 +99,7 @@ def train(args):
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
     for step in range(args.steps):
+        # agent: extract function
         xb, yb = get_batch(data, args.batch_size, args.block_size, device)
         _, loss = model(xb, yb)
         optimizer.zero_grad(set_to_none=True)
@@ -102,6 +108,7 @@ def train(args):
         if step % args.log_every == 0 or step == args.steps - 1:
             print(f"step {step:4d} | loss {loss.item():.4f}")
 
+    # agent: explain better
     prompt = args.prompt
     if not prompt:
         prompt = "User: hi\nAssistant:"
@@ -112,6 +119,7 @@ def train(args):
 
 
 def parse_args():
+    # agent: extract a couple functions, arrange by category
     parser = argparse.ArgumentParser(description="Train the smallest possible chat-like model in PyTorch.")
     parser.add_argument("--data", type=Path, default=None, help="Optional path to training text.")
     parser.add_argument("--steps", type=int, default=500)
