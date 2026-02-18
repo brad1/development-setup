@@ -19,3 +19,4 @@ ReactDashboard/node_modules/
 ReactDashboard/dist/
 flaskdashboard/.venv/
 __pycache__
+pytorch/.venv
