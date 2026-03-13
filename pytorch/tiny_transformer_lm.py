@@ -2,6 +2,19 @@
 # Smallest educational example:
 # Embedding → TransformerEncoderLayer → Linear → next-token prediction
 
+
+# See: 'The lm_head is the bridge from "hidden state" to "vocabulary". '
+# 
+# Details:
+#
+# If you remove the nn.Linear head, 
+# the transformer outputs vectors of size d_model instead of vocab_size, 
+# so you no longer have logits over the vocabulary and cannot compute next-token probabilities with cross-entropy.
+#
+# nn.Linear(d_model, vocab_size) is a learned weight matrix that projects each d_model vector 
+# into vocab_size scores (logits), one per token in the vocabulary. 
+# From there, softmax gives probabilities, and cross-entropy measures prediction quality.
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -16,7 +29,6 @@ hello transformer
 tiny models are fun
 hello tiny world
 """
-
 # ------------------------------------------------------------
 # Data preparation
 # ------------------------------------------------------------
@@ -43,8 +55,18 @@ batch_size = 8
 d_model = 32
 nhead = 4
 dim_ff = 64
+
+# default
 steps = 400
 lr = 1e-3
+# loss 0.1196, meg
+
+# longer, loss stagnates from newton's method overshooting the target
+# steps = 4000
+# lr = 1e-3
+
+# longer, slower, loss should get closer to the ideal value 
+# lr = 1e-3 - 1e-4
 
 # ------------------------------------------------------------
 # Batch sampling
@@ -65,15 +87,26 @@ class TinyTransformerLM(nn.Module):
     def __init__(self, vocab_size):
         super().__init__()
 
+        # dimensionality of layer input/output
+        # (1) vocab_size --> d_model, (2) d_model --> d_model (3) d_model --> vocab_size
+        # See dm_model=d_model below
+
+        # (1)
+        # Map a token in the vocab to its learned embedding vector
         self.embed = nn.Embedding(vocab_size, d_model)
 
+        # (2)
+        # The transformer outputs a hidden state vector (size d_model) per token in the sequence
         self.block = nn.TransformerEncoderLayer(
-            d_model=d_model,
+            d_model=d_model, # see comment at top of this function 
             nhead=nhead,
             dim_feedforward=dim_ff,
             batch_first=True
         )
+    
 
+        # (3)
+        # The lm_head is the bridge from "hidden state" to "vocabulary".
         self.lm_head = nn.Linear(d_model, vocab_size)
 
     def forward(self, idx, targets=None):
