@@ -1,7 +1,8 @@
+import json
 import unittest
 from unittest.mock import patch
 
-from app import app
+from app import FALLBACK_CSV, app
 
 
 SAMPLE_SNAPSHOT = {
@@ -54,6 +55,19 @@ class TelemetryEndpointTests(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
 
+    class DummyResponse:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def read(self):
+            return self._payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
     @patch("app._collect_system_snapshot", return_value=SAMPLE_SNAPSHOT)
     def test_simple_telemetry_returns_shell_snapshot(self, _collect):
         response = self.client.get("/api/simple-telemetry")
@@ -75,6 +89,39 @@ class TelemetryEndpointTests(unittest.TestCase):
         self.assertEqual(lines[0], "timestamp_iso,section,metric,value,unit,context")
         self.assertTrue(any("filesystem,use_percent,55,percent,/" in line for line in lines))
         self.assertTrue(any("network_interface,state,UP,text,eth0" in line for line in lines))
+
+    def test_prometheus_csv_success(self):
+        payload = {
+            "status": "success",
+            "data": {
+                "result": [
+                    {
+                        "metric": {"job": "demo", "instance": "demo-1"},
+                        "values": [[1700000000.0, "1.23"]],
+                    }
+                ]
+            },
+        }
+        encoded = json.dumps(payload).encode("utf-8")
+
+        with patch("app.urlopen", return_value=self.DummyResponse(encoded)):
+            response = self.client.get("/telemetry.csv")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get("X-Telemetry-Placeholder"), "false")
+        text = response.data.decode("utf-8")
+        lines = [line for line in text.splitlines() if line.strip()]
+        self.assertGreaterEqual(len(lines), 2)
+        self.assertEqual(lines[0], "timestamp_iso,metric_labels,value")
+
+    def test_prometheus_csv_fallback_on_failure(self):
+        with patch("app.urlopen", side_effect=RuntimeError("boom")):
+            response = self.client.get("/telemetry.csv")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get("X-Telemetry-Placeholder"), "true")
+        text = response.data.decode("utf-8")
+        self.assertEqual(text, FALLBACK_CSV)
 
 
 if __name__ == "__main__":

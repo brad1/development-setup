@@ -48,7 +48,11 @@ const formatUptime = (seconds) => {
 const buildHistory = (count, base, variance) =>
   Array.from({ length: count }, () => clamp(base + (Math.random() - 0.5) * variance, 0, 100));
 
-const FALLBACK_WIDGETS = [];
+const FALLBACK_WIDGETS = [
+  { id: 'fallback-1', title: 'Ingress::Active Users', value: 1825, trend: '+4%' },
+  { id: 'fallback-2', title: 'Queues::Queued Jobs', value: 48, trend: '-2%' },
+  { id: 'fallback-3', title: 'Errors::Pager Triggers', value: 3, trend: 'stable' },
+];
 
 const makeInitialMetrics = () => ({
   timestamp: new Date(),
@@ -335,7 +339,7 @@ function PlaceholderBanner({ backendFallback, telemetryFallback }) {
             fontWeight: 600,
           }}
         >
-          Shell telemetry endpoint unavailable.
+          Prometheus unreachable. Showing placeholder telemetry data.
         </div>
       )}
     </div>
@@ -1097,7 +1101,8 @@ function TableWatcher({ onTelemetryPlaceholderChange, onBackendDown }) {
           throw new Error('failed to load telemetry.csv');
         }
         if (onTelemetryPlaceholderChange) {
-          onTelemetryPlaceholderChange(false);
+          const usedFallback = response.headers.get('x-telemetry-placeholder') === 'true';
+          onTelemetryPlaceholderChange(usedFallback);
         }
         if (onBackendDown) {
           onBackendDown(false);
@@ -1116,7 +1121,7 @@ function TableWatcher({ onTelemetryPlaceholderChange, onBackendDown }) {
             onBackendDown(true);
           }
           if (onTelemetryPlaceholderChange) {
-            onTelemetryPlaceholderChange(true);
+            onTelemetryPlaceholderChange(false);
           }
         }
       }
@@ -1134,7 +1139,7 @@ function TableWatcher({ onTelemetryPlaceholderChange, onBackendDown }) {
   return (
     <div style={{ marginTop: '0.5rem' }}>
       <p style={{ marginTop: '0.35rem', color: '#64748b' }}>
-        Watching <code>/api/telemetry.csv</code> for shell-derived host telemetry updates.
+        Watching <code>/api/telemetry.csv</code> for updates.
         {lastUpdated && (
           <>
             {' '}

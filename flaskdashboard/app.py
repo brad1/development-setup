@@ -1,14 +1,17 @@
 import csv
 import io
+import json
 import re
 import subprocess
 from datetime import datetime, timezone
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
 from flask import Flask, Response, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, expose_headers=["X-Telemetry-Placeholder"])
 
 WIDGETS = [
     {"id": 1, "title": "Host::CPU cores", "value": "live", "trend": "shell"},
@@ -22,6 +25,20 @@ RUNTIME_CONFIG = {
     "highlightKnob": True,
     "popoverText": "Main page redirects to the simple dashboard at /simple.",
 }
+
+PROMETHEUS_URL_DEFAULT = "http://localhost:9090"
+PROMETHEUS_QUERY_DEFAULT = "rate(demo_requests_total[1m])"
+PROMETHEUS_RANGE_SECONDS = 600
+PROMETHEUS_STEP_SECONDS = 5
+
+FALLBACK_CSV = "\n".join(
+    [
+        "timestamp_iso,metric_labels,value",
+        "2026-02-09T14:00:00+00:00,{\"job\":\"demo\",\"instance\":\"demo-1\"},12.5",
+        "2026-02-09T14:00:05+00:00,{\"job\":\"demo\",\"instance\":\"demo-1\"},14.1",
+        "2026-02-09T14:00:10+00:00,{\"job\":\"demo\",\"instance\":\"demo-2\"},9.8",
+    ]
+)
 
 
 def _run_command(args):
@@ -208,6 +225,55 @@ def _collect_system_snapshot():
             "processes": "ps -eo pid,comm,%cpu,%mem --sort=-%cpu",
         },
     }
+
+
+def _prometheus_query_range_csv():
+    base_url = PROMETHEUS_URL_DEFAULT.rstrip("/")
+    query = PROMETHEUS_QUERY_DEFAULT
+    end = datetime.now(timezone.utc).timestamp()
+    start = end - PROMETHEUS_RANGE_SECONDS
+
+    params = urlencode(
+        {
+            "query": query,
+            "start": f"{start:.3f}",
+            "end": f"{end:.3f}",
+            "step": str(PROMETHEUS_STEP_SECONDS),
+        }
+    )
+    url = f"{base_url}/api/v1/query_range?{params}"
+
+    with urlopen(url, timeout=5) as response:
+        payload = response.read()
+
+    data = json.loads(payload.decode("utf-8"))
+    if data.get("status") != "success":
+        raise RuntimeError("prometheus status not success")
+
+    result = data.get("data", {}).get("result", [])
+    if not result:
+        raise RuntimeError("prometheus result empty")
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["timestamp_iso", "metric_labels", "value"])
+
+    wrote_row = False
+    for series in result:
+        labels = series.get("metric", {})
+        values = series.get("values", [])
+        if not isinstance(labels, dict):
+            labels = {}
+        label_json = json.dumps(labels, sort_keys=True, separators=(",", ":"))
+        for ts, value in values:
+            timestamp = datetime.fromtimestamp(float(ts), tz=timezone.utc).isoformat()
+            writer.writerow([timestamp, label_json, value])
+            wrote_row = True
+
+    if not wrote_row:
+        raise RuntimeError("prometheus result has no samples")
+
+    return output.getvalue().strip("\n")
 
 
 def _snapshot_to_csv(snapshot):
@@ -409,9 +475,17 @@ def telemetry_csv():
 
 @app.route("/telemetry.csv")
 def telemetry_csv_alias():
-    snapshot = _collect_system_snapshot()
-    response = Response(_snapshot_to_csv(snapshot), mimetype="text/csv")
+    try:
+        csv_text = _prometheus_query_range_csv()
+        used_fallback = False
+    except Exception as exc:
+        app.logger.error("telemetry.csv fallback: %s", exc)
+        csv_text = FALLBACK_CSV
+        used_fallback = True
+
+    response = Response(csv_text, mimetype="text/csv")
     response.headers["Content-Disposition"] = 'attachment; filename="telemetry.csv"'
+    response.headers["X-Telemetry-Placeholder"] = "true" if used_fallback else "false"
     return response
 
 
