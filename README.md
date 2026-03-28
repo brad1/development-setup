@@ -24,6 +24,12 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   `flaskdashboard/README.md` for the venv setup, test command, startup
   instructions, and available API routes.
 
+#### Project map
+
+- `notes/dashboard-ui-components.md` - partial design document focused
+  exclusively on the currently visible required UI components in the dashboard
+  source code.
+
 ### Standalone demos
 
 - `agent-orchestration/` - minimal OpenAI Agent SDK hello-world outline that reads local filenames, plans a web query, and runs a web-search-enabled agent.
