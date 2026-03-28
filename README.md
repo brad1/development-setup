@@ -8,6 +8,25 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 ```
 ## Project Index
 
+### Dashboard projects
+
+- `ReactDashboard/` - React/Vite dashboard frontend. Run `npm ci`, `npm test`,
+  and `npm run build` inside this directory to mirror the local automation
+  workflow.
+- `flaskdashboard/` - minimal Flask API backend for the dashboard. See
+  `flaskdashboard/README.md` for startup instructions and the available API
+  routes.
+
+### Standalone demos
+
+- `cpp/` - standalone C++ examples and modules, including the sample
+  `main.cpp` entry point and a local `Makefile`.
+- `rust/` - standalone Rust utility and demo code.
+- PyTorch demos - no top-level PyTorch demo directory is currently checked in,
+  so add it here once that project is present in the repository. (pytorch branch)
+
+### Chef cookbook
+
 - `attributes/` - default configuration attributes for the cookbook.
 - `files/` - various helper scripts, notes and configuration files used by the cookbook:
   - `bash/` - shell examples and SSH helpers.
@@ -55,11 +74,9 @@ syntax highlighting, and the powerlevel10k theme), and writes a `.zshrc` that
 sources the configuration in `files/zsh/`. Your previous `.zshrc` is backed up
 with a timestamped suffix if it existed.
 
-## Flask dashboard backend
+## Dashboard notes
 
 `flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets`, `GET /api/runtime-config`, `GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies. Ignore the repository-local virtual environment with `.gitignore` so you can keep a per-machine copy without making commits.
-
-## Local automation workflow
 
 To mirror `.github/workflows/reactdashboard-ci.yml`, run the same sequence used in CI from inside `ReactDashboard/`:
 
