@@ -37,7 +37,8 @@ npm run dev -- --host 127.0.0.1 --port 4173
 ```
 
 The backend serves `GET /api/widgets`, `GET /api/runtime-config`,
-`GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`. The React
-frontend currently consumes `GET /api/widgets`, and the other endpoints are a
-draft to support the runtime config and telemetry table if you wire them up
-later. The frontend defaults to `VITE_API_URL=http://localhost:5000`.
+`GET /api/simple-telemetry`, `GET /api/telemetry`, `GET /api/telemetry.csv`,
+and `GET /health`. The telemetry endpoints derive their data from standard
+Ubuntu shell tools such as `uptime`, `free -b`, `df -B1 -P`, `ip -brief
+address`, and `ps`. The frontend defaults to `VITE_API_URL=http://localhost:5000`,
+redirects `/` to `/simple`, and keeps the richer dashboard available at `/full`.

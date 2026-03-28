@@ -14,6 +14,12 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   and `bash scripts/ci-test.sh` from the repository root to mirror CI and Codex
   cloud automation. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
   after the backend is running.
+- `ReactDashboard/` - React/Vite dashboard frontend. Run `npm ci`, `npm test`,
+  and `npm run build` inside this directory to mirror the local automation
+  workflow. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
+  after the backend is running. The browser entrypoint redirects `/` to the
+  simpler shell-backed dashboard at `/simple`, while the richer prior view now
+  lives at `/full`.
 - `flaskdashboard/` - minimal Flask API backend for the dashboard. See
   `flaskdashboard/README.md` for the venv setup, test command, startup
   instructions, and available API routes.
@@ -83,7 +89,9 @@ with a timestamped suffix if it existed.
 install `flaskdashboard/requirements.txt`, run the backend tests with
 `python -m unittest`, and start the API with `FLASK_APP=app flask run --port 5000`.
 The API exposes `GET /api/widgets`, `GET /api/runtime-config`,
-`GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`. Ignore the
+`GET /api/simple-telemetry`, `GET /api/telemetry`, `GET /api/telemetry.csv`,
+and `GET /health`. The telemetry endpoints now derive their data from standard
+Ubuntu shell tools such as `uptime`, `free`, `df`, `ip`, and `ps`. Ignore the
 repository-local virtual environment with `.gitignore` so you can keep a
 per-machine copy without making commits.
 
