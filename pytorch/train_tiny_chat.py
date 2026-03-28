@@ -225,8 +225,7 @@ def resolve_prompt(prompt: str) -> str:
         logger.debug("resolve_prompt: using provided prompt")
         return prompt
     logger.debug("resolve_prompt: using default prompt")
-    return "A" # ./deterministic_data.txt
-    # return "User: hi\nAssistant:"
+    return "User: hi\nAssistant:"
 
 
 def configure_logging(debug: bool) -> None:

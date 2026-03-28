@@ -57,7 +57,7 @@ nhead = 4
 dim_ff = 64
 
 # default
-steps = 400
+steps = 4000
 lr = 1e-3
 # loss 0.1196, meg
 
