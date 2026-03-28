@@ -965,7 +965,12 @@ function TableWatcher({ onTelemetryPlaceholderChange, onBackendDown }) {
 }
 
 /* controllable, low-stakes variation points (knobs) */
-const buildKnobFiles = Object.keys(import.meta.glob('./mydash*.*'));
+const buildKnobFiles = Object.keys(
+  import.meta.glob('./mydash*.*', {
+    query: '?raw',
+    import: 'default',
+  })
+);
 
 function KnobPanel({ widgets }) {
   const [runtimeConfig, setRuntimeConfig] = useState(null);

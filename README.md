@@ -12,10 +12,11 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 
 - `ReactDashboard/` - React/Vite dashboard frontend. Run `npm ci`, `npm test`,
   and `npm run build` inside this directory to mirror the local automation
-  workflow.
+  workflow. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
+  after the backend is running.
 - `flaskdashboard/` - minimal Flask API backend for the dashboard. See
-  `flaskdashboard/README.md` for startup instructions and the available API
-  routes.
+  `flaskdashboard/README.md` for the venv setup, test command, startup
+  instructions, and available API routes.
 
 ### Standalone demos
 
@@ -76,7 +77,13 @@ with a timestamped suffix if it existed.
 
 ## Dashboard notes
 
-`flaskdashboard/README.md` covers how to start the minimal Flask API (`FLASK_APP=app flask run --port 5000`). The API exposes `GET /api/widgets`, `GET /api/runtime-config`, `GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`, and `flaskdashboard/requirements.txt` lists the dependencies. Ignore the repository-local virtual environment with `.gitignore` so you can keep a per-machine copy without making commits.
+`flaskdashboard/README.md` covers how to create the local virtual environment,
+install `flaskdashboard/requirements.txt`, run the backend tests with
+`python -m unittest`, and start the API with `FLASK_APP=app flask run --port 5000`.
+The API exposes `GET /api/widgets`, `GET /api/runtime-config`,
+`GET /api/telemetry`, `GET /api/telemetry.csv`, and `GET /health`. Ignore the
+repository-local virtual environment with `.gitignore` so you can keep a
+per-machine copy without making commits.
 
 To mirror `.github/workflows/reactdashboard-ci.yml`, run the same sequence used in CI from inside `ReactDashboard/`:
 
@@ -89,7 +96,32 @@ npm run build
 
 `npm ci` installs the dependencies listed in `package-lock.json`, `npm test` executes the `vitest` suite, and `npm run build` performs the production Vite build. These are the same commands that run on GitHub Actions, so their success signals the automation should pass locally as well. The job requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise the install and build steps will fail with network errors.
 
-Once the install step has run successfully you can run the React dev server (`npm run dev`) and point it at the local Flask backend by setting `VITE_API_URL` (default `http://localhost:5000`) in your shell or in `ReactDashboard/.env.local`. The front end also reads `/runtime-config.json` from `ReactDashboard/public/` for optional knobs, so keep that file in sync between environments.
+After the install step succeeds, start the backend from `flaskdashboard/`, then
+run the React dev server from `ReactDashboard/`:
+
+```
+cd flaskdashboard
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m unittest
+FLASK_APP=app flask run --port 5000
+```
+
+Open a second shell for the frontend:
+
+```
+cd ReactDashboard
+npm run dev -- --host 127.0.0.1 --port 4173
+```
+
+The React app points at the local Flask backend with `VITE_API_URL`
+(default `http://localhost:5000`), which you can override in your shell or in
+`ReactDashboard/.env.local`. The front end also reads
+`/runtime-config.json` from `ReactDashboard/public/` for optional knobs, so
+keep that file in sync between environments. Build-time discovery also scans
+for files matching `src/mydash*.*`; keep those files as plain text assets so
+they remain safe to include in the Vite bundle metadata.
 
 ## Notes on Codex pull requests
 

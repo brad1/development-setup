@@ -16,5 +16,6 @@ files/bin/sidekiq
 files/bin/sidekiqmon
 files/bin/tilt
 ReactDashboard/node_modules/
+ReactDashboard/dist/
 flaskdashboard/.venv/
 __pycache__
