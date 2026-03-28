@@ -32,6 +32,11 @@ Learn core PyTorch training mechanics by building and running the smallest possi
 - The sample output makes it obvious that the model is learning next-character behavior, even if it is still silly or noisy.
 - The code remains readable and educational rather than aggressively optimized.
 
+### Next Tasks
+- Demonstrate tiny chat failure mode that results from having too few layers
+- Build on tiny chat to add mode layers, leverage to train on harder patterns
+
+
 ## Agent Goals
 
 ### Scope
