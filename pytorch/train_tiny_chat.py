@@ -102,6 +102,7 @@ class BigramLanguageModel(nn.Module):
 
         self.table = nn.Embedding(vocab_size, vocab_size)
 
+    # POI called under the hood by model() to calculate loss gradient
     def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
         logits = self.table(idx)
         loss = None
@@ -110,12 +111,15 @@ class BigramLanguageModel(nn.Module):
             loss = F.cross_entropy(logits.view(b * t, c), targets.view(b * t))
         return logits, loss
 
+    # POI generate (not predict) next token
     def _sample_next_token(self, idx: torch.Tensor) -> torch.Tensor:
         logits, _ = self(idx)
         next_token_logits = logits[:, -1, :]
         probs = F.softmax(next_token_logits, dim=-1)
         return torch.multinomial(probs, num_samples=1)
 
+    # POI respond to a prompt
+    # 
     # Disable gradient tracking during inference to reduce memory use and speed up sampling.
     @torch.no_grad()
     def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
@@ -135,6 +139,7 @@ def load_text(path: Path | None) -> str:
     return path.read_text(encoding="utf-8")
 
 
+# POI establish what tokens are in play
 def build_vocab(text: str):
     logger.debug("build_vocab: text_length=%d", len(text))
     chars = sorted(set(text))
@@ -146,13 +151,14 @@ def build_vocab(text: str):
     return stoi, itos
 
 
+# POI plaintext --> tokens
 def encode(text: str, char_to_idx: dict[str, int]) -> torch.Tensor:
     return torch.tensor([char_to_idx[c] for c in text], dtype=torch.long)
 
 
+# POI tokens --> plaintext (turn generated content into readable text)
 def decode(tokens: torch.Tensor, idx_to_char: dict[int, str]) -> str:
     return "".join(idx_to_char[int(i)] for i in tokens)
-
 
 def sample_training_batch(
     data: torch.Tensor, batch_size: int, block_size: int, device: torch.device
@@ -203,6 +209,7 @@ def build_training_context(data_path: Path | None) -> TrainingDataContext:
     )
 
 
+# POI one backprop pass
 def train_step(
     model: BigramLanguageModel,
     optimizer: torch.optim.Optimizer,
@@ -257,6 +264,7 @@ def train(args):
             print(f"step {step:4d} | loss {loss_value:.4f}")
     logger.debug("train: optimization loop complete")
 
+    # POI inference pass
     prompt = resolve_prompt(args.prompt)
     start = encode(prompt, context.char_to_idx).unsqueeze(0).to(device)
     out = model.generate(start, max_new_tokens=args.max_new_tokens)[0].cpu()
@@ -266,6 +274,8 @@ def train(args):
     if args.save_model:
         save_model_checkpoint(model, args.save_model)
 
+
+# # # utility functions to control noise 
 
 def add_data_args(parser: argparse.ArgumentParser) -> None:
     logger.debug("add_data_args: registering data arguments")
