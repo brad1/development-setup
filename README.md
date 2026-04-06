@@ -10,9 +10,9 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 
 ### Dashboard projects
 
-- `ReactDashboard/` - React/Vite dashboard frontend. Run `npm ci`, `npm test`,
-  and `npm run build` inside this directory to mirror the local automation
-  workflow. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
+- `ReactDashboard/` - React/Vite dashboard frontend. Run `bash codex/setup.sh`
+  and `bash scripts/ci-test.sh` from the repository root to mirror CI and Codex
+  cloud automation. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
   after the backend is running.
 - `flaskdashboard/` - minimal Flask API backend for the dashboard. See
   `flaskdashboard/README.md` for the venv setup, test command, startup
@@ -87,16 +87,14 @@ The API exposes `GET /api/widgets`, `GET /api/runtime-config`,
 repository-local virtual environment with `.gitignore` so you can keep a
 per-machine copy without making commits.
 
-To mirror `.github/workflows/reactdashboard-ci.yml`, run the same sequence used in CI from inside `ReactDashboard/`:
+To mirror `.github/workflows/reactdashboard-ci.yml` and Codex cloud task bootstrapping, run the shared repository scripts from the repository root:
 
 ```
-cd ReactDashboard
-npm ci
-npm test
-npm run build
+bash codex/setup.sh
+bash scripts/ci-test.sh
 ```
 
-`npm ci` installs the dependencies listed in `package-lock.json`, `npm test` executes the `vitest` suite, and `npm run build` performs the production Vite build. These are the same commands that run on GitHub Actions, so their success signals the automation should pass locally as well. The job requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise the install and build steps will fail with network errors.
+`codex/setup.sh` performs deterministic dependency installation for `ReactDashboard/` and `scripts/ci-test.sh` runs the canonical test/build sequence (`npm test` then `npm run build`). These are the exact same scripts used by GitHub Actions and Codex cloud configuration, so successful local runs should match automation behavior. Codex caching is implicit, time-scoped container reuse, not configurable dependency caching like GitHub Actions. The setup step requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise installation will fail with network errors.
 
 After the install step succeeds, start the backend from `flaskdashboard/`, then
 run the React dev server from `ReactDashboard/`:
