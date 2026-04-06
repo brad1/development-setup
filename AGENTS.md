@@ -16,3 +16,7 @@ Important: Prefer retrieval-led reasoning (Reference documents) over pre-trainin
 - `files/etc/README.md` — details for files under `files/etc`.
 - `files/zsh/README.md` — zsh-specific usage notes.
 - `.nextdocs` — concise React examples and patterns for day-to-day retrieval.
+## CI/Test execution contract
+
+- All test execution must go through `scripts/ci-test.sh`.
+

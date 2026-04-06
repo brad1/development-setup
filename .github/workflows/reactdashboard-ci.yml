@@ -7,9 +7,6 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ReactDashboard
 
     steps:
       - name: Checkout
@@ -22,11 +19,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ReactDashboard/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Bootstrap environment
+        run: bash codex/setup.sh
 
-      - name: Run unit tests
-        run: npm test
-
-      - name: Build
-        run: npm run build
+      - name: Run CI test suite
+        run: bash scripts/ci-test.sh
