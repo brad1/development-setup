@@ -94,7 +94,7 @@ bash codex/setup.sh
 bash scripts/ci-test.sh
 ```
 
-`codex/setup.sh` performs deterministic dependency installation for `ReactDashboard/` and `scripts/ci-test.sh` runs the canonical test/build sequence (`npm test` then `npm run build`). These are the exact same scripts used by GitHub Actions and Codex cloud configuration, so successful local runs should match automation behavior. The setup step requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise installation will fail with network errors.
+`codex/setup.sh` performs deterministic dependency installation for `ReactDashboard/` and `scripts/ci-test.sh` runs the canonical test/build sequence (`npm test` then `npm run build`). These are the exact same scripts used by GitHub Actions and Codex cloud configuration, so successful local runs should match automation behavior. Codex caching is implicit, time-scoped container reuse, not configurable dependency caching like GitHub Actions. The setup step requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise installation will fail with network errors.
 
 After the install step succeeds, start the backend from `flaskdashboard/`, then
 run the React dev server from `ReactDashboard/`:
