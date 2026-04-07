@@ -37,8 +37,7 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 - `cpp/` - standalone C++ examples and modules, including the sample
   `main.cpp` entry point and a local `Makefile`.
 - `rust/` - standalone Rust utility and demo code.
-- PyTorch demos - no top-level PyTorch demo directory is currently checked in,
-  so add it here once that project is present in the repository. (pytorch branch)
+- `pytorch/` - "Tiny Chat" trains models from simplest possible training data patterns (coin, markov) with the fewest possible layers
 
 ### Chef cookbook
 
