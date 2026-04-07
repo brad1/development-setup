@@ -130,6 +130,44 @@ class BigramLanguageModel(nn.Module):
         return idx
 
 
+class Bigram2LanguageModel(nn.Module):
+    def __init__(self, vocab_size: int, embed_dim: int | None = None) -> None:
+        super().__init__()
+        # NOTE: Chosen as the simplest "extra layer" for a 2-gram context.
+        # Please revisit with a human to confirm this is the right teaching choice.
+        if embed_dim is None:
+            embed_dim = vocab_size
+        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.proj = nn.Linear(embed_dim * 2, vocab_size)
+
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
+        prev_idx = torch.zeros_like(idx)
+        prev_idx[:, 1:] = idx[:, :-1]
+        curr_emb = self.embedding(idx)
+        prev_emb = self.embedding(prev_idx)
+        combined = torch.cat((prev_emb, curr_emb), dim=-1)
+        logits = self.proj(combined)
+        loss = None
+        if targets is not None:
+            b, t, c = logits.shape
+            loss = F.cross_entropy(logits.view(b * t, c), targets.view(b * t))
+        return logits, loss
+
+    def _sample_next_token(self, idx: torch.Tensor) -> torch.Tensor:
+        logits, _ = self(idx)
+        next_token_logits = logits[:, -1, :]
+        probs = F.softmax(next_token_logits, dim=-1)
+        return torch.multinomial(probs, num_samples=1)
+
+    @torch.no_grad()
+    def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
+        logger.debug("generate: sampling %d new tokens", max_new_tokens)
+        for _ in range(max_new_tokens):
+            next_idx = self._sample_next_token(idx)
+            idx = torch.cat((idx, next_idx), dim=1)
+        return idx
+
+
 def load_text(path: Path | None) -> str:
     logger.debug("load_text: path=%s", path)
     if path is None:
@@ -209,6 +247,17 @@ def build_training_context(data_path: Path | None) -> TrainingDataContext:
     )
 
 
+def is_markov_hht(text: str) -> bool:
+    tokens = [c for c in text if c in ("H", "T")]
+    if len(tokens) < 6:
+        return False
+    for i, token in enumerate(tokens):
+        expected = "H" if i % 3 in (0, 1) else "T"
+        if token != expected:
+            return False
+    return True
+
+
 # POI one backprop pass
 def train_step(
     model: BigramLanguageModel,
@@ -247,7 +296,16 @@ def train(args):
     device = resolve_device(args.device)
     context = build_training_context(args.data)
 
-    model = BigramLanguageModel(vocab_size=len(context.char_to_idx)).to(device)
+    if args.model == "bigram2":
+        model = Bigram2LanguageModel(vocab_size=len(context.char_to_idx)).to(device)
+    else:
+        model = BigramLanguageModel(vocab_size=len(context.char_to_idx)).to(device)
+
+    if args.model == "bigram" and is_markov_hht(context.text):
+        print(
+            "\nNOTE: Markov-chain demo detected. The bigram model only sees one token\n"
+            "of context, so loss is expected to plateau above near-zero on H H T data.\n"
+        )
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
     logger.debug("train: starting optimization loop for %d steps", args.steps)
@@ -290,6 +348,12 @@ def add_training_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--lr", type=float, default=1e-2)
     parser.add_argument("--seed", type=int, default=1337)
     parser.add_argument("--log-every", type=int, default=100)
+    parser.add_argument(
+        "--model",
+        choices=["bigram", "bigram2"],
+        default="bigram",
+        help="Model variant: bigram (default) or bigram2 (2-token context).",
+    )
 
 
 def add_generation_args(parser: argparse.ArgumentParser) -> None:
