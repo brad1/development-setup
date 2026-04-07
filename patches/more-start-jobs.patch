@@ -1,0 +1,27 @@
+diff --git a/files/zsh/background-jobs.zsh b/files/zsh/background-jobs.zsh
+index cf56d3230cfc8349b3f3b562b12d67f199a259e7..89c3bbb22bb3a5de399a6a1a8028da350d50dbb0 100644
+--- a/files/zsh/background-jobs.zsh
++++ b/files/zsh/background-jobs.zsh
+@@ -1,13 +1,19 @@
+ # Background jobs launched at the start of an interactive shell session.
+ # Related background job helpers live in $INCLUDE/fn_jobs.zsh; see shell-status
+ # there for examples of status jobs that could move here once validated.
+ # Next step: import the candidate job(s) here, then manually test by opening a
+ # fresh zsh session and confirming the background job runs non-blocking.
+ 
+ if [[ -o interactive ]]; then
+   if [[ -z ${DEVSETUP_BACKGROUND_JOBS_STARTED:-} ]]; then
+     DEVSETUP_BACKGROUND_JOBS_STARTED=1
+-    # Example test job (non-blocking).
+-    command sleep 60 &!
++    # Example test job (non-blocking). Use exec -a to make it obvious in ps.
++    exec -a devsetup-bg-sleep-60 command sleep 60 &!
++    # Other ideas for easy-to-spot background jobs (commented out for tinkering):
++    # command sleep 60 &!
++    # zsh -c 'exec -a devsetup-bg-sleep-60 sleep 60' &!
++    # perl -e '$0="devsetup-bg-sleep-60"; sleep 60' &!
++    # python -c 'import time; time.sleep(60)' &!
++    # ~/bin/devsetup-bg-sleep-60 &!
+   fi
+ fi
+

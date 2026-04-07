@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
 const TABLE_URL = `${API_URL}/telemetry.csv`;
+const SIMPLE_TELEMETRY_URL = `${API_URL}/api/simple-telemetry`;
+const SIMPLE_DASHBOARD_PATH = '/simple';
+const FULL_DASHBOARD_PATH = '/full';
 
 const STATUS_COLORS = {
   ok: '#1f7a3e',
@@ -236,6 +239,28 @@ function useSimulatedMetrics() {
 }
 
 export default function App() {
+  const [pathname, setPathname] = useState(() => window.location.pathname || '/');
+
+  useEffect(() => {
+    const syncPath = () => setPathname(window.location.pathname || '/');
+
+    if (window.location.pathname === '/') {
+      window.history.replaceState({}, '', SIMPLE_DASHBOARD_PATH);
+      syncPath();
+    }
+
+    window.addEventListener('popstate', syncPath);
+    return () => window.removeEventListener('popstate', syncPath);
+  }, []);
+
+  if (pathname === FULL_DASHBOARD_PATH) {
+    return <FullDashboard />;
+  }
+
+  return <SimpleDashboard />;
+}
+
+function FullDashboard() {
   const [widgets, setWidgets] = useState([]);
   const [error, setError] = useState(null);
   const [backendFallback, setBackendFallback] = useState(false);
@@ -270,6 +295,7 @@ export default function App() {
       }}
     >
       <PlaceholderBanner backendFallback={backendFallback} telemetryFallback={telemetryFallback} />
+      <DashboardNav current="full" />
       <Header metrics={metrics} />
       <MetricsSections metrics={metrics} alertCounts={alertCounts} />
       <WidgetsSection widgets={widgets} error={error} />
@@ -317,6 +343,180 @@ function PlaceholderBanner({ backendFallback, telemetryFallback }) {
         </div>
       )}
     </div>
+  );
+}
+
+function SimpleDashboard() {
+  const [snapshot, setSnapshot] = useState(null);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+
+    const fetchSnapshot = async () => {
+      try {
+        const response = await fetch(SIMPLE_TELEMETRY_URL, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('failed to load simple telemetry');
+        }
+        const payload = await response.json();
+        if (!active) return;
+        setSnapshot(payload);
+        setError(null);
+        setLastUpdated(new Date());
+      } catch (err) {
+        if (!active) return;
+        setError(err);
+      }
+    };
+
+    fetchSnapshot();
+    const intervalId = setInterval(fetchSnapshot, 5000);
+
+    return () => {
+      active = false;
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const memoryUsedPercent = snapshot?.memory?.total_bytes
+    ? (snapshot.memory.used_bytes / snapshot.memory.total_bytes) * 100
+    : 0;
+  const swapUsedPercent = snapshot?.memory?.swap_total_bytes
+    ? (snapshot.memory.swap_used_bytes / snapshot.memory.swap_total_bytes) * 100
+    : 0;
+  const rootFilesystem = snapshot?.filesystems?.find((filesystem) => filesystem.mount === '/');
+
+  return (
+    <main
+      style={{
+        fontFamily: 'Inter, system-ui, sans-serif',
+        background: 'linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%)',
+        color: '#0f172a',
+        minHeight: '100vh',
+        padding: '2rem clamp(1rem, 4vw, 3rem)',
+      }}
+    >
+      <DashboardNav current="simple" />
+      <header style={{ marginBottom: '2rem' }}>
+        <p style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.16em', fontSize: '0.72rem', color: '#475569' }}>
+          Ubuntu 22 shell telemetry
+        </p>
+        <h1 data-testid="dashboard-heading" style={{ margin: '0.35rem 0 0.5rem' }}>
+          Simple Host Dashboard
+        </h1>
+        <p style={{ margin: 0, color: '#64748b', maxWidth: '70ch' }}>
+          Main page traffic now lands here. This view reads live host telemetry from standard Ubuntu shell tools instead of Prometheus or placeholder data.
+        </p>
+      </header>
+
+      {error && (
+        <div
+          style={{
+            background: '#fee2e2',
+            color: '#991b1b',
+            border: '1px solid #fecaca',
+            padding: '0.85rem 1rem',
+            borderRadius: '0.75rem',
+            marginBottom: '1.5rem',
+            fontWeight: 600,
+          }}
+        >
+          {error.message}
+        </div>
+      )}
+
+      <Section
+        title="Host summary"
+        subtitle={lastUpdated ? `Last updated ${lastUpdated.toLocaleTimeString()}` : 'Waiting for first sample'}
+      >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+          <Panel>
+            <MetricRow label="Hostname" value={snapshot?.host?.hostname ?? 'loading'} />
+            <MetricRow label="Kernel" value={snapshot?.host?.kernel ?? 'loading'} />
+            <MetricRow label="CPU cores" value={snapshot?.host?.cpu_count ?? 0} />
+          </Panel>
+          <Panel>
+            <MetricRow label="Uptime" value={snapshot?.uptime?.pretty ?? 'loading'} />
+            <MetricRow label="Load 1m" value={snapshot?.uptime?.load?.one?.toFixed?.(2) ?? '0.00'} />
+            <MetricRow label="Load 5m" value={snapshot?.uptime?.load?.five?.toFixed?.(2) ?? '0.00'} />
+            <MetricRow label="Load 15m" value={snapshot?.uptime?.load?.fifteen?.toFixed?.(2) ?? '0.00'} />
+          </Panel>
+          <Panel>
+            <MetricRow label="Memory used" value={snapshot ? formatBytes(snapshot.memory.used_bytes) : 'loading'} />
+            <MetricRow label="Memory available" value={snapshot ? formatBytes(snapshot.memory.available_bytes) : 'loading'} />
+            <div style={{ marginTop: '0.75rem' }}>
+              <ProgressBar value={memoryUsedPercent} color="#0ea5e9" />
+            </div>
+          </Panel>
+          <Panel>
+            <MetricRow label="Root filesystem" value={rootFilesystem ? `${rootFilesystem.use_percent}%` : 'n/a'} />
+            <MetricRow label="Disk used" value={rootFilesystem ? formatBytes(rootFilesystem.used_bytes) : 'n/a'} />
+            <MetricRow label="Disk free" value={rootFilesystem ? formatBytes(rootFilesystem.available_bytes) : 'n/a'} />
+            <div style={{ marginTop: '0.75rem' }}>
+              <ProgressBar value={rootFilesystem?.use_percent ?? 0} color="#f97316" />
+            </div>
+          </Panel>
+        </div>
+      </Section>
+
+      <Section title="Interfaces" subtitle="Reported by `ip -brief address`">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+          {(snapshot?.network_interfaces ?? []).map((iface) => (
+            <Panel key={iface.name}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <strong>{iface.name}</strong>
+                <StatusPill status={iface.state === 'UP' ? 'ok' : 'warn'} label={iface.state} />
+              </div>
+              <p style={{ margin: '0.75rem 0 0', color: '#64748b' }}>
+                {iface.addresses.length > 0 ? iface.addresses.join(', ') : 'No address'}
+              </p>
+            </Panel>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Top processes" subtitle="Sorted by CPU from `ps`">
+        <Panel>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ textAlign: 'left', color: '#64748b', fontSize: '0.82rem' }}>
+                  <th style={{ paddingBottom: '0.6rem' }}>PID</th>
+                  <th style={{ paddingBottom: '0.6rem' }}>Command</th>
+                  <th style={{ paddingBottom: '0.6rem' }}>CPU %</th>
+                  <th style={{ paddingBottom: '0.6rem' }}>MEM %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(snapshot?.top_processes ?? []).map((process) => (
+                  <tr key={process.pid} style={{ borderTop: '1px solid #e2e8f0' }}>
+                    <td style={{ padding: '0.6rem 0' }}>{process.pid}</td>
+                    <td>{process.command}</td>
+                    <td>{process.cpu_percent.toFixed(1)}</td>
+                    <td>{process.memory_percent.toFixed(1)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Panel>
+      </Section>
+
+      <Section title="Backend sources" subtitle="Commands currently feeding the simple dashboard">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+          <Panel>
+            <MetricRow label="Uptime" value={snapshot?.sources?.uptime ?? 'uptime'} />
+            <MetricRow label="Memory" value={snapshot?.sources?.memory ?? 'free -b'} />
+            <MetricRow label="Filesystems" value={snapshot?.sources?.filesystems ?? 'df'} />
+            <MetricRow label="Network" value={snapshot?.sources?.network ?? 'ip'} />
+            <MetricRow label="Processes" value={snapshot?.sources?.processes ?? 'ps'} />
+            <MetricRow label="Swap used" value={snapshot ? `${swapUsedPercent.toFixed(1)}%` : '0.0%'} />
+          </Panel>
+        </div>
+      </Section>
+    </main>
   );
 }
 
@@ -624,6 +824,30 @@ function Header({ metrics }) {
         <Badge label={`Updated ${metrics.timestamp.toLocaleTimeString()}`} tone="warn" />
       </div>
     </header>
+  );
+}
+
+function DashboardNav({ current }) {
+  const linkStyle = (isActive) => ({
+    padding: '0.45rem 0.8rem',
+    borderRadius: '999px',
+    textDecoration: 'none',
+    background: isActive ? '#dbeafe' : '#ffffff',
+    color: isActive ? '#1d4ed8' : '#334155',
+    border: '1px solid #cbd5e1',
+    fontSize: '0.85rem',
+    fontWeight: 600,
+  });
+
+  return (
+    <nav style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+      <a href={SIMPLE_DASHBOARD_PATH} style={linkStyle(current === 'simple')}>
+        Simple dashboard
+      </a>
+      <a href={FULL_DASHBOARD_PATH} style={linkStyle(current === 'full')}>
+        Full dashboard
+      </a>
+    </nav>
   );
 }
 

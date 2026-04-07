@@ -17,5 +17,7 @@ files/bin/sidekiqmon
 files/bin/tilt
 ReactDashboard/node_modules/
 ReactDashboard/dist/
+.venv/
 flaskdashboard/.venv/
 __pycache__
+pytorch/.venv
