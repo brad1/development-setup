@@ -36,6 +36,7 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 - `cat-mode/` - Windows "Cat Mode" application design package, including architecture notes, state-machine behavior, and implementation snippets for camera-based cat detection plus temporary keyboard suppression.
 - `cpp/` - standalone C++ examples and modules, including the sample
   `main.cpp` entry point and a local `Makefile`.
+- `gofai/` - tiny shell chatbot demo in `simplebot.sh` that can greet, remember a name, report it back, answer "what can you do?", and exit.
 - `rust/` - standalone Rust utility and demo code.
 - `pytorch/` - "Tiny Chat" trains models from simplest possible training data patterns (coin, markov) with the fewest possible layers
 
