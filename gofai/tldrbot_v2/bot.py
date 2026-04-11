@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 import sys
+import json
+import importlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -16,6 +18,8 @@ from engine.pending import PendingStore
 
 
 class TLDRBot:
+    ESCAPE_PHRASES = {"nevermind", "never mind", "ignore that", "forget it"}
+
     def __init__(self, root: Path) -> None:
         self.root = root
         self.forms = FormRegistry(root / "forms")
@@ -50,8 +54,63 @@ class TLDRBot:
         return chosen[:3]
 
     def _teaching_prompt(self, phrase: str, options: list[str]) -> str:
-        numbered = "; ".join(f"({idx}) {command}" for idx, command in enumerate(options, start=1))
+        display = options + ["new command"]
+        numbered = "; ".join(f"({idx}) {command}" for idx, command in enumerate(display, start=1))
         return f'what do you mean by "{phrase}"? {numbered}'
+
+    def _command_list(self) -> str:
+        return "commands: " + ", ".join(self.forms.commands())
+
+    def _suspend_active(self) -> bool:
+        return self.pending.suspend_recent()
+
+    def _create_new_command(self, phrase: str) -> str:
+        command = re.sub(r"[^a-z0-9]+", "_", phrase.lower()).strip("_")
+        if not command:
+            command = "new_command"
+        base = command
+        suffix = 2
+        while self.forms.has(command):
+            command = f"{base}_{suffix}"
+            suffix += 1
+
+        form = {
+            "form_name": command,
+            "command_name": command,
+            "required_fields": [],
+            "optional_fields": [],
+            "field_prompts": {},
+            "field_aliases": {},
+        }
+        form_path = self.root / "forms" / f"{command}.json"
+        form_path.parent.mkdir(parents=True, exist_ok=True)
+        form_path.write_text(json.dumps(form, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        self.forms.forms[command] = form
+        handler_path = self.root / "handlers" / f"{command}.py"
+        handler_path.parent.mkdir(parents=True, exist_ok=True)
+        handler_path.write_text(
+            "from __future__ import annotations\n\n\n"
+            "def handle(slots: dict[str, str]) -> str:\n"
+            "    return 'feature unimplemented'\n",
+            encoding="utf-8",
+        )
+        importlib.invalidate_caches()
+        self.matcher.add_custom_mapping(phrase, command)
+        return command
+
+    def _should_suspend_pending(self, text: str) -> tuple[bool, str | None]:
+        lower = text.lower().strip()
+        if lower in self.ESCAPE_PHRASES:
+            return True, "suspended"
+
+        matched = self.matcher.match(text)
+        if matched:
+            return True, None
+
+        if re.match(r'^map\s+"(.+?)"\s*->\s*([a-zA-Z0-9_\-]+)\s*$', text.strip()):
+            return True, None
+
+        return False, None
 
     def _handle_control(self, text: str) -> str | None:
         lower = text.lower().strip()
@@ -62,6 +121,10 @@ class TLDRBot:
             return "pending: " + "; ".join(
                 f"{p.id}:{p.command_name} missing={','.join(p.missing_fields) or 'none'}" for p in pending
             )
+        if lower == "help":
+            return self._command_list()
+        if lower in {"commands", "menu"}:
+            return self._command_list()
         if lower in {"cancel", "back"}:
             return "cancelled" if self.pending.cancel_recent() else "no pending"
         if lower == "cancel pending":
@@ -92,6 +155,11 @@ class TLDRBot:
                 self.matcher.add_custom_mapping(phrase, options[idx])
                 self.teaching_candidate = None
                 return "saved"
+            if idx == len(options):
+                phrase, _ = self.teaching_candidate
+                command = self._create_new_command(phrase)
+                self.teaching_candidate = None
+                return f"created {command}"
             return "pick 1-" + str(len(options))
         if lower in {"yes", "y"}:
             phrase, options = self.teaching_candidate
@@ -139,6 +207,12 @@ class TLDRBot:
 
         active = self.pending.most_recent()
         if active:
+            should_suspend, response = self._should_suspend_pending(text)
+            if should_suspend:
+                self._suspend_active()
+                if response is not None:
+                    return response
+                return self.process(text)
             form = self.forms.get(active.command_name)
             active.slots = parse_slots(text, form, existing=active.slots)
             self.pending.update(active)
