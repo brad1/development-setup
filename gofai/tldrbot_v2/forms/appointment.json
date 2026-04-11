@@ -1,0 +1,22 @@
+{
+  "form_name": "appointment",
+  "command_name": "appointment",
+  "required_fields": ["appointment_type", "day", "time_window", "zip_code"],
+  "optional_fields": ["provider_name", "insurance"],
+  "field_prompts": {
+    "appointment_type": "specify appointment type",
+    "day": "specify day",
+    "time_window": "specify time window",
+    "zip_code": "specify ZIP",
+    "provider_name": "specify provider",
+    "insurance": "specify insurance"
+  },
+  "field_aliases": {
+    "appointment_type": ["type", "appointment type"],
+    "day": ["day"],
+    "time_window": ["time", "time window"],
+    "zip_code": ["zip", "zip code"],
+    "provider_name": ["provider"],
+    "insurance": ["insurance"]
+  }
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "command_name": "appointment",
+    "created_at": "2026-04-11T01:36:52+00:00",
+    "form_name": "appointment",
+    "id": "2c398adb",
+    "missing_fields": [
+      "appointment_type",
+      "day",
+      "time_window",
+      "zip_code"
+    ],
+    "optional_fields": [
+      "provider_name",
+      "insurance"
+    ],
+    "required_fields": [
+      "appointment_type",
+      "day",
+      "time_window",
+      "zip_code"
+    ],
+    "slots": {},
+    "status": "pending",
+    "updated_at": "2026-04-11T01:36:52+00:00"
+  }
+]

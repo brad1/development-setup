@@ -1,0 +1,18 @@
+{
+  "form_name": "reminder",
+  "command_name": "reminder",
+  "required_fields": ["message", "time"],
+  "optional_fields": ["date", "priority"],
+  "field_prompts": {
+    "message": "specify reminder text",
+    "time": "specify time",
+    "date": "specify date",
+    "priority": "specify priority"
+  },
+  "field_aliases": {
+    "message": ["message", "text"],
+    "time": ["time"],
+    "date": ["date"],
+    "priority": ["priority"]
+  }
+}

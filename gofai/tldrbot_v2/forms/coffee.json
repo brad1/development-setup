@@ -1,0 +1,22 @@
+{
+  "form_name": "coffee",
+  "command_name": "coffee",
+  "required_fields": ["size", "temperature", "cream", "sugar"],
+  "optional_fields": ["flavor", "notes"],
+  "field_prompts": {
+    "size": "specify size",
+    "temperature": "specify hot or iced",
+    "cream": "specify cream yes/no",
+    "sugar": "specify sugar yes/no",
+    "flavor": "specify flavor",
+    "notes": "specify notes"
+  },
+  "field_aliases": {
+    "size": ["size"],
+    "temperature": ["temp", "temperature"],
+    "cream": ["cream"],
+    "sugar": ["sugar"],
+    "flavor": ["flavor"],
+    "notes": ["notes"]
+  }
+}
