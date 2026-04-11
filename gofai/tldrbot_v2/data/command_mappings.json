@@ -1,6 +1,7 @@
 {
   "custom": {
-    "dentist": "appointment"
+    "dentist": "appointment",
+    "hi": "reminder"
   },
   "defaults": {
     "coffee": "coffee",

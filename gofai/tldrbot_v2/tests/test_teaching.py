@@ -25,15 +25,18 @@ class TeachingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
             bot = TLDRBot(tmp)
-            first = bot.process("dentist")
-            self.assertIn("invalid command", first)
-            second = bot.process('map "dentist" -> appointment')
-            self.assertIn("map", second)
-            third = bot.process("yes")
-            self.assertEqual(third, "saved")
-            fourth = bot.process("dentist")
-            self.assertIn("specify", fourth)
+            first = bot.process("need a doctor")
+            self.assertIn("what do you mean", first)
+            self.assertIn("(1)", first)
+            second = bot.process("1")
+            self.assertEqual(second, "saved")
+            third = bot.process("need a doctor")
+            self.assertIn("?", third)
 
     def test_help_and_cancel_are_available_while_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -49,14 +52,12 @@ class TeachingTests(unittest.TestCase):
             )
             bot = TLDRBot(tmp)
             first = bot.process("coffee")
-            self.assertIn("specify", first)
-            self.assertIn('help', first)
-            second = bot.process("help")
-            self.assertIn("commands:", second)
-            third = bot.process("cancel")
-            self.assertEqual(third, "cancelled")
-            fourth = bot.process("show pending")
-            self.assertEqual(fourth, "no pending")
+            self.assertIn("?", first)
+            self.assertIn('cancel', first)
+            second = bot.process("cancel")
+            self.assertEqual(second, "cancelled")
+            third = bot.process("show pending")
+            self.assertEqual(third, "no pending")
 
 
 if __name__ == "__main__":

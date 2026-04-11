@@ -21,22 +21,37 @@ class TLDRBot:
         self.forms = FormRegistry(root / "forms")
         self.matcher = CommandMatcher(root / "data" / "command_mappings.json")
         self.pending = PendingStore(root / "data" / "pending_actions.json")
-        self.teaching_candidate: tuple[str, str] | None = None
+        self.teaching_candidate: tuple[str, list[str]] | None = None
 
     def _missing_prompt(self, action) -> str:
         fields = action.missing_fields
-        suffix = ' (type "help" for commands, "cancel" to stop)'
+        suffix = ' (type "cancel" to stop)'
         if len(fields) == 1:
-            return action.id + ": specify " + fields[0] + suffix
-        return action.id + ": specify " + ", ".join(fields) + suffix
+            return action.id + ": " + fields[0] + "?" + suffix
+        return action.id + ": " + ", ".join(f + "?" for f in fields) + suffix
 
-    def _command_help(self) -> str:
-        commands = ", ".join(self.forms.commands())
-        return (
-            "commands: "
-            + commands
-            + '. controls: help, commands, menu, cancel, show pending, continue pending, clear pending'
-        )
+    def _suggest_commands(self, text: str) -> list[str]:
+        lowered = text.lower().strip()
+        scored: list[tuple[int, str]] = []
+        for command in self.forms.commands():
+            score = 0
+            if command in lowered:
+                score += 4
+            if command == lowered:
+                score += 8
+            for part in re.split(r"[\s_-]+", command):
+                if part and part in lowered:
+                    score += 1
+            scored.append((score, command))
+        scored.sort(key=lambda item: (-item[0], item[1]))
+        chosen = [command for score, command in scored if score > 0]
+        if not chosen:
+            chosen = self.forms.commands()
+        return chosen[:3]
+
+    def _teaching_prompt(self, phrase: str, options: list[str]) -> str:
+        numbered = "; ".join(f"({idx}) {command}" for idx, command in enumerate(options, start=1))
+        return f'what do you mean by "{phrase}"? {numbered}'
 
     def _handle_control(self, text: str) -> str | None:
         lower = text.lower().strip()
@@ -47,8 +62,6 @@ class TLDRBot:
             return "pending: " + "; ".join(
                 f"{p.id}:{p.command_name} missing={','.join(p.missing_fields) or 'none'}" for p in pending
             )
-        if lower in {"help", "commands", "menu"}:
-            return self._command_help()
         if lower in {"cancel", "back"}:
             return "cancelled" if self.pending.cancel_recent() else "no pending"
         if lower == "cancel pending":
@@ -69,25 +82,36 @@ class TLDRBot:
         if not self.teaching_candidate:
             return None
         lower = text.strip().lower()
+        if lower in {"cancel", "back"}:
+            self.teaching_candidate = None
+            return "cancelled"
+        if lower.isdigit():
+            phrase, options = self.teaching_candidate
+            idx = int(lower) - 1
+            if 0 <= idx < len(options):
+                self.matcher.add_custom_mapping(phrase, options[idx])
+                self.teaching_candidate = None
+                return "saved"
+            return "pick 1-" + str(len(options))
         if lower in {"yes", "y"}:
-            phrase, command = self.teaching_candidate
-            self.matcher.add_custom_mapping(phrase, command)
+            phrase, options = self.teaching_candidate
+            self.matcher.add_custom_mapping(phrase, options[0])
             self.teaching_candidate = None
             return "saved"
         if lower in {"no", "n"}:
             self.teaching_candidate = None
             return "ignored"
-        return "confirm yes/no"
+        return "pick 1-" + str(len(self.teaching_candidate[1]))
 
     def _parse_map_command(self, text: str) -> str | None:
         match = re.match(r'^map\s+"(.+?)"\s*->\s*([a-zA-Z0-9_\-]+)\s*$', text.strip())
-        if not match:
-            return None
-        phrase, command = match.group(1), match.group(2).lower()
-        if not self.forms.has(command):
-            return "invalid command target"
-        self.teaching_candidate = (phrase, command)
-        return f'map "{phrase}" -> {command} ?'
+        if match:
+            phrase, command = match.group(1), match.group(2).lower()
+            if not self.forms.has(command):
+                return "invalid command target"
+            self.teaching_candidate = (phrase, [command])
+            return f'what do you mean by "{phrase}"? (1) {command}'
+        return None
 
     def _execute_if_ready(self, action):
         if action.missing_fields:
@@ -124,11 +148,9 @@ class TLDRBot:
 
         command = self.matcher.match(text)
         if not command:
-            return (
-                "invalid command. "
-                'map "<phrase>" -> <command_name>. '
-                f"valid commands: {', '.join(self.forms.commands())}"
-            )
+            options = self._suggest_commands(text)
+            self.teaching_candidate = (text, options)
+            return self._teaching_prompt(text, options)
 
         form = self.forms.get(command)
         slots = parse_slots(text, form, existing={})

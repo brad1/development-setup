@@ -22,7 +22,7 @@ python3 -m unittest discover -s tests -v
 - Form definitions in `forms/*.json`.
 - Pending actions persisted in `data/pending_actions.json`.
 - Unknown phrase teaching flow with explicit confirmation.
-- Terse operational responses.
+- Terse operational responses with a single escape path.
 
 ## Built-in Control Commands
 
@@ -31,6 +31,7 @@ python3 -m unittest discover -s tests -v
 - `cancel pending`
 - `clear pending`
 - `map "<phrase>" -> <command_name>`
+- `cancel`
 
 ## Extending
 
@@ -48,7 +49,7 @@ No core control-flow rewrite is required.
 $ python3 bot.py
  tldrbot v2
  you> order coffee hot no sugar vanilla
- bot> 0b32c2a1: specify size, cream
+ bot> 0b32c2a1: size?, cream? (type "cancel" to stop)
  you> size: medium cream: yes
  bot> coffee order: size=medium, temp=hot, cream=yes, sugar=no, flavor=vanilla, notes=none
  you> dentist
@@ -58,15 +59,15 @@ $ python3 bot.py
  you> yes
  bot> saved
  you> dentist
- bot> 4af120dd: specify appointment_type, day, time_window, zip_code
+ bot> 4af120dd: appointment_type?, day?, time_window?, zip_code? (type "cancel" to stop)
  you> type: cleaning day: monday
- bot> 4af120dd: specify time_window, zip_code
+ bot> 4af120dd: time_window?, zip_code? (type "cancel" to stop)
  ^C
 
 $ python3 bot.py
  tldrbot v2
  you> continue pending
- bot> 4af120dd: specify time_window, zip_code
+ bot> 4af120dd: time_window?, zip_code? (type "cancel" to stop)
  you> time window: morning zip: 90210
  bot> appointment queued: type=cleaning, day=monday, window=morning, zip=90210, provider=next available provider, insurance=self-pay
 ```
@@ -75,4 +76,3 @@ $ python3 bot.py
 
 - `data/command_mappings.json`: defaults + custom learned mappings.
 - `data/pending_actions.json`: active in-progress actions.
-
