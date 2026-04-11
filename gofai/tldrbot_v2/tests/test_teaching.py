@@ -35,6 +35,29 @@ class TeachingTests(unittest.TestCase):
             fourth = bot.process("dentist")
             self.assertIn("specify", fourth)
 
+    def test_help_and_cancel_are_available_while_pending(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{"coffee":"coffee"},"custom":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            first = bot.process("coffee")
+            self.assertIn("specify", first)
+            self.assertIn('help', first)
+            second = bot.process("help")
+            self.assertIn("commands:", second)
+            third = bot.process("cancel")
+            self.assertEqual(third, "cancelled")
+            fourth = bot.process("show pending")
+            self.assertEqual(fourth, "no pending")
+
 
 if __name__ == "__main__":
     unittest.main()

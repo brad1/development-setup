@@ -25,9 +25,18 @@ class TLDRBot:
 
     def _missing_prompt(self, action) -> str:
         fields = action.missing_fields
+        suffix = ' (type "help" for commands, "cancel" to stop)'
         if len(fields) == 1:
-            return action.id + ": specify " + fields[0]
-        return action.id + ": specify " + ", ".join(fields)
+            return action.id + ": specify " + fields[0] + suffix
+        return action.id + ": specify " + ", ".join(fields) + suffix
+
+    def _command_help(self) -> str:
+        commands = ", ".join(self.forms.commands())
+        return (
+            "commands: "
+            + commands
+            + '. controls: help, commands, menu, cancel, show pending, continue pending, clear pending'
+        )
 
     def _handle_control(self, text: str) -> str | None:
         lower = text.lower().strip()
@@ -38,6 +47,10 @@ class TLDRBot:
             return "pending: " + "; ".join(
                 f"{p.id}:{p.command_name} missing={','.join(p.missing_fields) or 'none'}" for p in pending
             )
+        if lower in {"help", "commands", "menu"}:
+            return self._command_help()
+        if lower in {"cancel", "back"}:
+            return "cancelled" if self.pending.cancel_recent() else "no pending"
         if lower == "cancel pending":
             return "cancelled" if self.pending.cancel_recent() else "no pending"
         if lower == "clear pending":
@@ -105,6 +118,8 @@ class TLDRBot:
             form = self.forms.get(active.command_name)
             active.slots = parse_slots(text, form, existing=active.slots)
             self.pending.update(active)
+            if active.missing_fields:
+                return self._missing_prompt(active)
             return self._execute_if_ready(active)
 
         command = self.matcher.match(text)
