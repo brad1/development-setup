@@ -43,6 +43,10 @@ class TLDRBot:
         if lower == "clear pending":
             self.pending.clear_all()
             return "cleared"
+        if lower == "suspend pending":
+            return "suspended" if self.pending.suspend_recent() else "no pending"
+        if lower == "resume pending":
+            return "resumed" if self.pending.resume_recent() else "no suspended"
         if lower == "continue pending":
             action = self.pending.most_recent()
             return self._missing_prompt(action) if action else "no pending"

@@ -59,11 +59,20 @@ class PendingStore:
     def list_active(self) -> list[PendingAction]:
         return [a for a in self._load() if a.status == "pending"]
 
+    def list_suspended(self) -> list[PendingAction]:
+        return [a for a in self._load() if a.status == "suspended"]
+
     def most_recent(self) -> PendingAction | None:
         active = self.list_active()
         if not active:
             return None
         return sorted(active, key=lambda item: item.updated_at)[-1]
+
+    def most_recent_suspended(self) -> PendingAction | None:
+        suspended = self.list_suspended()
+        if not suspended:
+            return None
+        return sorted(suspended, key=lambda item: item.updated_at)[-1]
 
     def create(self, form: dict[str, Any], slots: dict[str, str] | None = None) -> PendingAction:
         stamp = now_iso()
@@ -89,7 +98,8 @@ class PendingStore:
 
     def update(self, action: PendingAction) -> PendingAction:
         action.missing_fields = [f for f in action.required_fields if f not in action.slots]
-        action.status = "ready" if not action.missing_fields else "pending"
+        if action.status != "suspended":
+            action.status = "ready" if not action.missing_fields else "pending"
         action.updated_at = now_iso()
 
         actions = self._load()
@@ -120,3 +130,21 @@ class PendingStore:
 
     def clear_all(self) -> None:
         self._save([])
+
+    def suspend_recent(self) -> bool:
+        recent = self.most_recent()
+        if not recent:
+            return False
+        recent.status = "suspended"
+        recent.updated_at = now_iso()
+        self.update(recent)
+        return True
+
+    def resume_recent(self) -> bool:
+        recent = self.most_recent_suspended()
+        if not recent:
+            return False
+        recent.status = "pending"
+        recent.updated_at = now_iso()
+        self.update(recent)
+        return True
