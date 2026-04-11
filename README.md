@@ -14,12 +14,6 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
   and `bash scripts/ci-test.sh` from the repository root to mirror CI and Codex
   cloud automation. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
   after the backend is running.
-- `ReactDashboard/` - React/Vite dashboard frontend. Run `npm ci`, `npm test`,
-  and `npm run build` inside this directory to mirror the local automation
-  workflow. Start the dev server with `npm run dev -- --host 127.0.0.1 --port 4173`
-  after the backend is running. The browser entrypoint redirects `/` to the
-  simpler shell-backed dashboard at `/simple`, while the richer prior view now
-  lives at `/full`.
 - `flaskdashboard/` - minimal Flask API backend for the dashboard. See
   `flaskdashboard/README.md` for the venv setup, test command, startup
   instructions, and available API routes.
@@ -42,26 +36,9 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 ### Chef cookbook
 
 - `attributes/` - default configuration attributes for the cookbook.
-- `files/` - various helper scripts, notes and configuration files used by the cookbook:
-  - `bash/` - shell examples and SSH helpers.
-  - `bin/` - custom command line utilities and prototype scripts. The
-      `git-branch-hop` utility (requires `fzf`) lets you switch to a recent branch via fuzzy search. Two
-      zsh functions `git-branch-hop` and `git-branch-hop-old` provide the same
-      idea with different implementations for easy comparison.
-  - `cheatsheets/` - quick reference guides for tools (git, tmux, etc.).
-  - `custom/` - personal cheat entries for the `cheat` or `navi` utilities,
-    letting you fuzzy find frequently used commands.
-  - `docs/` - assorted documentation like logs and setup notes.
-    See `docs/DECISIONS.md` for project choices.
-  - `etc/` - sample configuration files such as `knife.rb.example`.
-  - `notes/` - topic-specific notes (cron, virtualbox, etc.).
-  - `pseudocode/` - design notes and planning snippets.
-  - `tmux/`, `vim/`, `zsh/` - configuration directories for these tools. The
-    `zsh` folder includes an oh-my-zsh setup. Most custom helpers live in
-    `functions.zsh` sources several `fn_*.zsh` modules that replace many older aliases. Over time,
-    commands from `files/custom` can be searched with `navi`, making even the
-    functions themselves optional (see `zsh/README.md`).
-  - `unix.example.0` and `matches` - example command snippets.
+- `files/` - helper scripts, configuration, and notes used by the cookbook.
+  See `files/etc/README.md`, `files/docs/DECISIONS.md`, and `files/zsh/README.md`
+  for focused details.
 - `recipes/` - main Chef recipes to configure different platforms.
 - `templates/` - template files for configuration (e.g. `zshrc.erb`).
 - `tools/` - utility scripts such as Ruby analysis helpers.
