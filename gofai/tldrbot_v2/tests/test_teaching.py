@@ -122,5 +122,15 @@ class TeachingTests(unittest.TestCase):
             self.assertEqual(third, "no pending")
 
 
+
+    def test_exit_sets_should_exit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            response = bot.process("exit")
+            self.assertEqual(response, "bye")
+            self.assertTrue(bot.should_exit)
+
 if __name__ == "__main__":
     unittest.main()
