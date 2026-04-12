@@ -87,6 +87,8 @@ def _extract_teaching_reply(lowered_text: str, phrase_table: PhraseTable) -> Tea
 
 
 def _map_syntax_error(normalized_text: str, phrase_table: PhraseTable) -> str | None:
+    if phrase_table.map_alias_target(normalized_text) is not None:
+        return None
     if not phrase_table.map_prefix_re().match(normalized_text):
         return None
     if phrase_table.map_command_re().match(normalized_text):
@@ -125,6 +127,37 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             should_suspend_pending=True,
         )
 
+    map_error = _map_syntax_error(normalized_text, phrase_table)
+    if map_error:
+        return VettedInput(
+            raw_text=text,
+            normalized_text=normalized_text,
+            lowered_text=lowered_text,
+            intent="invalid",
+            error=map_error,
+        )
+
+    map_match = phrase_table.map_command_re().match(normalized_text)
+    if map_match:
+        phrase, command = map_match.group(1), map_match.group(2).lower()
+        phrase_lowered = " ".join(phrase.strip().split()).lower()
+        if phrase_lowered in phrase_table.reserved_phrases():
+            return VettedInput(
+                raw_text=text,
+                normalized_text=normalized_text,
+                lowered_text=lowered_text,
+                intent="invalid",
+                error="control phrase collision",
+            )
+        return VettedInput(
+            raw_text=text,
+            normalized_text=normalized_text,
+            lowered_text=lowered_text,
+            intent="map_command",
+            map_command=MapCommandPayload(phrase=phrase, command=command),
+            should_suspend_pending=True,
+        )
+
     if context.teaching_candidate:
         teaching_reply = _extract_teaching_reply(lowered_text, phrase_table)
         if teaching_reply.kind != "invalid":
@@ -157,37 +190,6 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             lowered_text=lowered_text,
             intent="teaching_reply",
             teaching_reply=teaching_reply,
-        )
-
-    map_error = _map_syntax_error(normalized_text, phrase_table)
-    if map_error:
-        return VettedInput(
-            raw_text=text,
-            normalized_text=normalized_text,
-            lowered_text=lowered_text,
-            intent="invalid",
-            error=map_error,
-        )
-
-    map_match = phrase_table.map_command_re().match(normalized_text)
-    if map_match:
-        phrase, command = map_match.group(1), map_match.group(2).lower()
-        phrase_lowered = " ".join(phrase.strip().split()).lower()
-        if phrase_lowered in phrase_table.reserved_phrases():
-            return VettedInput(
-                raw_text=text,
-                normalized_text=normalized_text,
-                lowered_text=lowered_text,
-                intent="invalid",
-                error="control phrase collision",
-            )
-        return VettedInput(
-            raw_text=text,
-            normalized_text=normalized_text,
-            lowered_text=lowered_text,
-            intent="map_command",
-            map_command=MapCommandPayload(phrase=phrase, command=command),
-            should_suspend_pending=True,
         )
 
     control_verb = phrase_table.control_verb(lowered_text)

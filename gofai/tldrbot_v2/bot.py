@@ -21,6 +21,22 @@ from engine.pending import PendingStore
 
 
 class TLDRBot:
+    CONTROL_ACTIONS: tuple[tuple[str, str], ...] = (
+        ("help", "help"),
+        ("greet", "greet"),
+        ("register", "name_prompt"),
+        ("identify", "get_name"),
+        ("status", "status"),
+        ("capabilities", "capabilities"),
+        ("show pending", "show_pending"),
+        ("continue pending", "continue_pending"),
+        ("cancel pending", "cancel_pending"),
+        ("clear pending", "clear_pending"),
+        ("suspend pending", "suspend_pending"),
+        ("resume pending", "resume_pending"),
+        ("exit", "exit"),
+    )
+
     def __init__(self, root: Path) -> None:
         self.root = root
         self.forms = FormRegistry(root / "forms")
@@ -46,7 +62,7 @@ class TLDRBot:
     def _suggest_commands(self, text: str) -> list[str]:
         lowered = text.lower().strip()
         scored: list[tuple[int, str]] = []
-        for command in self.forms.commands():
+        for command in self._available_action_targets():
             score = 0
             if command in lowered:
                 score += 4
@@ -59,8 +75,8 @@ class TLDRBot:
         scored.sort(key=lambda item: (-item[0], item[1]))
         chosen = [command for score, command in scored if score > 0]
         if not chosen:
-            chosen = self.forms.commands()
-        return chosen[:3]
+            chosen = self._available_action_targets()
+        return chosen
 
     def _teaching_prompt(self, phrase: str, options: list[str]) -> str:
         display = options + ["new command"]
@@ -73,25 +89,23 @@ class TLDRBot:
     def _capability_list(self) -> str:
         return "available functions: greetings, identity registration, identity recall, status reports, capability queries, and session termination."
 
+    def _control_action_labels(self) -> list[str]:
+        return [label for label, _ in self.CONTROL_ACTIONS]
+
+    def _available_action_targets(self) -> list[str]:
+        return sorted(set(self.forms.commands()) | set(self._control_action_labels()))
+
+    def _resolve_action_target(self, target: str) -> tuple[str, str] | None:
+        if self.forms.has(target):
+            return "form", target
+        for label, verb in self.CONTROL_ACTIONS:
+            if target == label or target == verb:
+                return "control", verb
+        return None
+
     def _help_summary(self) -> str:
         commands = ", ".join(self.forms.commands())
-        controls = ", ".join(
-            [
-                "greet",
-                "register identity",
-                "recall identity",
-                "status",
-                "capabilities",
-                "show pending",
-                "continue pending",
-                "cancel pending",
-                "clear pending",
-                "suspend pending",
-                "resume pending",
-                'map "<phrase>" -> <command>',
-                "exit",
-            ]
-        )
+        controls = ", ".join(self._control_action_labels() + ['map "<phrase>" -> <command>'])
         return f"commands: {commands}; controls: {controls}"
 
     def _extract_name(self, text: str, prefix: str | None = None) -> str:
@@ -225,7 +239,8 @@ class TLDRBot:
         else:
             phrase = map_command.phrase
 
-        if not self.forms.has(map_command.command):
+        resolved = self._resolve_action_target(map_command.command)
+        if not resolved:
             return "invalid command target"
         self.teaching_candidate = (phrase, [map_command.command])
         return f'what do you mean by "{phrase}"? (1) {map_command.command}'
@@ -278,7 +293,14 @@ class TLDRBot:
             self.teaching_candidate = (vetted.normalized_text, options)
             return self._teaching_prompt(vetted.normalized_text, options)
 
-        form = self.forms.get(command)
+        resolved = self._resolve_action_target(command)
+        if not resolved:
+            return "invalid command target"
+        target_kind, target = resolved
+        if target_kind == "control":
+            return self._handle_control(target)
+
+        form = self.forms.get(target)
         slots = parse_slots(vetted.normalized_text, form, existing={})
         action = self.pending.create(form, slots=slots)
         action = self.pending.update(action)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,6 +9,11 @@ from bot import TLDRBot
 
 
 class TeachingTests(unittest.TestCase):
+    def _last_option_index(self, prompt: str) -> int:
+        numbers = [int(value) for value in re.findall(r"\((\d+)\)", prompt)]
+        assert numbers
+        return max(numbers)
+
     def _seed(self, tmp: Path) -> None:
         (tmp / "forms").mkdir()
         (tmp / "data").mkdir()
@@ -33,7 +39,7 @@ class TeachingTests(unittest.TestCase):
             first = bot.process("need a doctor")
             self.assertIn("what do you mean", first)
             self.assertIn("(1)", first)
-            self.assertIn("(3) new command", first)
+            self.assertIn("new command", first)
             second = bot.process("1")
             self.assertEqual(second, "saved")
             third = bot.process("need a doctor")
@@ -49,8 +55,8 @@ class TeachingTests(unittest.TestCase):
             )
             bot = TLDRBot(tmp)
             first = bot.process("need a doctor")
-            self.assertIn("(3) new command", first)
-            second = bot.process("3")
+            self.assertIn("new command", first)
+            second = bot.process(str(self._last_option_index(first)))
             self.assertTrue(second.startswith("created "))
             third = bot.process("need a doctor")
             self.assertEqual(third, "feature unimplemented")
@@ -73,7 +79,7 @@ class TeachingTests(unittest.TestCase):
             self.assertIn("?", first)
             second = bot.process("help")
             self.assertIn("commands: appointment, coffee", second)
-            self.assertIn("controls: greet, register identity, recall identity, status, capabilities", second)
+            self.assertIn("controls: help, greet, register, identify, status, capabilities", second)
             third = bot.process("show pending")
             self.assertIn("coffee", third)
             fourth = bot.process("cancel")
@@ -119,6 +125,16 @@ class TeachingTests(unittest.TestCase):
             self.assertIn("what do you mean", first)
             second = bot.process("map to coffee")
             self.assertIn('what do you mean by "need a doctor"', second)
+
+    def test_direct_map_to_control_verb(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            self.assertIn("what do you mean", bot.process("healthcheck"))
+            self.assertIn("(1) status", bot.process('map "healthcheck" -> status'))
+            self.assertEqual(bot.process("yes"), "saved")
+            self.assertEqual(bot.process("healthcheck"), "Assistant online. All monitored systems nominal.")
 
     def test_known_command_or_escape_phrase_suspends_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -187,9 +203,9 @@ class TeachingTests(unittest.TestCase):
             )
             bot = TLDRBot(tmp)
             first = bot.process("need a doctor")
-            self.assertIn("(3) new command", first)
-            second = bot.process("4")
-            self.assertEqual(second, "pick 1-3")
+            self.assertIn("new command", first)
+            second = bot.process(str(self._last_option_index(first) + 1))
+            self.assertIn("pick 1-", second)
 
 
 
