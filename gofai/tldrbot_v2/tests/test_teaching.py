@@ -66,35 +66,61 @@ class TeachingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{"coffee":"coffee"},"custom":{"list":"help"}}',
+                encoding="utf-8",
+            )
             (tmp / "forms" / "coffee.json").write_text(
                 '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
                 encoding="utf-8",
             )
-            (tmp / "data" / "command_mappings.json").write_text(
-                '{"defaults":{"coffee":"coffee"},"custom":{}}',
-                encoding="utf-8",
-            )
             bot = TLDRBot(tmp)
+            second = bot.process("help")
+            third = bot.process("capabilities")
+            fourth = bot.process("list")
+            self.assertEqual(second, third)
+            self.assertEqual(second, fourth)
+            self.assertIn("overview:", second)
+            self.assertIn("  builtins:", second)
+            self.assertIn("    help, commands, capabilities, status, greet, register, identify, list pending, clear pending, exit", second)
+            self.assertIn("  sample commands:", second)
+            self.assertIn("    appointment, coffee", second)
+            self.assertIn("  maps:", second)
+            self.assertIn('    teach aliases with `map "<phrase>" -> <command>`', second)
             first = bot.process("coffee")
             self.assertIn("?", first)
-            second = bot.process("help")
-            self.assertIn("commands: appointment, coffee", second)
-            self.assertIn("controls: help, greet, register, identify, status, capabilities, list pending, clear pending, exit", second)
-            third = bot.process("list pending")
-            self.assertIn("coffee", third)
-            fourth = bot.process("clear pending")
-            self.assertEqual(fourth, "cleared")
             fifth = bot.process("list pending")
-            self.assertEqual(fifth, "no pending")
+            self.assertIn("coffee", fifth)
+            sixth = bot.process("clear pending")
+            self.assertEqual(sixth, "cleared")
+            seventh = bot.process("list pending")
+            self.assertEqual(seventh, "no pending")
 
     def test_greet_status_and_capabilities(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            (tmp / "forms" / "reminder.json").write_text(
+                '{"form_name":"reminder","command_name":"reminder","required_fields":["message"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
             bot = TLDRBot(tmp)
             self.assertEqual(bot.process("hello"), "Assistant ready.")
             self.assertEqual(bot.process("status"), "Assistant online. All monitored systems nominal.")
-            self.assertIn("available functions", bot.process("what can you do"))
+            overview = bot.process("what can you do")
+            self.assertEqual(overview, bot.process("help"))
+            self.assertEqual(overview, bot.process("capabilities"))
+            self.assertIn("overview:", overview)
+            self.assertIn("  builtins:", overview)
+            self.assertIn("    help, commands, capabilities, status, greet, register, identify, list pending, clear pending, exit", overview)
+            self.assertIn("  sample commands:", overview)
+            self.assertIn("    appointment, coffee, reminder", overview)
+            self.assertIn("  maps:", overview)
+            self.assertIn('    teach aliases with `map "<phrase>" -> <command>`', overview)
 
     def test_name_registration_and_recall(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

@@ -83,8 +83,32 @@ class TLDRBot:
     def _command_list(self) -> str:
         return "commands: " + ", ".join(self.forms.commands())
 
-    def _capability_list(self) -> str:
-        return "available functions: greetings, identity registration, identity recall, status reports, capability queries, and session termination."
+    def _sample_custom_commands(self, limit: int = 3) -> list[str]:
+        preferred = ["appointment", "coffee", "reminder"]
+        sample = [command for command in preferred if self.forms.has(command)]
+        if len(sample) < limit:
+            for command in self.forms.commands():
+                if command not in sample:
+                    sample.append(command)
+                if len(sample) >= limit:
+                    break
+        return sample[:limit]
+
+    def _overview_summary(self) -> str:
+        builtins = ["help", "commands", "capabilities", "status", "greet", "register", "identify", "list pending", "clear pending", "exit"]
+        custom_commands = self._sample_custom_commands()
+        lines = [
+            "overview:",
+            "  builtins:",
+            "    " + ", ".join(builtins),
+            "  sample commands:",
+            "    " + ", ".join(custom_commands),
+            "  maps:",
+            '    teach aliases with `map "<phrase>" -> <command>`',
+            "  custom:",
+            "    learned aliases and new forms you add",
+        ]
+        return "\n".join(lines)
 
     def _control_action_labels(self) -> list[str]:
         return [label for label, _ in self.CONTROL_ACTIONS]
@@ -101,9 +125,7 @@ class TLDRBot:
         return None
 
     def _help_summary(self) -> str:
-        commands = ", ".join(self.forms.commands())
-        controls = ", ".join(self._control_action_labels() + ['map "<phrase>" -> <command>'])
-        return f"commands: {commands}; controls: {controls}"
+        return self._overview_summary()
 
     def _route_pending_input(self, text: str):
         return route_pending_input(text, self.pending._load())
@@ -161,10 +183,8 @@ class TLDRBot:
             return "pending: " + "; ".join(
                 f"{p.id}:{p.command_name} missing={','.join(p.missing_fields) or 'none'}" for p in pending
             )
-        if control_verb in {"help", "commands"}:
-            return self._help_summary()
-        if control_verb == "capabilities":
-            return self._capability_list()
+        if control_verb in {"help", "commands", "capabilities"}:
+            return self._overview_summary()
         if control_verb == "cancel":
             if self.teaching_candidate:
                 self.teaching_candidate = None
