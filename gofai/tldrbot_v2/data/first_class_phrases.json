@@ -1,0 +1,75 @@
+{
+  "controls": [
+    {
+      "phrase": "show pending",
+      "verb": "show_pending"
+    },
+    {
+      "phrase": "help",
+      "verb": "help"
+    },
+    {
+      "phrase": "commands",
+      "verb": "help"
+    },
+    {
+      "phrase": "menu",
+      "verb": "help"
+    },
+    {
+      "phrase": "cancel",
+      "verb": "cancel"
+    },
+    {
+      "phrase": "back",
+      "verb": "cancel"
+    },
+    {
+      "phrase": "cancel pending",
+      "verb": "cancel_pending"
+    },
+    {
+      "phrase": "clear pending",
+      "verb": "clear_pending"
+    },
+    {
+      "phrase": "suspend pending",
+      "verb": "suspend_pending"
+    },
+    {
+      "phrase": "resume pending",
+      "verb": "resume_pending"
+    },
+    {
+      "phrase": "continue pending",
+      "verb": "continue_pending"
+    }
+  ],
+  "exit_words": [
+    "quit",
+    "exit"
+  ],
+  "escape_phrases": [
+    "nevermind",
+    "never mind",
+    "ignore that",
+    "forget it"
+  ],
+  "teaching_replies": {
+    "cancel": [
+      "cancel",
+      "back"
+    ],
+    "yes": [
+      "yes",
+      "y"
+    ],
+    "no": [
+      "no",
+      "n"
+    ]
+  },
+  "map_command": {
+    "prefix": "map"
+  }
+}

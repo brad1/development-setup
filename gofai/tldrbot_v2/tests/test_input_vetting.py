@@ -6,6 +6,21 @@ from engine.input_vetting import VettingContext, vet
 
 
 class InputVettingTests(unittest.TestCase):
+    def test_control_alias_from_phrase_table(self) -> None:
+        vetted = vet(" menu ", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "help")
+
+    def test_broken_map_command_is_invalid(self) -> None:
+        vetted = vet('map "Need Dentist" appointment', VettingContext())
+        self.assertEqual(vetted.intent, "invalid")
+        self.assertEqual(vetted.error, "invalid map syntax")
+
+    def test_map_command_reserved_phrase_collision_is_invalid(self) -> None:
+        vetted = vet('map "cancel" -> appointment', VettingContext())
+        self.assertEqual(vetted.intent, "invalid")
+        self.assertEqual(vetted.error, "control phrase collision")
+
     def test_map_command_payload(self) -> None:
         vetted = vet(' map   "Need Dentist"   ->  Appointment ', VettingContext())
         self.assertEqual(vetted.intent, "map_command")
@@ -21,6 +36,13 @@ class InputVettingTests(unittest.TestCase):
         assert vetted.teaching_reply is not None
         self.assertEqual(vetted.teaching_reply.kind, "select")
         self.assertEqual(vetted.teaching_reply.selected_index, 1)
+
+    def test_teaching_reply_text_stays_in_teaching_mode(self) -> None:
+        vetted = vet("what else", VettingContext(teaching_candidate=("need help", ["coffee", "reminder"])))
+        self.assertEqual(vetted.intent, "teaching_reply")
+        self.assertIsNotNone(vetted.teaching_reply)
+        assert vetted.teaching_reply is not None
+        self.assertEqual(vetted.teaching_reply.kind, "invalid")
 
     def test_exit_intent(self) -> None:
         vetted = vet(" EXIT ", VettingContext())

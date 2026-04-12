@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-import re
+from functools import lru_cache
 from dataclasses import dataclass
 from typing import Literal
+
+from .phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 
 
 Intent = Literal[
@@ -15,29 +17,12 @@ Intent = Literal[
     "utterance",
 ]
 
-CONTROL_ALIASES: dict[str, str] = {
-    "show pending": "show_pending",
-    "help": "help",
-    "commands": "commands",
-    "menu": "commands",
-    "cancel": "cancel",
-    "back": "cancel",
-    "cancel pending": "cancel_pending",
-    "clear pending": "clear_pending",
-    "suspend pending": "suspend_pending",
-    "resume pending": "resume_pending",
-    "continue pending": "continue_pending",
-}
-
-EXIT_WORDS = {"quit", "exit"}
-ESCAPE_PHRASES = {"nevermind", "never mind", "ignore that", "forget it"}
-MAP_COMMAND_RE = re.compile(r'^map\s+"(.+?)"\s*->\s*([a-zA-Z0-9_\-]+)\s*$')
-
 
 @dataclass(frozen=True)
 class VettingContext:
     teaching_candidate: tuple[str, list[str]] | None = None
     max_length: int = 500
+    phrase_table: PhraseTable | None = None
 
 
 @dataclass(frozen=True)
@@ -84,24 +69,37 @@ def _shape_check(raw_text: str, normalized_text: str, context: VettingContext) -
         return None
     if len(raw_text) > context.max_length:
         return "input too long"
+    # Deferred hardening lives in section 3a of the checklist.
     if _contains_forbidden_control_chars(raw_text):
         return "invalid control chars"
     return None
 
 
-def _extract_teaching_reply(lowered_text: str) -> TeachingReplyPayload | None:
-    if lowered_text in {"cancel", "back"}:
-        return TeachingReplyPayload(kind="cancel")
+def _extract_teaching_reply(lowered_text: str, phrase_table: PhraseTable) -> TeachingReplyPayload | None:
     if lowered_text.isdigit():
         return TeachingReplyPayload(kind="select", selected_index=int(lowered_text) - 1)
-    if lowered_text in {"yes", "y"}:
-        return TeachingReplyPayload(kind="yes")
-    if lowered_text in {"no", "n"}:
-        return TeachingReplyPayload(kind="no")
+    for kind, phrases in phrase_table.teaching_replies.items():
+        if lowered_text in phrases:
+            if kind in {"cancel", "yes", "no"}:
+                return TeachingReplyPayload(kind=kind)
     return TeachingReplyPayload(kind="invalid")
 
 
+def _map_syntax_error(normalized_text: str, phrase_table: PhraseTable) -> str | None:
+    if not phrase_table.map_prefix_re().match(normalized_text):
+        return None
+    if phrase_table.map_command_re().match(normalized_text):
+        return None
+    return "invalid map syntax"
+
+
+@lru_cache(maxsize=1)
+def _default_phrase_table() -> PhraseTable:
+    return PhraseTable.load(DEFAULT_PHRASE_TABLE_PATH)
+
+
 def vet(text: str, context: VettingContext) -> VettedInput:
+    phrase_table = context.phrase_table or _default_phrase_table()
     normalized_text, lowered_text = _normalize(text)
 
     shape_error = _shape_check(text, normalized_text, context)
@@ -117,10 +115,10 @@ def vet(text: str, context: VettingContext) -> VettedInput:
     if not normalized_text:
         return VettedInput(raw_text=text, normalized_text=normalized_text, lowered_text=lowered_text, intent="empty")
 
-    if lowered_text in EXIT_WORDS:
+    if phrase_table.is_exit(lowered_text):
         return VettedInput(raw_text=text, normalized_text=normalized_text, lowered_text=lowered_text, intent="exit")
 
-    if lowered_text in ESCAPE_PHRASES:
+    if phrase_table.is_escape(lowered_text):
         return VettedInput(
             raw_text=text,
             normalized_text=normalized_text,
@@ -135,12 +133,31 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="teaching_reply",
-            teaching_reply=_extract_teaching_reply(lowered_text),
+            teaching_reply=_extract_teaching_reply(lowered_text, phrase_table),
         )
 
-    map_match = MAP_COMMAND_RE.match(normalized_text)
+    map_error = _map_syntax_error(normalized_text, phrase_table)
+    if map_error:
+        return VettedInput(
+            raw_text=text,
+            normalized_text=normalized_text,
+            lowered_text=lowered_text,
+            intent="invalid",
+            error=map_error,
+        )
+
+    map_match = phrase_table.map_command_re().match(normalized_text)
     if map_match:
         phrase, command = map_match.group(1), map_match.group(2).lower()
+        phrase_lowered = " ".join(phrase.strip().split()).lower()
+        if phrase_lowered in phrase_table.reserved_phrases():
+            return VettedInput(
+                raw_text=text,
+                normalized_text=normalized_text,
+                lowered_text=lowered_text,
+                intent="invalid",
+                error="control phrase collision",
+            )
         return VettedInput(
             raw_text=text,
             normalized_text=normalized_text,
@@ -150,7 +167,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             should_suspend_pending=True,
         )
 
-    control_verb = CONTROL_ALIASES.get(lowered_text)
+    control_verb = phrase_table.control_verb(lowered_text)
     if control_verb:
         return VettedInput(
             raw_text=text,

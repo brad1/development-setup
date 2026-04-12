@@ -14,6 +14,7 @@ from engine.dispatcher import dispatch
 from engine.forms import FormRegistry
 from engine.input_vetting import MapCommandPayload, TeachingReplyPayload, VettingContext, vet
 from engine.matcher import CommandMatcher
+from engine.phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 from engine.parser import parse_slots
 from engine.pending import PendingStore
 
@@ -24,6 +25,10 @@ class TLDRBot:
         self.forms = FormRegistry(root / "forms")
         self.matcher = CommandMatcher(root / "data" / "command_mappings.json")
         self.pending = PendingStore(root / "data" / "pending_actions.json")
+        phrase_table_path = root / "data" / "first_class_phrases.json"
+        self.phrase_table = PhraseTable.load(
+            phrase_table_path if phrase_table_path.exists() else DEFAULT_PHRASE_TABLE_PATH
+        )
         self.teaching_candidate: tuple[str, list[str]] | None = None
         self.should_exit = False
 
@@ -127,7 +132,7 @@ class TLDRBot:
             return "cancelled"
         if teaching_reply.kind == "select":
             phrase, options = self.teaching_candidate
-            idx = teaching_reply.selected_index or -1
+            idx = teaching_reply.selected_index if teaching_reply.selected_index is not None else -1
             if 0 <= idx < len(options):
                 self.matcher.add_custom_mapping(phrase, options[idx])
                 self.teaching_candidate = None
@@ -136,7 +141,7 @@ class TLDRBot:
                 command = self._create_new_command(phrase)
                 self.teaching_candidate = None
                 return f"created {command}"
-            return "pick 1-" + str(len(options))
+            return "pick 1-" + str(len(options) + 1)
         if teaching_reply.kind == "yes":
             phrase, options = self.teaching_candidate
             self.matcher.add_custom_mapping(phrase, options[0])
@@ -145,7 +150,7 @@ class TLDRBot:
         if teaching_reply.kind == "no":
             self.teaching_candidate = None
             return "ignored"
-        return "pick 1-" + str(len(self.teaching_candidate[1]))
+        return "pick 1-" + str(len(self.teaching_candidate[1]) + 1)
 
     def _handle_map_command(self, map_command: MapCommandPayload) -> str:
         if not self.forms.has(map_command.command):
@@ -161,7 +166,7 @@ class TLDRBot:
         return result
 
     def process(self, text: str) -> str:
-        vetted = vet(text, VettingContext(teaching_candidate=self.teaching_candidate))
+        vetted = vet(text, VettingContext(teaching_candidate=self.teaching_candidate, phrase_table=self.phrase_table))
 
         if vetted.intent == "invalid":
             return vetted.error or "invalid input"

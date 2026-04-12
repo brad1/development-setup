@@ -121,6 +121,36 @@ class TeachingTests(unittest.TestCase):
             third = bot.process("show pending")
             self.assertEqual(third, "no pending")
 
+    def test_invalid_map_syntax_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            response = bot.process('map "dentist" appointment')
+            self.assertEqual(response, "invalid map syntax")
+
+    def test_reserved_control_phrase_map_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            response = bot.process('map "cancel" -> appointment')
+            self.assertEqual(response, "control phrase collision")
+
+    def test_invalid_teaching_reply_reports_full_range(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            first = bot.process("need a doctor")
+            self.assertIn("(3) new command", first)
+            second = bot.process("4")
+            self.assertEqual(second, "pick 1-3")
+
 
 
     def test_exit_sets_should_exit(self) -> None:

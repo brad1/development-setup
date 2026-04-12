@@ -19,6 +19,7 @@ python3 -m unittest discover -s tests -v
 ## Behavior Summary
 
 - Command recognition via `data/command_mappings.json` (custom first, defaults second).
+- First-class control phrases via `data/first_class_phrases.json`.
 - Form definitions in `forms/*.json`.
 - Pending actions persisted in `data/pending_actions.json`.
 - Unknown phrase teaching flow with explicit confirmation.
@@ -75,4 +76,5 @@ $ python3 bot.py
 ## Data Files
 
 - `data/command_mappings.json`: defaults + custom learned mappings.
+- `data/first_class_phrases.json`: editable table for first-class controls, exit words, escape phrases, and teaching replies.
 - `data/pending_actions.json`: active in-progress actions.

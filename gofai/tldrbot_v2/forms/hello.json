@@ -1,0 +1,8 @@
+{
+  "command_name": "hello",
+  "field_aliases": {},
+  "field_prompts": {},
+  "form_name": "hello",
+  "optional_fields": [],
+  "required_fields": []
+}

@@ -1,9 +1,14 @@
 {
   "custom": {
     "asdfasdf": "asdfasdf",
+    "boo": "boo",
     "dentist": "appointment",
+    "dfdfd": "dfdfd",
+    "hello": "hello",
     "hi": "reminder",
-    "reminder": "reminder"
+    "name": "appointment",
+    "reminder": "reminder",
+    "restart": "appointment"
   },
   "defaults": {
     "coffee": "coffee",
