@@ -1,8 +1,8 @@
 {
   "controls": [
     {
-      "phrase": "show pending",
-      "verb": "show_pending"
+      "phrase": "list pending",
+      "verb": "list_pending"
     },
     {
       "phrase": "help",
@@ -129,24 +129,8 @@
       "verb": "cancel"
     },
     {
-      "phrase": "cancel pending",
-      "verb": "cancel_pending"
-    },
-    {
       "phrase": "clear pending",
       "verb": "clear_pending"
-    },
-    {
-      "phrase": "suspend pending",
-      "verb": "suspend_pending"
-    },
-    {
-      "phrase": "resume pending",
-      "verb": "resume_pending"
-    },
-    {
-      "phrase": "continue pending",
-      "verb": "continue_pending"
     },
     {
       "phrase": "status",

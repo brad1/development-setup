@@ -18,6 +18,7 @@ from engine.profile import ProfileStore, UserProfile
 from engine.phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 from engine.parser import parse_slots
 from engine.pending import PendingStore
+from engine.slot_router import route_pending_input
 
 
 class TLDRBot:
@@ -28,12 +29,8 @@ class TLDRBot:
         ("identify", "get_name"),
         ("status", "status"),
         ("capabilities", "capabilities"),
-        ("show pending", "show_pending"),
-        ("continue pending", "continue_pending"),
-        ("cancel pending", "cancel_pending"),
+        ("list pending", "list_pending"),
         ("clear pending", "clear_pending"),
-        ("suspend pending", "suspend_pending"),
-        ("resume pending", "resume_pending"),
         ("exit", "exit"),
     )
 
@@ -108,6 +105,9 @@ class TLDRBot:
         controls = ", ".join(self._control_action_labels() + ['map "<phrase>" -> <command>'])
         return f"commands: {commands}; controls: {controls}"
 
+    def _route_pending_input(self, text: str):
+        return route_pending_input(text, self.pending._load())
+
     def _extract_name(self, text: str, prefix: str | None = None) -> str:
         source = text.strip()
         if prefix:
@@ -154,7 +154,7 @@ class TLDRBot:
         return command
 
     def _handle_control(self, control_verb: str) -> str:
-        if control_verb == "show_pending":
+        if control_verb == "list_pending":
             pending = self.pending.list_active()
             if not pending:
                 return "no pending"
@@ -165,19 +165,17 @@ class TLDRBot:
             return self._help_summary()
         if control_verb == "capabilities":
             return self._capability_list()
-        if control_verb in {"cancel", "cancel_pending"}:
-            self.awaiting_name = False
-            return "cancelled" if self.pending.cancel_recent() else "no pending"
+        if control_verb == "cancel":
+            if self.teaching_candidate:
+                self.teaching_candidate = None
+                return "cancelled"
+            if self.awaiting_name:
+                self.awaiting_name = False
+                return "cancelled"
+            return "ready"
         if control_verb == "clear_pending":
             self.pending.clear_all()
             return "cleared"
-        if control_verb == "suspend_pending":
-            return "suspended" if self.pending.suspend_recent() else "no pending"
-        if control_verb == "resume_pending":
-            return "resumed" if self.pending.resume_recent() else "no suspended"
-        if control_verb == "continue_pending":
-            action = self.pending.most_recent()
-            return self._missing_prompt(action) if action else "no pending"
         if control_verb == "exit":
             self.should_exit = True
             return "bye"
@@ -271,21 +269,19 @@ class TLDRBot:
         if self.awaiting_name:
             return self._set_name_from_text(vetted.raw_text)
 
-        active = self.pending.most_recent()
-        if active:
-            matched = self.matcher.match(vetted.normalized_text)
-            if vetted.should_suspend_pending or matched:
-                self.pending.suspend_recent()
-                if vetted.should_suspend_pending and vetted.intent == "utterance":
-                    return "suspended"
-                return self.process(vetted.normalized_text)
+        if vetted.should_suspend_pending:
+            return "ready"
 
-            form = self.forms.get(active.command_name)
-            active.slots = parse_slots(vetted.normalized_text, form, existing=active.slots)
-            self.pending.update(active)
-            if active.missing_fields:
-                return self._missing_prompt(active)
-            return self._execute_if_ready(active)
+        routed = self._route_pending_input(vetted.normalized_text)
+        if routed:
+            if routed.status == "suspended":
+                routed.status = "pending"
+            form = self.forms.get(routed.command_name)
+            routed.slots = parse_slots(vetted.normalized_text, form, existing=routed.slots)
+            self.pending.update(routed)
+            if routed.missing_fields:
+                return self._missing_prompt(routed)
+            return self._execute_if_ready(routed)
 
         command = self.matcher.match(vetted.normalized_text)
         if not command:

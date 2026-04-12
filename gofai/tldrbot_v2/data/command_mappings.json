@@ -2,11 +2,14 @@
   "custom": {
     "asdfasdf": "asdfasdf",
     "boo": "boo",
+    "bye": "exit",
     "capa": "capabilities",
+    "clear": "clear pending",
     "dentist": "appointment",
     "dfdfd": "dfdfd",
     "hello": "hello",
     "hi": "reminder",
+    "list": "help",
     "name": "appointment",
     "reminder": "reminder",
     "restart": "appointment"

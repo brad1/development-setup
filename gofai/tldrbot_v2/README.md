@@ -30,12 +30,8 @@ python3 -m unittest discover -s tests -v
 - `help`
 - `commands`
 - `capabilities`
-- `show pending`
-- `continue pending`
-- `cancel pending`
+- `list pending`
 - `clear pending`
-- `suspend pending`
-- `resume pending`
 - `status`
 - `greet`
 - `what is my name`
@@ -77,8 +73,8 @@ $ python3 bot.py
 
 $ python3 bot.py
  tldrbot v2
- you> continue pending
- bot> 4af120dd: time_window?, zip_code? (type "cancel" to stop)
+ you> list pending
+ bot> pending: 4af120dd:appointment missing=time_window,zip_code
  you> time window: morning zip: 90210
  bot> appointment queued: type=cleaning, day=monday, window=morning, zip=90210, provider=next available provider, insurance=self-pay
 ```

@@ -140,11 +140,8 @@ class PendingStore:
         self.update(recent)
         return True
 
-    def resume_recent(self) -> bool:
-        recent = self.most_recent_suspended()
-        if not recent:
-            return False
-        recent.status = "pending"
-        recent.updated_at = now_iso()
-        self.update(recent)
-        return True
+    def most_recent_routable(self) -> PendingAction | None:
+        routable = [a for a in self._load() if a.status in {"pending", "suspended"}]
+        if not routable:
+            return None
+        return sorted(routable, key=lambda item: item.updated_at)[-1]

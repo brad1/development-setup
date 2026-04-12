@@ -62,7 +62,7 @@ class TeachingTests(unittest.TestCase):
             self.assertEqual(third, "feature unimplemented")
             self.assertEqual(bot.matcher.custom().get("need a doctor"), "need_a_doctor")
 
-    def test_help_and_cancel_are_available_while_pending(self) -> None:
+    def test_help_and_clear_are_available_while_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
@@ -79,12 +79,12 @@ class TeachingTests(unittest.TestCase):
             self.assertIn("?", first)
             second = bot.process("help")
             self.assertIn("commands: appointment, coffee", second)
-            self.assertIn("controls: help, greet, register, identify, status, capabilities", second)
-            third = bot.process("show pending")
+            self.assertIn("controls: help, greet, register, identify, status, capabilities, list pending, clear pending, exit", second)
+            third = bot.process("list pending")
             self.assertIn("coffee", third)
-            fourth = bot.process("cancel")
-            self.assertEqual(fourth, "cancelled")
-            fifth = bot.process("show pending")
+            fourth = bot.process("clear pending")
+            self.assertEqual(fourth, "cleared")
+            fifth = bot.process("list pending")
             self.assertEqual(fifth, "no pending")
 
     def test_greet_status_and_capabilities(self) -> None:
@@ -136,7 +136,7 @@ class TeachingTests(unittest.TestCase):
             self.assertEqual(bot.process("yes"), "saved")
             self.assertEqual(bot.process("healthcheck"), "Assistant online. All monitored systems nominal.")
 
-    def test_known_command_or_escape_phrase_suspends_pending(self) -> None:
+    def test_known_command_routes_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
@@ -153,11 +153,12 @@ class TeachingTests(unittest.TestCase):
             self.assertIn("?", first)
             second = bot.process("dentist")
             self.assertIn("?", second)
-            self.assertEqual(len(bot.pending.list_suspended()), 1)
-            third = bot.process("show pending")
-            self.assertIn("appointment", third)
+            self.assertEqual(len(bot.pending.list_suspended()), 0)
+            self.assertIsNotNone(bot.pending.most_recent())
+            third = bot.process("list pending")
+            self.assertIn("coffee", third)
 
-    def test_nevermind_suspends_pending(self) -> None:
+    def test_nevermind_does_not_suspend_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
@@ -173,9 +174,9 @@ class TeachingTests(unittest.TestCase):
             first = bot.process("coffee")
             self.assertIn("?", first)
             second = bot.process("nevermind")
-            self.assertEqual(second, "suspended")
-            third = bot.process("show pending")
-            self.assertEqual(third, "no pending")
+            self.assertEqual(second, "ready")
+            third = bot.process("list pending")
+            self.assertIn("coffee", third)
 
     def test_invalid_map_syntax_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
