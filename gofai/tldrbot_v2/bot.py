@@ -14,6 +14,7 @@ from engine.dispatcher import dispatch
 from engine.forms import FormRegistry
 from engine.input_vetting import MapCommandPayload, TeachingReplyPayload, VettingContext, vet
 from engine.matcher import CommandMatcher
+from engine.profile import ProfileStore, UserProfile
 from engine.phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 from engine.parser import parse_slots
 from engine.pending import PendingStore
@@ -25,11 +26,14 @@ class TLDRBot:
         self.forms = FormRegistry(root / "forms")
         self.matcher = CommandMatcher(root / "data" / "command_mappings.json")
         self.pending = PendingStore(root / "data" / "pending_actions.json")
+        self.profile_store = ProfileStore(root / "data" / "user_profile.json")
+        self.profile = self.profile_store.load()
         phrase_table_path = root / "data" / "first_class_phrases.json"
         self.phrase_table = PhraseTable.load(
             phrase_table_path if phrase_table_path.exists() else DEFAULT_PHRASE_TABLE_PATH
         )
         self.teaching_candidate: tuple[str, list[str]] | None = None
+        self.awaiting_name = False
         self.should_exit = False
 
     def _missing_prompt(self, action) -> str:
@@ -65,6 +69,41 @@ class TLDRBot:
 
     def _command_list(self) -> str:
         return "commands: " + ", ".join(self.forms.commands())
+
+    def _capability_list(self) -> str:
+        return "available functions: greetings, identity registration, identity recall, status reports, capability queries, and session termination."
+
+    def _help_summary(self) -> str:
+        commands = ", ".join(self.forms.commands())
+        controls = ", ".join(
+            [
+                "greet",
+                "register identity",
+                "recall identity",
+                "status",
+                "capabilities",
+                "show pending",
+                "continue pending",
+                "cancel pending",
+                "clear pending",
+                "suspend pending",
+                "resume pending",
+                'map "<phrase>" -> <command>',
+                "exit",
+            ]
+        )
+        return f"commands: {commands}; controls: {controls}"
+
+    def _extract_name(self, text: str, prefix: str | None = None) -> str:
+        source = text.strip()
+        if prefix:
+            lowered = source.lower()
+            normalized_prefix = prefix.lower().strip()
+            if lowered.startswith(normalized_prefix):
+                source = source[len(normalized_prefix) :].strip()
+        source = re.sub(r"^[\s,:;-]+", "", source)
+        source = re.sub(r"[\s,:;.!?]+$", "", source)
+        return source
 
     def _create_new_command(self, phrase: str) -> str:
         command = re.sub(r"[^a-z0-9]+", "_", phrase.lower()).strip("_")
@@ -109,8 +148,11 @@ class TLDRBot:
                 f"{p.id}:{p.command_name} missing={','.join(p.missing_fields) or 'none'}" for p in pending
             )
         if control_verb in {"help", "commands"}:
-            return self._command_list()
+            return self._help_summary()
+        if control_verb == "capabilities":
+            return self._capability_list()
         if control_verb in {"cancel", "cancel_pending"}:
+            self.awaiting_name = False
             return "cancelled" if self.pending.cancel_recent() else "no pending"
         if control_verb == "clear_pending":
             self.pending.clear_all()
@@ -122,7 +164,30 @@ class TLDRBot:
         if control_verb == "continue_pending":
             action = self.pending.most_recent()
             return self._missing_prompt(action) if action else "no pending"
+        if control_verb == "exit":
+            self.should_exit = True
+            return "bye"
+        if control_verb == "greet":
+            return "Assistant ready."
+        if control_verb == "status":
+            return "Assistant online. All monitored systems nominal."
+        if control_verb == "get_name":
+            return f"You are identified as {self.profile.name}." if self.profile.name else "No identity record is currently stored."
+        if control_verb == "name_prompt":
+            self.awaiting_name = True
+            return "Specify."
         return "ready"
+
+    def _set_name_from_text(self, text: str | None = None, remainder: str | None = None) -> str:
+        candidate = remainder or (self._extract_name(text or "") if text else "")
+        candidate = candidate.strip()
+        if not candidate:
+            self.awaiting_name = True
+            return "Specify."
+        self.profile = UserProfile(name=candidate)
+        self.profile_store.save(self.profile)
+        self.awaiting_name = False
+        return f"Acknowledged. I will address you as {candidate}."
 
     def _handle_teaching_reply(self, teaching_reply: TeachingReplyPayload) -> str:
         if not self.teaching_candidate:
@@ -153,10 +218,17 @@ class TLDRBot:
         return "pick 1-" + str(len(self.teaching_candidate[1]) + 1)
 
     def _handle_map_command(self, map_command: MapCommandPayload) -> str:
+        if map_command.use_teaching_candidate:
+            if not self.teaching_candidate:
+                return "unable to comply. no phrase is awaiting assignment."
+            phrase = self.teaching_candidate[0]
+        else:
+            phrase = map_command.phrase
+
         if not self.forms.has(map_command.command):
             return "invalid command target"
-        self.teaching_candidate = (map_command.phrase, [map_command.command])
-        return f'what do you mean by "{map_command.phrase}"? (1) {map_command.command}'
+        self.teaching_candidate = (phrase, [map_command.command])
+        return f'what do you mean by "{phrase}"? (1) {map_command.command}'
 
     def _execute_if_ready(self, action):
         if action.missing_fields:
@@ -172,15 +244,17 @@ class TLDRBot:
             return vetted.error or "invalid input"
         if vetted.intent == "empty":
             return "ready"
-        if vetted.intent == "exit":
-            self.should_exit = True
-            return "bye"
         if vetted.intent == "teaching_reply" and vetted.teaching_reply:
             return self._handle_teaching_reply(vetted.teaching_reply)
         if vetted.intent == "map_command" and vetted.map_command:
             return self._handle_map_command(vetted.map_command)
         if vetted.intent == "control" and vetted.control_verb:
+            if vetted.control_verb == "set_name":
+                return self._set_name_from_text(vetted.raw_text, vetted.control_remainder)
             return self._handle_control(vetted.control_verb)
+
+        if self.awaiting_name:
+            return self._set_name_from_text(vetted.raw_text)
 
         active = self.pending.most_recent()
         if active:

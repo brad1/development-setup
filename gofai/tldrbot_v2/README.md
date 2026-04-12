@@ -27,10 +27,20 @@ python3 -m unittest discover -s tests -v
 
 ## Built-in Control Commands
 
+- `help`
+- `commands`
+- `capabilities`
 - `show pending`
 - `continue pending`
 - `cancel pending`
 - `clear pending`
+- `suspend pending`
+- `resume pending`
+- `status`
+- `greet`
+- `what is my name`
+- `who am i`
+- `register`
 - `map "<phrase>" -> <command_name>`
 - `cancel`
 
@@ -76,5 +86,6 @@ $ python3 bot.py
 ## Data Files
 
 - `data/command_mappings.json`: defaults + custom learned mappings.
-- `data/first_class_phrases.json`: editable table for first-class controls, exit words, escape phrases, and teaching replies.
+- `data/first_class_phrases.json`: editable table for first-class controls, escape phrases, and teaching replies.
+- `data/user_profile.json`: stored identity name for `who am i` / `my name is ...`.
 - `data/pending_actions.json`: active in-progress actions.

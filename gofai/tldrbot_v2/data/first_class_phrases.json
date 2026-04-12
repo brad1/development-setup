@@ -9,8 +9,112 @@
       "verb": "help"
     },
     {
+      "phrase": "assistance",
+      "verb": "help"
+    },
+    {
+      "phrase": "options",
+      "verb": "help"
+    },
+    {
       "phrase": "commands",
       "verb": "help"
+    },
+    {
+      "phrase": "list commands",
+      "verb": "help"
+    },
+    {
+      "phrase": "show commands",
+      "verb": "help"
+    },
+    {
+      "phrase": "what can you do",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "what do you do",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "what are your capabilities",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "what capabilities do you have",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "capabilities",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "functions",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "what functions do you have",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "how can you help",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "what services do you provide",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "list functions",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "show capabilities",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "show functions",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "available commands",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "available functions",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "tell me what you can do",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "tell me your capabilities",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "what are you able to do",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "describe your capabilities",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "describe functions",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "summarize capabilities",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "capability report",
+      "verb": "capabilities"
+    },
+    {
+      "phrase": "function report",
+      "verb": "capabilities"
     },
     {
       "phrase": "menu",
@@ -43,17 +147,247 @@
     {
       "phrase": "continue pending",
       "verb": "continue_pending"
+    },
+    {
+      "phrase": "status",
+      "verb": "status"
+    },
+    {
+      "phrase": "report",
+      "verb": "status"
+    },
+    {
+      "phrase": "status report",
+      "verb": "status"
+    },
+    {
+      "phrase": "report status",
+      "verb": "status"
+    },
+    {
+      "phrase": "system status",
+      "verb": "status"
+    },
+    {
+      "phrase": "give me a report",
+      "verb": "status"
+    },
+    {
+      "phrase": "give me status",
+      "verb": "status"
+    },
+    {
+      "phrase": "give me a status report",
+      "verb": "status"
+    },
+    {
+      "phrase": "provide a report",
+      "verb": "status"
+    },
+    {
+      "phrase": "provide status",
+      "verb": "status"
+    },
+    {
+      "phrase": "provide a status report",
+      "verb": "status"
+    },
+    {
+      "phrase": "operational report",
+      "verb": "status"
+    },
+    {
+      "phrase": "operations report",
+      "verb": "status"
+    },
+    {
+      "phrase": "readiness report",
+      "verb": "status"
+    },
+    {
+      "phrase": "system report",
+      "verb": "status"
+    },
+    {
+      "phrase": "condition report",
+      "verb": "status"
+    },
+    {
+      "phrase": "how are you",
+      "verb": "status"
+    },
+    {
+      "phrase": "are you online",
+      "verb": "status"
+    },
+    {
+      "phrase": "all systems nominal",
+      "verb": "status"
+    },
+    {
+      "phrase": "state your status",
+      "verb": "status"
+    },
+    {
+      "phrase": "greetings",
+      "verb": "greet"
+    },
+    {
+      "phrase": "hi",
+      "verb": "greet"
+    },
+    {
+      "phrase": "hello",
+      "verb": "greet"
+    },
+    {
+      "phrase": "hey",
+      "verb": "greet"
+    },
+    {
+      "phrase": "salutations",
+      "verb": "greet"
+    },
+    {
+      "phrase": "hello there",
+      "verb": "greet"
+    },
+    {
+      "phrase": "good morning",
+      "verb": "greet"
+    },
+    {
+      "phrase": "good afternoon",
+      "verb": "greet"
+    },
+    {
+      "phrase": "good evening",
+      "verb": "greet"
+    },
+    {
+      "phrase": "what is my name",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "what s my name",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "what's my name",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "who am i",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "do you know my name",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "do you remember my name",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "remind me of my name",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "what name do you have for me",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "what did i tell you my name is",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "identify me",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "who do you think i am",
+      "verb": "get_name"
+    },
+    {
+      "phrase": "register",
+      "verb": "name_prompt"
+    },
+    {
+      "phrase": "register me",
+      "verb": "name_prompt"
+    },
+    {
+      "phrase": "register identity",
+      "verb": "name_prompt"
+    },
+    {
+      "phrase": "register user",
+      "verb": "name_prompt"
+    },
+    {
+      "phrase": "exit",
+      "verb": "exit"
+    },
+    {
+      "phrase": "quit",
+      "verb": "exit"
     }
-  ],
-  "exit_words": [
-    "quit",
-    "exit"
   ],
   "escape_phrases": [
     "nevermind",
     "never mind",
     "ignore that",
     "forget it"
+  ],
+  "prefix_controls": [
+    {
+      "phrase": "my name is",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "name is",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "i am",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "i m",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "i'm",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "im",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "call me",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "you can call me",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "you may call me",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "refer to me as",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "my designation is",
+      "verb": "set_name"
+    },
+    {
+      "phrase": "register me as",
+      "verb": "set_name"
+    }
   ],
   "teaching_replies": {
     "cancel": [
@@ -70,6 +404,11 @@
     ]
   },
   "map_command": {
-    "prefix": "map"
+    "prefix": "map",
+    "aliases": [
+      "map to",
+      "assign to",
+      "alias to"
+    ]
   }
 }

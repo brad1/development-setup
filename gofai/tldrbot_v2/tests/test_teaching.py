@@ -72,13 +72,53 @@ class TeachingTests(unittest.TestCase):
             first = bot.process("coffee")
             self.assertIn("?", first)
             second = bot.process("help")
-            self.assertEqual(second, "commands: appointment, coffee")
+            self.assertIn("commands: appointment, coffee", second)
+            self.assertIn("controls: greet, register identity, recall identity, status, capabilities", second)
             third = bot.process("show pending")
             self.assertIn("coffee", third)
             fourth = bot.process("cancel")
             self.assertEqual(fourth, "cancelled")
             fifth = bot.process("show pending")
             self.assertEqual(fifth, "no pending")
+
+    def test_greet_status_and_capabilities(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            self.assertEqual(bot.process("hello"), "Assistant ready.")
+            self.assertEqual(bot.process("status"), "Assistant online. All monitored systems nominal.")
+            self.assertIn("available functions", bot.process("what can you do"))
+
+    def test_name_registration_and_recall(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            self.assertEqual(bot.process("my name is Ada"), "Acknowledged. I will address you as Ada.")
+            self.assertEqual(bot.process("who am i"), "You are identified as Ada.")
+
+    def test_name_prompt_then_value(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            self.assertEqual(bot.process("register"), "Specify.")
+            self.assertEqual(bot.process("Ada Lovelace"), "Acknowledged. I will address you as Ada Lovelace.")
+
+    def test_map_alias_while_teaching(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            first = bot.process("need a doctor")
+            self.assertIn("what do you mean", first)
+            second = bot.process("map to coffee")
+            self.assertIn('what do you mean by "need a doctor"', second)
 
     def test_known_command_or_escape_phrase_suspends_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

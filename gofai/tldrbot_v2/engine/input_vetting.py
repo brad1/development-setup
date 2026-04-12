@@ -10,7 +10,6 @@ from .phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 Intent = Literal[
     "empty",
     "invalid",
-    "exit",
     "control",
     "teaching_reply",
     "map_command",
@@ -35,6 +34,7 @@ class TeachingReplyPayload:
 class MapCommandPayload:
     phrase: str
     command: str
+    use_teaching_candidate: bool = False
 
 
 @dataclass(frozen=True)
@@ -45,6 +45,7 @@ class VettedInput:
     intent: Intent
     error: str | None = None
     control_verb: str | None = None
+    control_remainder: str | None = None
     teaching_reply: TeachingReplyPayload | None = None
     map_command: MapCommandPayload | None = None
     should_suspend_pending: bool = False
@@ -115,9 +116,6 @@ def vet(text: str, context: VettingContext) -> VettedInput:
     if not normalized_text:
         return VettedInput(raw_text=text, normalized_text=normalized_text, lowered_text=lowered_text, intent="empty")
 
-    if phrase_table.is_exit(lowered_text):
-        return VettedInput(raw_text=text, normalized_text=normalized_text, lowered_text=lowered_text, intent="exit")
-
     if phrase_table.is_escape(lowered_text):
         return VettedInput(
             raw_text=text,
@@ -128,12 +126,37 @@ def vet(text: str, context: VettingContext) -> VettedInput:
         )
 
     if context.teaching_candidate:
+        teaching_reply = _extract_teaching_reply(lowered_text, phrase_table)
+        if teaching_reply.kind != "invalid":
+            return VettedInput(
+                raw_text=text,
+                normalized_text=normalized_text,
+                lowered_text=lowered_text,
+                intent="teaching_reply",
+                teaching_reply=teaching_reply,
+            )
+
+        alias_target = phrase_table.map_alias_target(normalized_text)
+        if alias_target is not None:
+            return VettedInput(
+                raw_text=text,
+                normalized_text=normalized_text,
+                lowered_text=lowered_text,
+                intent="map_command",
+                map_command=MapCommandPayload(
+                    phrase=context.teaching_candidate[0],
+                    command=alias_target.lower(),
+                    use_teaching_candidate=True,
+                ),
+                should_suspend_pending=True,
+            )
+
         return VettedInput(
             raw_text=text,
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="teaching_reply",
-            teaching_reply=_extract_teaching_reply(lowered_text, phrase_table),
+            teaching_reply=teaching_reply,
         )
 
     map_error = _map_syntax_error(normalized_text, phrase_table)
@@ -175,6 +198,19 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             lowered_text=lowered_text,
             intent="control",
             control_verb=control_verb,
+            should_suspend_pending=True,
+        )
+
+    prefix_control = phrase_table.prefix_control(text)
+    if prefix_control:
+        control_verb, remainder = prefix_control
+        return VettedInput(
+            raw_text=text,
+            normalized_text=normalized_text,
+            lowered_text=lowered_text,
+            intent="control",
+            control_verb=control_verb,
+            control_remainder=remainder or None,
             should_suspend_pending=True,
         )
 

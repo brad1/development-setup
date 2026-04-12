@@ -11,6 +11,17 @@ class InputVettingTests(unittest.TestCase):
         self.assertEqual(vetted.intent, "control")
         self.assertEqual(vetted.control_verb, "help")
 
+    def test_capability_phrase_from_phrase_table(self) -> None:
+        vetted = vet("what can you do", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "capabilities")
+
+    def test_name_prefix_from_phrase_table(self) -> None:
+        vetted = vet("my name is Ada", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "set_name")
+        self.assertEqual(vetted.control_remainder, "Ada")
+
     def test_broken_map_command_is_invalid(self) -> None:
         vetted = vet('map "Need Dentist" appointment', VettingContext())
         self.assertEqual(vetted.intent, "invalid")
@@ -44,9 +55,10 @@ class InputVettingTests(unittest.TestCase):
         assert vetted.teaching_reply is not None
         self.assertEqual(vetted.teaching_reply.kind, "invalid")
 
-    def test_exit_intent(self) -> None:
+    def test_exit_is_control_verb(self) -> None:
         vetted = vet(" EXIT ", VettingContext())
-        self.assertEqual(vetted.intent, "exit")
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "exit")
 
 
 if __name__ == "__main__":
