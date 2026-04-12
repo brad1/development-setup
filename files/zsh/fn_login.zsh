@@ -250,57 +250,15 @@ cheat-bash() {
 }
 
 shell-status() {
-      clear
+    clear
 
-      show_news
-
-      # NExt - Control - ? workflow selection
-    # List simple control kep mappings
-    # bindkey | grep -E '"\^[^[]{1}'
-
-    # not quite there, plus other utilities above aren't control keys
-    #fn=/opt/chef/cookbooks/development-setup/files/zsh/functions.zsh
-    #echo 'Custom control keys:'
-    #grep '^bindkey' $fn | awk -F'#' '{if ($2) print $2, $3 }'
-    
-    echo 'Shortcuts:'
-    echo '    b()   Ctrl-G (navi search)' 
-    echo 'New commands to try (preview):'
-    if [[ -f "$NAVI_CUSTOM_DIR/personal/brad_try_next.cheat" ]]; then
-      grep '^    ' "$NAVI_CUSTOM_DIR/personal/brad_try_next.cheat" | head -n5
-    fi
-    echo '    ...'
-    echo 'Commands to remember (preview):'
-    if [[ -f "$NAVI_CUSTOM_DIR/personal/brad_reminder.cheat" ]]; then
-      grep '^    ' "$NAVI_CUSTOM_DIR/personal/brad_reminder.cheat" | head -n5
-    fi
-    echo '    ...'
-    echo 'Things to add:'
-    echo '    expanded history (Ctrl-R instead of "a" for tagged command search)'
-    echo '    Ctrl-R:'
-    echo '    - import sticking commands (for Ctrl-R) # over time these may become functions'
-    echo '    - fzf in reverse search...'
-    echo 'My initiatives:'
-    echo '     AutoUpdates - outline and labels for next meeting'
-    echo '     Expand end to end tests'
-    echo '     PDP - friday kubernetes practice' 
-    echo '          left off on fastbuilder: microk8s kubectl logs -f kibana-kibana-7445df7ffb-kgqnc'
-    echo '            http://192.168.46.156:5601/'
-    echo '     Stress.sql'
-    echo "We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others."
-    echo "-  Parnas' 1972 paper 'On the Criteria To Be Used in Decomposing Systems into Modules'"
+    echo 'Shortcuts reminder:'
+    echo '    b()   Ctrl-G (navi search)'
     echo
-    echo
-    echo '---- Pending action items: ----'
-    echo
-
-    # TODO test and expand
-    shell_login_overview 
-
-    # vagrant snapshot list already does this!
-    # vagrant_snapshot_status "$HOME/Projects/sitemanager"
-
-    #fzf_menu_exp
+    echo 'Running VMs / containers (first 3):'
+    echo '    [placeholder] vm-or-container-1'
+    echo '    [placeholder] vm-or-container-2'
+    echo '    [placeholder] vm-or-container-3'
 }
 
 #
