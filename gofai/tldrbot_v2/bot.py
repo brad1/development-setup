@@ -27,6 +27,7 @@ class TLDRBot:
         ("greet", "greet"),
         ("register", "name_prompt"),
         ("identify", "get_name"),
+        ("delete mapping", "delete_mapping"),
         ("status", "status"),
         ("capabilities", "capabilities"),
         ("list pending", "list_pending"),
@@ -46,6 +47,7 @@ class TLDRBot:
             phrase_table_path if phrase_table_path.exists() else DEFAULT_PHRASE_TABLE_PATH
         )
         self.teaching_candidate: tuple[str, list[str]] | None = None
+        self.mapping_delete_candidate: tuple[str, list[str]] | None = None
         self.awaiting_name = False
         self.should_exit = False
 
@@ -95,7 +97,7 @@ class TLDRBot:
         return sample[:limit]
 
     def _overview_summary(self) -> str:
-        builtins = ["help", "commands", "capabilities", "status", "greet", "register", "identify", "list pending", "clear pending", "exit"]
+        builtins = ["help", "greet", "register", "identify", "delete mapping", "status", "capabilities", "list pending", "clear pending", "exit"]
         custom_commands = self._sample_custom_commands()
         lines = [
             "overview:",
@@ -129,6 +131,69 @@ class TLDRBot:
 
     def _route_pending_input(self, text: str):
         return route_pending_input(text, self.pending._load())
+
+    def _custom_mapping_phrases(self) -> list[str]:
+        return sorted(self.matcher.custom().keys())
+
+    def _matching_custom_mappings(self, phrase: str | None) -> list[str]:
+        custom = self._custom_mapping_phrases()
+        if not phrase:
+            return custom
+        normalized = re.sub(r"\s+", " ", phrase.strip().lower())
+        if not normalized:
+            return custom
+        exact = [item for item in custom if item == normalized]
+        if exact:
+            return exact
+        contains = [item for item in custom if normalized in item]
+        if contains:
+            return contains
+        contained_by = [item for item in custom if item in normalized]
+        if contained_by:
+            return contained_by
+        return []
+
+    def _delete_mapping_prompt(self, phrase: str, options: list[str]) -> str:
+        numbered = "; ".join(f"({idx}) {mapping}" for idx, mapping in enumerate(options, start=1))
+        if phrase:
+            return f'remove which mapping for "{phrase}"? {numbered}'
+        return f"remove which mapping? {numbered}"
+
+    def _begin_mapping_delete(self, phrase: str | None) -> str:
+        matches = self._matching_custom_mappings(phrase)
+        if not matches:
+            return "no matching custom mapping"
+        if phrase and len(matches) == 1:
+            self.matcher.remove_custom_mapping(matches[0])
+            return "deleted"
+        self.mapping_delete_candidate = (phrase or "", matches)
+        return self._delete_mapping_prompt(phrase or "", matches)
+
+    def _handle_mapping_delete_reply(self, text: str) -> str | None:
+        if not self.mapping_delete_candidate:
+            return None
+
+        lowered = text.strip().lower()
+        cancel_phrases = (
+            self.phrase_table.teaching_replies.get("cancel", frozenset())
+            | self.phrase_table.teaching_replies.get("no", frozenset())
+            | self.phrase_table.escape_phrases
+        )
+        if lowered in cancel_phrases:
+            self.mapping_delete_candidate = None
+            return "cancelled"
+
+        if not lowered.isdigit():
+            return f"pick 1-{len(self.mapping_delete_candidate[1])}"
+
+        idx = int(lowered) - 1
+        phrase, options = self.mapping_delete_candidate
+        if 0 <= idx < len(options):
+            self.matcher.remove_custom_mapping(options[idx])
+            self.mapping_delete_candidate = None
+            return f"deleted {options[idx]}"
+
+        return f"pick 1-{len(options)}"
 
     def _extract_name(self, text: str, prefix: str | None = None) -> str:
         source = text.strip()
@@ -189,6 +254,9 @@ class TLDRBot:
             if self.teaching_candidate:
                 self.teaching_candidate = None
                 return "cancelled"
+            if self.mapping_delete_candidate:
+                self.mapping_delete_candidate = None
+                return "cancelled"
             if self.awaiting_name:
                 self.awaiting_name = False
                 return "cancelled"
@@ -208,6 +276,8 @@ class TLDRBot:
         if control_verb == "name_prompt":
             self.awaiting_name = True
             return "Specify."
+        if control_verb == "delete_mapping":
+            return self._begin_mapping_delete(None)
         return "ready"
 
     def _set_name_from_text(self, text: str | None = None, remainder: str | None = None) -> str:
@@ -274,6 +344,8 @@ class TLDRBot:
         vetted = vet(text, VettingContext(teaching_candidate=self.teaching_candidate, phrase_table=self.phrase_table))
 
         if vetted.intent == "invalid":
+            if vetted.error == "unsupported question":
+                return "Unable to comply."
             return vetted.error or "invalid input"
         if vetted.intent == "empty":
             return "ready"
@@ -284,10 +356,18 @@ class TLDRBot:
         if vetted.intent == "control" and vetted.control_verb:
             if vetted.control_verb == "set_name":
                 return self._set_name_from_text(vetted.raw_text, vetted.control_remainder)
+            if vetted.control_verb == "delete_mapping":
+                self.teaching_candidate = None
+                return self._begin_mapping_delete(vetted.control_remainder)
             return self._handle_control(vetted.control_verb)
 
         if self.awaiting_name:
             return self._set_name_from_text(vetted.raw_text)
+
+        if self.mapping_delete_candidate:
+            delete_reply = self._handle_mapping_delete_reply(vetted.raw_text)
+            if delete_reply is not None:
+                return delete_reply
 
         if vetted.should_suspend_pending:
             return "ready"

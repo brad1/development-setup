@@ -371,6 +371,18 @@
     {
       "phrase": "register me as",
       "verb": "set_name"
+    },
+    {
+      "phrase": "delete mapping",
+      "verb": "delete_mapping"
+    },
+    {
+      "phrase": "remove mapping",
+      "verb": "delete_mapping"
+    },
+    {
+      "phrase": "forget mapping",
+      "verb": "delete_mapping"
     }
   ],
   "teaching_replies": {

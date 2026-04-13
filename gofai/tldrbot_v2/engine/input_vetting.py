@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 from dataclasses import dataclass
 from typing import Literal
@@ -96,6 +97,12 @@ def _map_syntax_error(normalized_text: str, phrase_table: PhraseTable) -> str | 
     return "invalid map syntax"
 
 
+_NAME_QUESTION_RE = re.compile(
+    r"^(?:what(?:'s| is)|who(?:'s| is)|what are|who are)\s+(?:your\s+)?name\??$",
+    re.IGNORECASE,
+)
+
+
 @lru_cache(maxsize=1)
 def _default_phrase_table() -> PhraseTable:
     return PhraseTable.load(DEFAULT_PHRASE_TABLE_PATH)
@@ -125,6 +132,15 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             lowered_text=lowered_text,
             intent="utterance",
             should_suspend_pending=True,
+        )
+
+    if _NAME_QUESTION_RE.match(normalized_text):
+        return VettedInput(
+            raw_text=text,
+            normalized_text=normalized_text,
+            lowered_text=lowered_text,
+            intent="invalid",
+            error="unsupported question",
         )
 
     map_error = _map_syntax_error(normalized_text, phrase_table)
@@ -181,6 +197,30 @@ def vet(text: str, context: VettingContext) -> VettedInput:
                     command=alias_target.lower(),
                     use_teaching_candidate=True,
                 ),
+                should_suspend_pending=True,
+            )
+
+        control_verb = phrase_table.control_verb(lowered_text)
+        if control_verb:
+            return VettedInput(
+                raw_text=text,
+                normalized_text=normalized_text,
+                lowered_text=lowered_text,
+                intent="control",
+                control_verb=control_verb,
+                should_suspend_pending=True,
+            )
+
+        prefix_control = phrase_table.prefix_control(text)
+        if prefix_control:
+            control_verb, remainder = prefix_control
+            return VettedInput(
+                raw_text=text,
+                normalized_text=normalized_text,
+                lowered_text=lowered_text,
+                intent="control",
+                control_verb=control_verb,
+                control_remainder=remainder or None,
                 should_suspend_pending=True,
             )
 

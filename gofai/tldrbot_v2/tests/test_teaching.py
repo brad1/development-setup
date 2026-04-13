@@ -82,7 +82,7 @@ class TeachingTests(unittest.TestCase):
             self.assertEqual(second, fourth)
             self.assertIn("overview:", second)
             self.assertIn("  builtins:", second)
-            self.assertIn("    help, commands, capabilities, status, greet, register, identify, list pending, clear pending, exit", second)
+            self.assertIn("    help, greet, register, identify, delete mapping, status, capabilities, list pending, clear pending, exit", second)
             self.assertIn("  sample commands:", second)
             self.assertIn("    appointment, coffee", second)
             self.assertIn("  maps:", second)
@@ -116,7 +116,7 @@ class TeachingTests(unittest.TestCase):
             self.assertEqual(overview, bot.process("capabilities"))
             self.assertIn("overview:", overview)
             self.assertIn("  builtins:", overview)
-            self.assertIn("    help, commands, capabilities, status, greet, register, identify, list pending, clear pending, exit", overview)
+            self.assertIn("    help, greet, register, identify, delete mapping, status, capabilities, list pending, clear pending, exit", overview)
             self.assertIn("  sample commands:", overview)
             self.assertIn("    appointment, coffee, reminder", overview)
             self.assertIn("  maps:", overview)
@@ -126,9 +126,39 @@ class TeachingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{},"custom":{"name":"appointment"}}',
+                encoding="utf-8",
+            )
             bot = TLDRBot(tmp)
             self.assertEqual(bot.process("my name is Ada"), "Acknowledged. I will address you as Ada.")
             self.assertEqual(bot.process("who am i"), "You are identified as Ada.")
+            self.assertIn("appointment_type?", bot.process("name"))
+            self.assertEqual(bot.process("what is your name?"), "Unable to comply.")
+
+    def test_delete_mapping_flow(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{"coffee":"coffee"},"custom":{"name":"appointment","nick":"appointment"}}',
+                encoding="utf-8",
+            )
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            prompt = bot.process("delete mapping name")
+            self.assertEqual(prompt, "deleted")
+            self.assertNotIn("name", bot.matcher.custom())
+            self.assertIn("what do you mean", bot.process("name"))
+
+            list_prompt = bot.process("delete mapping")
+            self.assertIn("remove which mapping?", list_prompt)
+            self.assertIn("(1) nick", list_prompt)
+            self.assertEqual(bot.process("1"), "deleted nick")
+            self.assertNotIn("nick", bot.matcher.custom())
 
     def test_name_prompt_then_value(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

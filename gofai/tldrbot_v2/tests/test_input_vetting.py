@@ -22,6 +22,17 @@ class InputVettingTests(unittest.TestCase):
         self.assertEqual(vetted.control_verb, "set_name")
         self.assertEqual(vetted.control_remainder, "Ada")
 
+    def test_delete_mapping_prefix_from_phrase_table(self) -> None:
+        vetted = vet("delete mapping name", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "delete_mapping")
+        self.assertEqual(vetted.control_remainder, "name")
+
+    def test_name_question_is_vetoed_before_command_matching(self) -> None:
+        vetted = vet("what is your name?", VettingContext())
+        self.assertEqual(vetted.intent, "invalid")
+        self.assertEqual(vetted.error, "unsupported question")
+
     def test_broken_map_command_is_invalid(self) -> None:
         vetted = vet('map "Need Dentist" appointment', VettingContext())
         self.assertEqual(vetted.intent, "invalid")
