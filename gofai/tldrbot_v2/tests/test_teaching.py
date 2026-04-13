@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,6 +9,11 @@ from bot import TLDRBot
 
 
 class TeachingTests(unittest.TestCase):
+    def _last_option_index(self, prompt: str) -> int:
+        numbers = [int(value) for value in re.findall(r"\((\d+)\)", prompt)]
+        assert numbers
+        return max(numbers)
+
     def _seed(self, tmp: Path) -> None:
         (tmp / "forms").mkdir()
         (tmp / "data").mkdir()
@@ -33,7 +39,7 @@ class TeachingTests(unittest.TestCase):
             first = bot.process("need a doctor")
             self.assertIn("what do you mean", first)
             self.assertIn("(1)", first)
-            self.assertIn("(3) new command", first)
+            self.assertIn("new command", first)
             second = bot.process("1")
             self.assertEqual(second, "saved")
             third = bot.process("need a doctor")
@@ -49,14 +55,48 @@ class TeachingTests(unittest.TestCase):
             )
             bot = TLDRBot(tmp)
             first = bot.process("need a doctor")
-            self.assertIn("(3) new command", first)
-            second = bot.process("3")
+            self.assertIn("new command", first)
+            second = bot.process(str(self._last_option_index(first)))
             self.assertTrue(second.startswith("created "))
             third = bot.process("need a doctor")
             self.assertEqual(third, "feature unimplemented")
             self.assertEqual(bot.matcher.custom().get("need a doctor"), "need_a_doctor")
 
-    def test_help_and_cancel_are_available_while_pending(self) -> None:
+    def test_help_and_clear_are_available_while_pending(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{"coffee":"coffee"},"custom":{"list":"help"}}',
+                encoding="utf-8",
+            )
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            second = bot.process("help")
+            third = bot.process("capabilities")
+            fourth = bot.process("list")
+            self.assertEqual(second, third)
+            self.assertEqual(second, fourth)
+            self.assertIn("overview:", second)
+            self.assertIn("  builtins:", second)
+            self.assertIn("    help, greet, register, identify, delete mapping, status, capabilities, list pending, clear pending, exit", second)
+            self.assertIn("  sample commands:", second)
+            self.assertIn("    appointment, coffee", second)
+            self.assertIn("  maps:", second)
+            self.assertIn('    teach aliases with `map "<phrase>" -> <command>`', second)
+            first = bot.process("coffee")
+            self.assertIn("?", first)
+            fifth = bot.process("list pending")
+            self.assertIn("coffee", fifth)
+            sixth = bot.process("clear pending")
+            self.assertEqual(sixth, "cleared")
+            seventh = bot.process("list pending")
+            self.assertEqual(seventh, "no pending")
+
+    def test_greet_status_and_capabilities(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
@@ -64,23 +104,95 @@ class TeachingTests(unittest.TestCase):
                 '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
                 encoding="utf-8",
             )
-            (tmp / "data" / "command_mappings.json").write_text(
-                '{"defaults":{"coffee":"coffee"},"custom":{}}',
+            (tmp / "forms" / "reminder.json").write_text(
+                '{"form_name":"reminder","command_name":"reminder","required_fields":["message"],"optional_fields":[],"field_prompts":{}}',
                 encoding="utf-8",
             )
             bot = TLDRBot(tmp)
-            first = bot.process("coffee")
-            self.assertIn("?", first)
-            second = bot.process("help")
-            self.assertEqual(second, "commands: appointment, coffee")
-            third = bot.process("show pending")
-            self.assertIn("coffee", third)
-            fourth = bot.process("cancel")
-            self.assertEqual(fourth, "cancelled")
-            fifth = bot.process("show pending")
-            self.assertEqual(fifth, "no pending")
+            self.assertEqual(bot.process("hello"), "Assistant ready.")
+            self.assertEqual(bot.process("status"), "Assistant online. All monitored systems nominal.")
+            overview = bot.process("what can you do")
+            self.assertEqual(overview, bot.process("help"))
+            self.assertEqual(overview, bot.process("capabilities"))
+            self.assertIn("overview:", overview)
+            self.assertIn("  builtins:", overview)
+            self.assertIn("    help, greet, register, identify, delete mapping, status, capabilities, list pending, clear pending, exit", overview)
+            self.assertIn("  sample commands:", overview)
+            self.assertIn("    appointment, coffee, reminder", overview)
+            self.assertIn("  maps:", overview)
+            self.assertIn('    teach aliases with `map "<phrase>" -> <command>`', overview)
 
-    def test_known_command_or_escape_phrase_suspends_pending(self) -> None:
+    def test_name_registration_and_recall(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{},"custom":{"name":"appointment"}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            self.assertEqual(bot.process("my name is Ada"), "Acknowledged. I will address you as Ada.")
+            self.assertEqual(bot.process("who am i"), "You are identified as Ada.")
+            self.assertIn("appointment_type?", bot.process("name"))
+            self.assertEqual(bot.process("what is your name?"), "Unable to comply.")
+
+    def test_delete_mapping_flow(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "data" / "command_mappings.json").write_text(
+                '{"defaults":{"coffee":"coffee"},"custom":{"name":"appointment","nick":"appointment"}}',
+                encoding="utf-8",
+            )
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            prompt = bot.process("delete mapping name")
+            self.assertEqual(prompt, "deleted")
+            self.assertNotIn("name", bot.matcher.custom())
+            self.assertIn("what do you mean", bot.process("name"))
+
+            list_prompt = bot.process("delete mapping")
+            self.assertIn("remove which mapping?", list_prompt)
+            self.assertIn("(1) nick", list_prompt)
+            self.assertEqual(bot.process("1"), "deleted nick")
+            self.assertNotIn("nick", bot.matcher.custom())
+
+    def test_name_prompt_then_value(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            self.assertEqual(bot.process("register"), "Specify.")
+            self.assertEqual(bot.process("Ada Lovelace"), "Acknowledged. I will address you as Ada Lovelace.")
+
+    def test_map_alias_while_teaching(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            first = bot.process("need a doctor")
+            self.assertIn("what do you mean", first)
+            second = bot.process("map to coffee")
+            self.assertIn('what do you mean by "need a doctor"', second)
+
+    def test_direct_map_to_control_verb(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            self.assertIn("what do you mean", bot.process("healthcheck"))
+            self.assertIn("(1) status", bot.process('map "healthcheck" -> status'))
+            self.assertEqual(bot.process("yes"), "saved")
+            self.assertEqual(bot.process("healthcheck"), "Assistant online. All monitored systems nominal.")
+
+    def test_known_command_routes_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
@@ -97,11 +209,12 @@ class TeachingTests(unittest.TestCase):
             self.assertIn("?", first)
             second = bot.process("dentist")
             self.assertIn("?", second)
-            self.assertEqual(len(bot.pending.list_suspended()), 1)
-            third = bot.process("show pending")
-            self.assertIn("appointment", third)
+            self.assertEqual(len(bot.pending.list_suspended()), 0)
+            self.assertIsNotNone(bot.pending.most_recent())
+            third = bot.process("list pending")
+            self.assertIn("coffee", third)
 
-    def test_nevermind_suspends_pending(self) -> None:
+    def test_nevermind_does_not_suspend_pending(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
             self._seed(tmp)
@@ -117,10 +230,50 @@ class TeachingTests(unittest.TestCase):
             first = bot.process("coffee")
             self.assertIn("?", first)
             second = bot.process("nevermind")
-            self.assertEqual(second, "suspended")
-            third = bot.process("show pending")
-            self.assertEqual(third, "no pending")
+            self.assertEqual(second, "ready")
+            third = bot.process("list pending")
+            self.assertIn("coffee", third)
 
+    def test_invalid_map_syntax_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            response = bot.process('map "dentist" appointment')
+            self.assertEqual(response, "invalid map syntax")
+
+    def test_reserved_control_phrase_map_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            response = bot.process('map "cancel" -> appointment')
+            self.assertEqual(response, "control phrase collision")
+
+    def test_invalid_teaching_reply_reports_full_range(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            (tmp / "forms" / "coffee.json").write_text(
+                '{"form_name":"coffee","command_name":"coffee","required_fields":["size"],"optional_fields":[],"field_prompts":{}}',
+                encoding="utf-8",
+            )
+            bot = TLDRBot(tmp)
+            first = bot.process("need a doctor")
+            self.assertIn("new command", first)
+            second = bot.process(str(self._last_option_index(first) + 1))
+            self.assertIn("pick 1-", second)
+
+
+
+    def test_exit_sets_should_exit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            self._seed(tmp)
+            bot = TLDRBot(tmp)
+            response = bot.process("exit")
+            self.assertEqual(response, "bye")
+            self.assertTrue(bot.should_exit)
 
 if __name__ == "__main__":
     unittest.main()

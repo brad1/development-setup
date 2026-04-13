@@ -28,7 +28,7 @@ class PendingTests(unittest.TestCase):
             self.assertEqual(rows[0].missing_fields, [])
             self.assertEqual(rows[0].status, "ready")
 
-    def test_suspend_and_resume(self) -> None:
+    def test_suspend_and_route(self) -> None:
         form = {
             "form_name": "coffee",
             "command_name": "coffee",
@@ -40,13 +40,10 @@ class PendingTests(unittest.TestCase):
             store.create(form, {"size": "small"})
             self.assertTrue(store.suspend_recent())
             self.assertIsNone(store.most_recent())
-            suspended = store.most_recent_suspended()
+            suspended = store.most_recent_routable()
             self.assertIsNotNone(suspended)
             self.assertEqual(suspended.status, "suspended")
-            self.assertTrue(store.resume_recent())
-            active = store.most_recent()
-            self.assertIsNotNone(active)
-            self.assertEqual(active.status, "pending")
+            self.assertEqual(store.most_recent_routable().status, "suspended")
 
 
 if __name__ == "__main__":

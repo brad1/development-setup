@@ -1,0 +1,106 @@
+from __future__ import annotations
+
+import unittest
+
+from engine.input_vetting import VettingContext, vet
+from engine.human_indicators import analyze_human_indicators
+
+
+class InputVettingTests(unittest.TestCase):
+    def test_human_indicators_basic_analysis(self) -> None:
+        indicators = analyze_human_indicators("hello my name is earle", 500)
+        self.assertEqual(indicators.num_words, 5)
+        self.assertEqual(indicators.first_word, "hello")
+        self.assertEqual(indicators.last_word, "earle")
+        self.assertFalse(indicators.contains_hot_word)
+        self.assertFalse(indicators.contains_multiple_hot_words)
+        self.assertEqual(indicators.signal_gain, 0.0)
+        self.assertEqual(indicators.classification, "UNKNOWN")
+
+    def test_human_indicators_hot_word_detection_is_case_insensitive_substring(self) -> None:
+        indicators = analyze_human_indicators("Please HELP me asap", 500)
+        self.assertTrue(indicators.contains_hot_word)
+        self.assertTrue(indicators.contains_multiple_hot_words)
+        self.assertEqual(indicators.signal_gain, 2.0)
+
+    def test_human_indicators_truncate_for_length(self) -> None:
+        indicators = analyze_human_indicators("hello world here", 5)
+        self.assertEqual(indicators.num_words, 1)
+        self.assertEqual(indicators.first_word, "hello")
+        self.assertEqual(indicators.last_word, "hello")
+
+    def test_vetted_input_carries_human_indicators(self) -> None:
+        vetted = vet("hello my name is earle", VettingContext())
+        self.assertIsNotNone(vetted.human_indicators)
+        assert vetted.human_indicators is not None
+        self.assertEqual(vetted.human_indicators.first_word, "hello")
+        self.assertEqual(vetted.human_indicators.last_word, "earle")
+
+    def test_control_alias_from_phrase_table(self) -> None:
+        vetted = vet(" menu ", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "help")
+
+    def test_capability_phrase_from_phrase_table(self) -> None:
+        vetted = vet("what can you do", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "capabilities")
+
+    def test_name_prefix_from_phrase_table(self) -> None:
+        vetted = vet("my name is Ada", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "set_name")
+        self.assertEqual(vetted.control_remainder, "Ada")
+
+    def test_delete_mapping_prefix_from_phrase_table(self) -> None:
+        vetted = vet("delete mapping name", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "delete_mapping")
+        self.assertEqual(vetted.control_remainder, "name")
+
+    def test_name_question_is_vetoed_before_command_matching(self) -> None:
+        vetted = vet("what is your name?", VettingContext())
+        self.assertEqual(vetted.intent, "invalid")
+        self.assertEqual(vetted.error, "unsupported question")
+
+    def test_broken_map_command_is_invalid(self) -> None:
+        vetted = vet('map "Need Dentist" appointment', VettingContext())
+        self.assertEqual(vetted.intent, "invalid")
+        self.assertEqual(vetted.error, "invalid map syntax")
+
+    def test_map_command_reserved_phrase_collision_is_invalid(self) -> None:
+        vetted = vet('map "cancel" -> appointment', VettingContext())
+        self.assertEqual(vetted.intent, "invalid")
+        self.assertEqual(vetted.error, "control phrase collision")
+
+    def test_map_command_payload(self) -> None:
+        vetted = vet(' map   "Need Dentist"   ->  Appointment ', VettingContext())
+        self.assertEqual(vetted.intent, "map_command")
+        self.assertIsNotNone(vetted.map_command)
+        assert vetted.map_command is not None
+        self.assertEqual(vetted.map_command.phrase, "Need Dentist")
+        self.assertEqual(vetted.map_command.command, "appointment")
+
+    def test_teaching_reply_selection(self) -> None:
+        vetted = vet("2", VettingContext(teaching_candidate=("need help", ["coffee", "reminder"])))
+        self.assertEqual(vetted.intent, "teaching_reply")
+        self.assertIsNotNone(vetted.teaching_reply)
+        assert vetted.teaching_reply is not None
+        self.assertEqual(vetted.teaching_reply.kind, "select")
+        self.assertEqual(vetted.teaching_reply.selected_index, 1)
+
+    def test_teaching_reply_text_stays_in_teaching_mode(self) -> None:
+        vetted = vet("what else", VettingContext(teaching_candidate=("need help", ["coffee", "reminder"])))
+        self.assertEqual(vetted.intent, "teaching_reply")
+        self.assertIsNotNone(vetted.teaching_reply)
+        assert vetted.teaching_reply is not None
+        self.assertEqual(vetted.teaching_reply.kind, "invalid")
+
+    def test_exit_is_control_verb(self) -> None:
+        vetted = vet(" EXIT ", VettingContext())
+        self.assertEqual(vetted.intent, "control")
+        self.assertEqual(vetted.control_verb, "exit")
+
+
+if __name__ == "__main__":
+    unittest.main()

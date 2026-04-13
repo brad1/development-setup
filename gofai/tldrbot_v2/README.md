@@ -19,6 +19,7 @@ python3 -m unittest discover -s tests -v
 ## Behavior Summary
 
 - Command recognition via `data/command_mappings.json` (custom first, defaults second).
+- First-class control phrases via `data/first_class_phrases.json`.
 - Form definitions in `forms/*.json`.
 - Pending actions persisted in `data/pending_actions.json`.
 - Unknown phrase teaching flow with explicit confirmation.
@@ -26,10 +27,16 @@ python3 -m unittest discover -s tests -v
 
 ## Built-in Control Commands
 
-- `show pending`
-- `continue pending`
-- `cancel pending`
+- `help`
+- `commands`
+- `capabilities`
+- `list pending`
 - `clear pending`
+- `status`
+- `greet`
+- `what is my name`
+- `who am i`
+- `register`
 - `map "<phrase>" -> <command_name>`
 - `cancel`
 
@@ -66,8 +73,8 @@ $ python3 bot.py
 
 $ python3 bot.py
  tldrbot v2
- you> continue pending
- bot> 4af120dd: time_window?, zip_code? (type "cancel" to stop)
+ you> list pending
+ bot> pending: 4af120dd:appointment missing=time_window,zip_code
  you> time window: morning zip: 90210
  bot> appointment queued: type=cleaning, day=monday, window=morning, zip=90210, provider=next available provider, insurance=self-pay
 ```
@@ -75,4 +82,6 @@ $ python3 bot.py
 ## Data Files
 
 - `data/command_mappings.json`: defaults + custom learned mappings.
+- `data/first_class_phrases.json`: editable table for first-class controls, escape phrases, and teaching replies.
+- `data/user_profile.json`: stored identity name for `who am i` / `my name is ...`.
 - `data/pending_actions.json`: active in-progress actions.

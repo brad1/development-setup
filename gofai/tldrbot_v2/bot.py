@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import importlib
+import json
 import re
 import sys
-import json
-import importlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -12,20 +12,44 @@ if str(ROOT) not in sys.path:
 
 from engine.dispatcher import dispatch
 from engine.forms import FormRegistry
+from engine.input_vetting import MapCommandPayload, TeachingReplyPayload, VettingContext, vet
 from engine.matcher import CommandMatcher
+from engine.profile import ProfileStore, UserProfile
+from engine.phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 from engine.parser import parse_slots
 from engine.pending import PendingStore
+from engine.slot_router import route_pending_input
 
 
 class TLDRBot:
-    ESCAPE_PHRASES = {"nevermind", "never mind", "ignore that", "forget it"}
+    CONTROL_ACTIONS: tuple[tuple[str, str], ...] = (
+        ("help", "help"),
+        ("greet", "greet"),
+        ("register", "name_prompt"),
+        ("identify", "get_name"),
+        ("delete mapping", "delete_mapping"),
+        ("status", "status"),
+        ("capabilities", "capabilities"),
+        ("list pending", "list_pending"),
+        ("clear pending", "clear_pending"),
+        ("exit", "exit"),
+    )
 
     def __init__(self, root: Path) -> None:
         self.root = root
         self.forms = FormRegistry(root / "forms")
         self.matcher = CommandMatcher(root / "data" / "command_mappings.json")
         self.pending = PendingStore(root / "data" / "pending_actions.json")
+        self.profile_store = ProfileStore(root / "data" / "user_profile.json")
+        self.profile = self.profile_store.load()
+        phrase_table_path = root / "data" / "first_class_phrases.json"
+        self.phrase_table = PhraseTable.load(
+            phrase_table_path if phrase_table_path.exists() else DEFAULT_PHRASE_TABLE_PATH
+        )
         self.teaching_candidate: tuple[str, list[str]] | None = None
+        self.mapping_delete_candidate: tuple[str, list[str]] | None = None
+        self.awaiting_name = False
+        self.should_exit = False
 
     def _missing_prompt(self, action) -> str:
         fields = action.missing_fields
@@ -37,7 +61,7 @@ class TLDRBot:
     def _suggest_commands(self, text: str) -> list[str]:
         lowered = text.lower().strip()
         scored: list[tuple[int, str]] = []
-        for command in self.forms.commands():
+        for command in self._available_action_targets():
             score = 0
             if command in lowered:
                 score += 4
@@ -50,8 +74,8 @@ class TLDRBot:
         scored.sort(key=lambda item: (-item[0], item[1]))
         chosen = [command for score, command in scored if score > 0]
         if not chosen:
-            chosen = self.forms.commands()
-        return chosen[:3]
+            chosen = self._available_action_targets()
+        return chosen
 
     def _teaching_prompt(self, phrase: str, options: list[str]) -> str:
         display = options + ["new command"]
@@ -61,8 +85,126 @@ class TLDRBot:
     def _command_list(self) -> str:
         return "commands: " + ", ".join(self.forms.commands())
 
-    def _suspend_active(self) -> bool:
-        return self.pending.suspend_recent()
+    def _sample_custom_commands(self, limit: int = 3) -> list[str]:
+        preferred = ["appointment", "coffee", "reminder"]
+        sample = [command for command in preferred if self.forms.has(command)]
+        if len(sample) < limit:
+            for command in self.forms.commands():
+                if command not in sample:
+                    sample.append(command)
+                if len(sample) >= limit:
+                    break
+        return sample[:limit]
+
+    def _overview_summary(self) -> str:
+        builtins = ["help", "greet", "register", "identify", "delete mapping", "status", "capabilities", "list pending", "clear pending", "exit"]
+        custom_commands = self._sample_custom_commands()
+        lines = [
+            "overview:",
+            "  builtins:",
+            "    " + ", ".join(builtins),
+            "  sample commands:",
+            "    " + ", ".join(custom_commands),
+            "  maps:",
+            '    teach aliases with `map "<phrase>" -> <command>`',
+            "  custom:",
+            "    learned aliases and new forms you add",
+        ]
+        return "\n".join(lines)
+
+    def _control_action_labels(self) -> list[str]:
+        return [label for label, _ in self.CONTROL_ACTIONS]
+
+    def _available_action_targets(self) -> list[str]:
+        return sorted(set(self.forms.commands()) | set(self._control_action_labels()))
+
+    def _resolve_action_target(self, target: str) -> tuple[str, str] | None:
+        if self.forms.has(target):
+            return "form", target
+        for label, verb in self.CONTROL_ACTIONS:
+            if target == label or target == verb:
+                return "control", verb
+        return None
+
+    def _help_summary(self) -> str:
+        return self._overview_summary()
+
+    def _route_pending_input(self, text: str):
+        return route_pending_input(text, self.pending._load())
+
+    def _custom_mapping_phrases(self) -> list[str]:
+        return sorted(self.matcher.custom().keys())
+
+    def _matching_custom_mappings(self, phrase: str | None) -> list[str]:
+        custom = self._custom_mapping_phrases()
+        if not phrase:
+            return custom
+        normalized = re.sub(r"\s+", " ", phrase.strip().lower())
+        if not normalized:
+            return custom
+        exact = [item for item in custom if item == normalized]
+        if exact:
+            return exact
+        contains = [item for item in custom if normalized in item]
+        if contains:
+            return contains
+        contained_by = [item for item in custom if item in normalized]
+        if contained_by:
+            return contained_by
+        return []
+
+    def _delete_mapping_prompt(self, phrase: str, options: list[str]) -> str:
+        numbered = "; ".join(f"({idx}) {mapping}" for idx, mapping in enumerate(options, start=1))
+        if phrase:
+            return f'remove which mapping for "{phrase}"? {numbered}'
+        return f"remove which mapping? {numbered}"
+
+    def _begin_mapping_delete(self, phrase: str | None) -> str:
+        matches = self._matching_custom_mappings(phrase)
+        if not matches:
+            return "no matching custom mapping"
+        if phrase and len(matches) == 1:
+            self.matcher.remove_custom_mapping(matches[0])
+            return "deleted"
+        self.mapping_delete_candidate = (phrase or "", matches)
+        return self._delete_mapping_prompt(phrase or "", matches)
+
+    def _handle_mapping_delete_reply(self, text: str) -> str | None:
+        if not self.mapping_delete_candidate:
+            return None
+
+        lowered = text.strip().lower()
+        cancel_phrases = (
+            self.phrase_table.teaching_replies.get("cancel", frozenset())
+            | self.phrase_table.teaching_replies.get("no", frozenset())
+            | self.phrase_table.escape_phrases
+        )
+        if lowered in cancel_phrases:
+            self.mapping_delete_candidate = None
+            return "cancelled"
+
+        if not lowered.isdigit():
+            return f"pick 1-{len(self.mapping_delete_candidate[1])}"
+
+        idx = int(lowered) - 1
+        phrase, options = self.mapping_delete_candidate
+        if 0 <= idx < len(options):
+            self.matcher.remove_custom_mapping(options[idx])
+            self.mapping_delete_candidate = None
+            return f"deleted {options[idx]}"
+
+        return f"pick 1-{len(options)}"
+
+    def _extract_name(self, text: str, prefix: str | None = None) -> str:
+        source = text.strip()
+        if prefix:
+            lowered = source.lower()
+            normalized_prefix = prefix.lower().strip()
+            if lowered.startswith(normalized_prefix):
+                source = source[len(normalized_prefix) :].strip()
+        source = re.sub(r"^[\s,:;-]+", "", source)
+        source = re.sub(r"[\s,:;.!?]+$", "", source)
+        return source
 
     def _create_new_command(self, phrase: str) -> str:
         command = re.sub(r"[^a-z0-9]+", "_", phrase.lower()).strip("_")
@@ -98,88 +240,98 @@ class TLDRBot:
         self.matcher.add_custom_mapping(phrase, command)
         return command
 
-    def _should_suspend_pending(self, text: str) -> tuple[bool, str | None]:
-        lower = text.lower().strip()
-        if lower in self.ESCAPE_PHRASES:
-            return True, "suspended"
-
-        matched = self.matcher.match(text)
-        if matched:
-            return True, None
-
-        if re.match(r'^map\s+"(.+?)"\s*->\s*([a-zA-Z0-9_\-]+)\s*$', text.strip()):
-            return True, None
-
-        return False, None
-
-    def _handle_control(self, text: str) -> str | None:
-        lower = text.lower().strip()
-        if lower == "show pending":
+    def _handle_control(self, control_verb: str) -> str:
+        if control_verb == "list_pending":
             pending = self.pending.list_active()
             if not pending:
                 return "no pending"
             return "pending: " + "; ".join(
                 f"{p.id}:{p.command_name} missing={','.join(p.missing_fields) or 'none'}" for p in pending
             )
-        if lower == "help":
-            return self._command_list()
-        if lower in {"commands", "menu"}:
-            return self._command_list()
-        if lower in {"cancel", "back"}:
-            return "cancelled" if self.pending.cancel_recent() else "no pending"
-        if lower == "cancel pending":
-            return "cancelled" if self.pending.cancel_recent() else "no pending"
-        if lower == "clear pending":
+        if control_verb in {"help", "commands", "capabilities"}:
+            return self._overview_summary()
+        if control_verb == "cancel":
+            if self.teaching_candidate:
+                self.teaching_candidate = None
+                return "cancelled"
+            if self.mapping_delete_candidate:
+                self.mapping_delete_candidate = None
+                return "cancelled"
+            if self.awaiting_name:
+                self.awaiting_name = False
+                return "cancelled"
+            return "ready"
+        if control_verb == "clear_pending":
             self.pending.clear_all()
             return "cleared"
-        if lower == "suspend pending":
-            return "suspended" if self.pending.suspend_recent() else "no pending"
-        if lower == "resume pending":
-            return "resumed" if self.pending.resume_recent() else "no suspended"
-        if lower == "continue pending":
-            action = self.pending.most_recent()
-            return self._missing_prompt(action) if action else "no pending"
-        return None
+        if control_verb == "exit":
+            self.should_exit = True
+            return "bye"
+        if control_verb == "greet":
+            return "Assistant ready."
+        if control_verb == "status":
+            return "Assistant online. All monitored systems nominal."
+        if control_verb == "get_name":
+            return f"You are identified as {self.profile.name}." if self.profile.name else "No identity record is currently stored."
+        if control_verb == "name_prompt":
+            self.awaiting_name = True
+            return "Specify."
+        if control_verb == "delete_mapping":
+            return self._begin_mapping_delete(None)
+        return "ready"
 
-    def _maybe_confirm_teaching(self, text: str) -> str | None:
+    def _set_name_from_text(self, text: str | None = None, remainder: str | None = None) -> str:
+        candidate = remainder or (self._extract_name(text or "") if text else "")
+        candidate = candidate.strip()
+        if not candidate:
+            self.awaiting_name = True
+            return "Specify."
+        self.profile = UserProfile(name=candidate)
+        self.profile_store.save(self.profile)
+        self.awaiting_name = False
+        return f"Acknowledged. I will address you as {candidate}."
+
+    def _handle_teaching_reply(self, teaching_reply: TeachingReplyPayload) -> str:
         if not self.teaching_candidate:
-            return None
-        lower = text.strip().lower()
-        if lower in {"cancel", "back"}:
+            return "ready"
+        if teaching_reply.kind == "cancel":
             self.teaching_candidate = None
             return "cancelled"
-        if lower.isdigit():
+        if teaching_reply.kind == "select":
             phrase, options = self.teaching_candidate
-            idx = int(lower) - 1
+            idx = teaching_reply.selected_index if teaching_reply.selected_index is not None else -1
             if 0 <= idx < len(options):
                 self.matcher.add_custom_mapping(phrase, options[idx])
                 self.teaching_candidate = None
                 return "saved"
             if idx == len(options):
-                phrase, _ = self.teaching_candidate
                 command = self._create_new_command(phrase)
                 self.teaching_candidate = None
                 return f"created {command}"
-            return "pick 1-" + str(len(options))
-        if lower in {"yes", "y"}:
+            return "pick 1-" + str(len(options) + 1)
+        if teaching_reply.kind == "yes":
             phrase, options = self.teaching_candidate
             self.matcher.add_custom_mapping(phrase, options[0])
             self.teaching_candidate = None
             return "saved"
-        if lower in {"no", "n"}:
+        if teaching_reply.kind == "no":
             self.teaching_candidate = None
             return "ignored"
-        return "pick 1-" + str(len(self.teaching_candidate[1]))
+        return "pick 1-" + str(len(self.teaching_candidate[1]) + 1)
 
-    def _parse_map_command(self, text: str) -> str | None:
-        match = re.match(r'^map\s+"(.+?)"\s*->\s*([a-zA-Z0-9_\-]+)\s*$', text.strip())
-        if match:
-            phrase, command = match.group(1), match.group(2).lower()
-            if not self.forms.has(command):
-                return "invalid command target"
-            self.teaching_candidate = (phrase, [command])
-            return f'what do you mean by "{phrase}"? (1) {command}'
-        return None
+    def _handle_map_command(self, map_command: MapCommandPayload) -> str:
+        if map_command.use_teaching_candidate:
+            if not self.teaching_candidate:
+                return "unable to comply. no phrase is awaiting assignment."
+            phrase = self.teaching_candidate[0]
+        else:
+            phrase = map_command.phrase
+
+        resolved = self._resolve_action_target(map_command.command)
+        if not resolved:
+            return "invalid command target"
+        self.teaching_candidate = (phrase, [map_command.command])
+        return f'what do you mean by "{phrase}"? (1) {map_command.command}'
 
     def _execute_if_ready(self, action):
         if action.missing_fields:
@@ -189,45 +341,63 @@ class TLDRBot:
         return result
 
     def process(self, text: str) -> str:
-        text = text.strip()
-        if not text:
+        vetted = vet(text, VettingContext(teaching_candidate=self.teaching_candidate, phrase_table=self.phrase_table))
+
+        if vetted.intent == "invalid":
+            if vetted.error == "unsupported question":
+                return "Unable to comply."
+            return vetted.error or "invalid input"
+        if vetted.intent == "empty":
+            return "ready"
+        if vetted.intent == "teaching_reply" and vetted.teaching_reply:
+            return self._handle_teaching_reply(vetted.teaching_reply)
+        if vetted.intent == "map_command" and vetted.map_command:
+            return self._handle_map_command(vetted.map_command)
+        if vetted.intent == "control" and vetted.control_verb:
+            if vetted.control_verb == "set_name":
+                return self._set_name_from_text(vetted.raw_text, vetted.control_remainder)
+            if vetted.control_verb == "delete_mapping":
+                self.teaching_candidate = None
+                return self._begin_mapping_delete(vetted.control_remainder)
+            return self._handle_control(vetted.control_verb)
+
+        if self.awaiting_name:
+            return self._set_name_from_text(vetted.raw_text)
+
+        if self.mapping_delete_candidate:
+            delete_reply = self._handle_mapping_delete_reply(vetted.raw_text)
+            if delete_reply is not None:
+                return delete_reply
+
+        if vetted.should_suspend_pending:
             return "ready"
 
-        teaching_response = self._maybe_confirm_teaching(text)
-        if teaching_response:
-            return teaching_response
+        routed = self._route_pending_input(vetted.normalized_text)
+        if routed:
+            if routed.status == "suspended":
+                routed.status = "pending"
+            form = self.forms.get(routed.command_name)
+            routed.slots = parse_slots(vetted.normalized_text, form, existing=routed.slots)
+            self.pending.update(routed)
+            if routed.missing_fields:
+                return self._missing_prompt(routed)
+            return self._execute_if_ready(routed)
 
-        map_response = self._parse_map_command(text)
-        if map_response:
-            return map_response
-
-        control_response = self._handle_control(text)
-        if control_response:
-            return control_response
-
-        active = self.pending.most_recent()
-        if active:
-            should_suspend, response = self._should_suspend_pending(text)
-            if should_suspend:
-                self._suspend_active()
-                if response is not None:
-                    return response
-                return self.process(text)
-            form = self.forms.get(active.command_name)
-            active.slots = parse_slots(text, form, existing=active.slots)
-            self.pending.update(active)
-            if active.missing_fields:
-                return self._missing_prompt(active)
-            return self._execute_if_ready(active)
-
-        command = self.matcher.match(text)
+        command = self.matcher.match(vetted.normalized_text)
         if not command:
-            options = self._suggest_commands(text)
-            self.teaching_candidate = (text, options)
-            return self._teaching_prompt(text, options)
+            options = self._suggest_commands(vetted.normalized_text)
+            self.teaching_candidate = (vetted.normalized_text, options)
+            return self._teaching_prompt(vetted.normalized_text, options)
 
-        form = self.forms.get(command)
-        slots = parse_slots(text, form, existing={})
+        resolved = self._resolve_action_target(command)
+        if not resolved:
+            return "invalid command target"
+        target_kind, target = resolved
+        if target_kind == "control":
+            return self._handle_control(target)
+
+        form = self.forms.get(target)
+        slots = parse_slots(vetted.normalized_text, form, existing={})
         action = self.pending.create(form, slots=slots)
         action = self.pending.update(action)
         return self._execute_if_ready(action)
@@ -243,10 +413,11 @@ def repl() -> None:
             print("\nbye")
             break
 
-        if user_input.strip().lower() in {"quit", "exit"}:
-            print("bye")
+        response = bot.process(user_input)
+        if bot.should_exit:
+            print(response)
             break
-        print("bot>", bot.process(user_input))
+        print("bot>", response)
 
 
 if __name__ == "__main__":
