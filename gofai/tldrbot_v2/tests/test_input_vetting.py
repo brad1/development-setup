@@ -3,9 +3,39 @@ from __future__ import annotations
 import unittest
 
 from engine.input_vetting import VettingContext, vet
+from engine.human_indicators import analyze_human_indicators
 
 
 class InputVettingTests(unittest.TestCase):
+    def test_human_indicators_basic_analysis(self) -> None:
+        indicators = analyze_human_indicators("hello my name is earle", 500)
+        self.assertEqual(indicators.num_words, 5)
+        self.assertEqual(indicators.first_word, "hello")
+        self.assertEqual(indicators.last_word, "earle")
+        self.assertFalse(indicators.contains_hot_word)
+        self.assertFalse(indicators.contains_multiple_hot_words)
+        self.assertEqual(indicators.signal_gain, 0.0)
+        self.assertEqual(indicators.classification, "UNKNOWN")
+
+    def test_human_indicators_hot_word_detection_is_case_insensitive_substring(self) -> None:
+        indicators = analyze_human_indicators("Please HELP me asap", 500)
+        self.assertTrue(indicators.contains_hot_word)
+        self.assertTrue(indicators.contains_multiple_hot_words)
+        self.assertEqual(indicators.signal_gain, 2.0)
+
+    def test_human_indicators_truncate_for_length(self) -> None:
+        indicators = analyze_human_indicators("hello world here", 5)
+        self.assertEqual(indicators.num_words, 1)
+        self.assertEqual(indicators.first_word, "hello")
+        self.assertEqual(indicators.last_word, "hello")
+
+    def test_vetted_input_carries_human_indicators(self) -> None:
+        vetted = vet("hello my name is earle", VettingContext())
+        self.assertIsNotNone(vetted.human_indicators)
+        assert vetted.human_indicators is not None
+        self.assertEqual(vetted.human_indicators.first_word, "hello")
+        self.assertEqual(vetted.human_indicators.last_word, "earle")
+
     def test_control_alias_from_phrase_table(self) -> None:
         vetted = vet(" menu ", VettingContext())
         self.assertEqual(vetted.intent, "control")

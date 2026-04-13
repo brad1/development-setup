@@ -5,6 +5,7 @@ from functools import lru_cache
 from dataclasses import dataclass
 from typing import Literal
 
+from .human_indicators import HumanIndicators, analyze_human_indicators
 from .phrase_table import DEFAULT_PHRASE_TABLE_PATH, PhraseTable
 
 
@@ -44,6 +45,7 @@ class VettedInput:
     normalized_text: str
     lowered_text: str
     intent: Intent
+    human_indicators: HumanIndicators | None = None
     error: str | None = None
     control_verb: str | None = None
     control_remainder: str | None = None
@@ -111,6 +113,7 @@ def _default_phrase_table() -> PhraseTable:
 def vet(text: str, context: VettingContext) -> VettedInput:
     phrase_table = context.phrase_table or _default_phrase_table()
     normalized_text, lowered_text = _normalize(text)
+    human_indicators = analyze_human_indicators(text, context.max_length)
 
     shape_error = _shape_check(text, normalized_text, context)
     if shape_error:
@@ -119,11 +122,18 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="invalid",
+            human_indicators=human_indicators,
             error=shape_error,
         )
 
     if not normalized_text:
-        return VettedInput(raw_text=text, normalized_text=normalized_text, lowered_text=lowered_text, intent="empty")
+        return VettedInput(
+            raw_text=text,
+            normalized_text=normalized_text,
+            lowered_text=lowered_text,
+            intent="empty",
+            human_indicators=human_indicators,
+        )
 
     if phrase_table.is_escape(lowered_text):
         return VettedInput(
@@ -131,6 +141,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="utterance",
+            human_indicators=human_indicators,
             should_suspend_pending=True,
         )
 
@@ -140,6 +151,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="invalid",
+            human_indicators=human_indicators,
             error="unsupported question",
         )
 
@@ -150,6 +162,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="invalid",
+            human_indicators=human_indicators,
             error=map_error,
         )
 
@@ -163,6 +176,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
                 normalized_text=normalized_text,
                 lowered_text=lowered_text,
                 intent="invalid",
+                human_indicators=human_indicators,
                 error="control phrase collision",
             )
         return VettedInput(
@@ -170,6 +184,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="map_command",
+            human_indicators=human_indicators,
             map_command=MapCommandPayload(phrase=phrase, command=command),
             should_suspend_pending=True,
         )
@@ -182,6 +197,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
                 normalized_text=normalized_text,
                 lowered_text=lowered_text,
                 intent="teaching_reply",
+                human_indicators=human_indicators,
                 teaching_reply=teaching_reply,
             )
 
@@ -192,6 +208,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
                 normalized_text=normalized_text,
                 lowered_text=lowered_text,
                 intent="map_command",
+                human_indicators=human_indicators,
                 map_command=MapCommandPayload(
                     phrase=context.teaching_candidate[0],
                     command=alias_target.lower(),
@@ -207,6 +224,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
                 normalized_text=normalized_text,
                 lowered_text=lowered_text,
                 intent="control",
+                human_indicators=human_indicators,
                 control_verb=control_verb,
                 should_suspend_pending=True,
             )
@@ -219,6 +237,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
                 normalized_text=normalized_text,
                 lowered_text=lowered_text,
                 intent="control",
+                human_indicators=human_indicators,
                 control_verb=control_verb,
                 control_remainder=remainder or None,
                 should_suspend_pending=True,
@@ -229,6 +248,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="teaching_reply",
+            human_indicators=human_indicators,
             teaching_reply=teaching_reply,
         )
 
@@ -239,6 +259,7 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="control",
+            human_indicators=human_indicators,
             control_verb=control_verb,
             should_suspend_pending=True,
         )
@@ -251,9 +272,16 @@ def vet(text: str, context: VettingContext) -> VettedInput:
             normalized_text=normalized_text,
             lowered_text=lowered_text,
             intent="control",
+            human_indicators=human_indicators,
             control_verb=control_verb,
             control_remainder=remainder or None,
             should_suspend_pending=True,
         )
 
-    return VettedInput(raw_text=text, normalized_text=normalized_text, lowered_text=lowered_text, intent="utterance")
+    return VettedInput(
+        raw_text=text,
+        normalized_text=normalized_text,
+        lowered_text=lowered_text,
+        intent="utterance",
+        human_indicators=human_indicators,
+    )
