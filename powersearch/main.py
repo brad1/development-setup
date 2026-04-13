@@ -263,6 +263,9 @@ def main() -> int:
     except ValueError as exc:
         Presenter.show_error(str(exc))
         return 2
+    except Exception as exc:
+        Presenter.show_error(f"internal error: {exc}")
+        return 1
 
     Presenter.show_plan(plan.command)
 
