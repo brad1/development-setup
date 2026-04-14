@@ -1,4 +1,5 @@
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -128,34 +129,67 @@ def test_planner_rejects_unsupported_mode_combinations():
         powersearch.Planner.build_plan(req)
 
 
-@pytest.mark.skip(reason="not implemented yet: concurrent subprocess guard")
 def test_executor_rejects_concurrent_subprocess_groups():
-    pass
+    powersearch.Executor._active_run_lock.acquire()
+    try:
+        plan = powersearch.ExecutionPlan("echo hi")
+        with pytest.raises(powersearch.ConcurrentExecutionError, match="concurrent subprocess groups"):
+            powersearch.Executor.run(plan)
+    finally:
+        powersearch.Executor._active_run_lock.release()
 
 
-@pytest.mark.skip(reason="not implemented yet: output streamer abstraction")
 def test_output_streamer_streams_incrementally():
-    pass
+    plan = powersearch.ExecutionPlan("printf 'alpha\\n'; sleep 0.1; printf 'beta\\n'")
+    result = powersearch.Executor.run(plan)
+
+    assert result.exit_code == 0
 
 
-@pytest.mark.skip(reason="not implemented yet: output streamer abstraction")
 def test_output_streamer_bounds_buffered_bytes():
-    pass
+    plan = powersearch.ExecutionPlan(
+        "python3 -c \"import sys; sys.stdout.write('x' * 128)\"",
+        max_output_bytes=32,
+    )
+    result = powersearch.Executor.run(plan)
+
+    assert result.resource_exhausted is True
+    assert powersearch.ExitPolicy.from_execution(result) == 125
 
 
-@pytest.mark.skip(reason="not implemented yet: output streamer abstraction")
 def test_output_streamer_bounds_emitted_lines():
-    pass
+    plan = powersearch.ExecutionPlan(
+        "python3 -c \"print('a\\n' * 8, end='')\"",
+        max_output_lines=3,
+    )
+    result = powersearch.Executor.run(plan)
+
+    assert result.resource_exhausted is True
+    assert result.error_message == "output limits exceeded"
 
 
-@pytest.mark.skip(reason="not implemented yet: output streamer abstraction")
-def test_output_streamer_emits_overflow_marker():
-    pass
+def test_output_streamer_emits_overflow_marker(capsys):
+    plan = powersearch.ExecutionPlan(
+        "python3 -c \"import sys; sys.stdout.write('x' * 128)\"",
+        max_output_bytes=32,
+    )
+    powersearch.Executor.run(plan)
+
+    captured = capsys.readouterr()
+    assert powersearch.OUTPUT_LIMIT_MARKER.strip() in captured.out
 
 
-@pytest.mark.skip(reason="not implemented yet: telemetry sink abstraction")
 def test_telemetry_sink_records_lifecycle_events():
-    pass
+    powersearch.TelemetrySink.reset()
+    plan = powersearch.ExecutionPlan("printf 'hello\\n'")
+    result = powersearch.Executor.run(plan, telemetry=powersearch.TelemetrySink)
+
+    assert result.exit_code == 0
+    names = [event["event"] for event in powersearch.TelemetrySink.events]
+    assert "process_started" in names
+    assert "stream_chunk" in names
+    assert "process_exited" in names
+    assert "cleanup_complete" in names
 
 
 def test_presenter_renders_previews_summaries_and_errors_consistently(capsys):
@@ -169,16 +203,28 @@ def test_presenter_renders_previews_summaries_and_errors_consistently(capsys):
     assert "bad news" in captured.err
 
 
-@pytest.mark.skip(reason="not implemented yet: no-zombie integration test")
 def test_executor_always_reaps_child_processes():
-    pass
+    plan = powersearch.ExecutionPlan("sleep 0.05")
+    result = powersearch.Executor.run(plan)
+
+    assert result.exit_code == 0
+    assert powersearch.Executor._active_run_lock.acquire(blocking=False) is True
+    powersearch.Executor._active_run_lock.release()
 
 
-@pytest.mark.skip(reason="not implemented yet: wall-time and timeout harness coverage")
 def test_executor_enforces_wall_time_and_timeout():
-    pass
+    plan = powersearch.ExecutionPlan("sleep 1", timeout_seconds=1)
+    started = time.monotonic()
+    result = powersearch.Executor.run(plan)
+    elapsed = time.monotonic() - started
+
+    assert result.timed_out is True
+    assert powersearch.ExitPolicy.from_execution(result) == 124
+    assert elapsed < 3
 
 
-@pytest.mark.skip(reason="not implemented yet: descendant termination verification")
 def test_executor_terminates_descendants_on_timeout():
-    pass
+    plan = powersearch.ExecutionPlan("sleep 5 & wait", timeout_seconds=1)
+    result = powersearch.Executor.run(plan)
+
+    assert result.timed_out is True
