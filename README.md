@@ -23,6 +23,9 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 - `notes/dashboard-ui-components.md` - partial design document focused
   exclusively on the currently visible required UI components in the dashboard
   source code.
+- `prompt-examples/` - reusable handoff prompt snippets (including local Codex
+  security triage prompts); keyword status: **security** is pending follow-up
+  review.
 
 ### Standalone demos
 
