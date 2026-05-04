@@ -5,10 +5,16 @@
 #
 # TDD steps are each saved in a commit.
 # - commit 1: add failing tests
-# - commit 2: pass tests from first commit, add more failing tests
+# - commit 2: pass tests
+# - commit 3: add more failing tests 
 # - ...
 
 require 'syslog'
+
+# convenience, simplify mocking
+def log_info(message)
+  Syslog.open("RSpec") { |s| s.info message }
+end
 
 module VisitorPattern
 
@@ -18,7 +24,11 @@ module VisitorPattern
 
   class Shelf
     def initialize
-      raise 'hell'
+      @queue = []
+    end
+
+    def accept(visitor)
+      log_info("accept_reached")
     end
   end
 
@@ -31,7 +41,7 @@ RSpec.describe VisitorPattern do
   let(:empty_cart)  { VisitorPattern::ShoppingCart.new }
 
   before(:each) {
-    allow(Syslog).to receive(:open).and_return logger
+    allow(Syslog).to receive(:open).and_yield logger
   }
 
   describe VisitorPattern::ShoppingCart do
@@ -45,7 +55,7 @@ RSpec.describe VisitorPattern do
     end
     context "when accepting a visitor" do
       it "logs the visit" do
-        expect(logger).to receive(:info)
+        expect(logger).to receive(:info).with("accept_reached")
         empty_shelf.accept empty_cart
       end
     end
