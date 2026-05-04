@@ -27,8 +27,21 @@ module VisitorPattern
       @queue = []
     end
 
+    def size
+      @queue.size
+    end
+
     def pop
-      log_info("unimplemented")
+      raise 'not allowed' if @queue.size.eql? 0
+      @queue.pop
+    end
+
+    def push(item)
+      @queue.push item
+    end
+
+    def face
+      @queue.first
     end
 
     def accept(visitor)
@@ -68,7 +81,7 @@ RSpec.describe VisitorPattern do
 
       context "and items are removed" do
         it "throws an exception" do
-          expect { empty_shelf.pop }.to raise_error
+          expect { empty_shelf.pop }.to raise_error RuntimeError
         end
       end
 
