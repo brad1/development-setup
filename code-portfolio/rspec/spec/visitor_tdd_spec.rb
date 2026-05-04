@@ -22,6 +22,16 @@ module VisitorPattern
   end
 
   class Aisle
+    def initialize(shelf)
+      raise ArgumentError if shelf.nil?
+      @shelves = [shelf]
+    end
+
+    def accept(visitor)
+      @shelves.each do |shelf|
+        shelf.accept visitor
+      end
+    end
   end
 
 
@@ -90,8 +100,8 @@ RSpec.describe VisitorPattern do
       it "exposes its shelf" do
         visitor = spy('visitor')
         aisle = described_class.new empty_shelf
-        aisle.accept visitor
         expect(empty_shelf).to receive(:accept).with visitor
+        aisle.accept visitor
       end
     end
   end
