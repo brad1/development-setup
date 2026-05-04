@@ -19,12 +19,28 @@ end
 module VisitorPattern
 
   class ShoppingCart
+
+    def initialize
+      @items = []
+    end
+
+    def visit_aisle(aisle)
+      nil
+    end
+
+    def visit_shelf(shelf)
+      @items << shelf.pop
+    end
   end
 
   class Aisle
     def initialize(shelf)
       raise ArgumentError if shelf.nil?
       @shelves = [shelf]
+    end
+
+    def add_shelf(shelf)
+      @shelves << shelf
     end
 
     def accept(visitor)
@@ -59,6 +75,8 @@ module VisitorPattern
 
     def accept(visitor)
       log_info("accept_reached")
+
+      visitor.visit_shelf self
     end
   end
 
