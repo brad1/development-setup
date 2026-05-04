@@ -70,11 +70,47 @@ RSpec.describe VisitorPattern do
   let(:empty_shelf) { VisitorPattern::Shelf.new }
   let(:empty_cart)  { VisitorPattern::ShoppingCart.new }
 
+  let(:item) { spy('item') }
+
+  let(:shelf) {
+    rval = VisitorPattern::Shelf.new
+    rval.push item
+    rval
+  }
+
+  let(:aisle) { 
+    VisitorPattern::Aisle.new shelf
+  }
+
   before(:each) {
     allow(Syslog).to receive(:open).and_yield logger
   }
 
+  describe "Shopping for a single item" do
+
+    describe VisitorPattern::Shelf do
+
+      context "when accepting a cart" do
+        it "has no more than one item removed" do
+          expect(shelf).to receive(:pop).at_most(:once)
+          aisle.accept empty_cart
+        end
+      end
+    end
+
+  end
+
   describe VisitorPattern::ShoppingCart do
+    context "when visiting an aisle" do
+      it "does not crash" do
+        expect { empty_cart.visit_aisle aisle }.not_to raise_error
+      end
+    end
+    context "when visiting a shelf" do
+      it "does not crash" do
+        expect { empty_cart.visit_shelf shelf }.not_to raise_error
+      end
+    end
   end
 
   describe VisitorPattern::Aisle do
@@ -97,11 +133,31 @@ RSpec.describe VisitorPattern do
     end
 
     context "when accepting a visitor" do
+
+      let(:visitor) { spy('visitor') }
+
       it "exposes its shelf" do
-        visitor = spy('visitor')
         aisle = described_class.new empty_shelf
         expect(empty_shelf).to receive(:accept).with visitor
         aisle.accept visitor
+      end
+
+      context "and has multiple shelves" do
+
+        let(:shelf_1) { spy('shelf_1') }
+        let(:shelf_2) { spy('shelf_2') }
+
+        let(:aisle) { 
+          rval = VisitorPattern::Aisle.new shelf_1
+          rval.add_shelf shelf_2
+          rval
+        }
+
+        it "exposes all shelves" do
+          expect(shelf_1).to receive(:accept).with visitor
+          expect(shelf_2).to receive(:accept).with visitor
+          aisle.accept visitor
+        end
       end
     end
   end
@@ -151,8 +207,15 @@ RSpec.describe VisitorPattern do
     context "when accepting a visitor" do
       it "logs the visit" do
         expect(logger).to receive(:info).with("accept_reached")
-        empty_shelf.accept empty_cart
+        shelf.accept empty_cart
       end
+
+      it "executes the visit" do
+        cart = spy()
+        expect(cart).to receive(:visit_shelf).with shelf
+        shelf.accept cart
+      end
+
     end
   end
 
