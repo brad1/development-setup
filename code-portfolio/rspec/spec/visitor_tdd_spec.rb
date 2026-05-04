@@ -21,6 +21,9 @@ module VisitorPattern
   class ShoppingCart
   end
 
+  class Aisle
+  end
+
 
   class Shelf
     def initialize
@@ -62,6 +65,35 @@ RSpec.describe VisitorPattern do
   }
 
   describe VisitorPattern::ShoppingCart do
+  end
+
+  describe VisitorPattern::Aisle do
+    context "when using the default constructor" do
+      it "throws an argument error" do
+        expect {described_class.new}.to raise_error ArgumentError
+      end
+    end
+    context "when setting up the first shelf" do
+      context "and shelf is nil" do
+        it "throws an argument error" do
+          expect {described_class.new nil }.to raise_error ArgumentError
+        end
+      end
+      context "and shelf is empty" do
+        it "throws no errors" do
+          expect {described_class.new empty_shelf }.not_to raise_error
+        end
+      end
+    end
+
+    context "when accepting a visitor" do
+      it "exposes its shelf" do
+        visitor = spy('visitor')
+        aisle = described_class.new empty_shelf
+        aisle.accept visitor
+        expect(empty_shelf).to receive(:accept).with visitor
+      end
+    end
   end
 
   describe VisitorPattern::Shelf do
