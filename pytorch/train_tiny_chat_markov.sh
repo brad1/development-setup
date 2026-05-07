@@ -8,11 +8,7 @@ fi
 DATA_PATH="$(mktemp)"
 trap 'rm -f "$DATA_PATH"' EXIT
 
-cat > "$DATA_PATH" <<'EOF'
-H H T H H T H H T H H T H H T H H T
-H H T H H T H H T H H T H H T H H T
-H H T H H T H H T H H T H H T H H T
-EOF
+printf '%s' 'HHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHT' > "$DATA_PATH"
 
 python3 pytorch/train_tiny_chat.py \
   --data "$DATA_PATH" \
@@ -20,6 +16,7 @@ python3 pytorch/train_tiny_chat.py \
   --batch-size 32 \
   --block-size 16 \
   --lr 1e-2 \
-  --prompt "H H " \
+  --prompt "HH" \
   --max-new-tokens 40 \
+  --sample-strategy argmax \
   --model bigram

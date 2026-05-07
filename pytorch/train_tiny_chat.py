@@ -112,9 +112,13 @@ class BigramLanguageModel(nn.Module):
         return logits, loss
 
     # POI generate (not predict) next token
-    def _sample_next_token(self, idx: torch.Tensor) -> torch.Tensor:
+    def _sample_next_token(
+        self, idx: torch.Tensor, sample_strategy: str = "multinomial"
+    ) -> torch.Tensor:
         logits, _ = self(idx)
         next_token_logits = logits[:, -1, :]
+        if sample_strategy == "argmax":
+            return torch.argmax(next_token_logits, dim=-1, keepdim=True)
         probs = F.softmax(next_token_logits, dim=-1)
         return torch.multinomial(probs, num_samples=1)
 
@@ -122,10 +126,12 @@ class BigramLanguageModel(nn.Module):
     # 
     # Disable gradient tracking during inference to reduce memory use and speed up sampling.
     @torch.no_grad()
-    def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
+    def generate(
+        self, idx: torch.Tensor, max_new_tokens: int, sample_strategy: str = "multinomial"
+    ) -> torch.Tensor:
         logger.debug("generate: sampling %d new tokens", max_new_tokens)
         for _ in range(max_new_tokens):
-            next_idx = self._sample_next_token(idx)
+            next_idx = self._sample_next_token(idx, sample_strategy=sample_strategy)
             idx = torch.cat((idx, next_idx), dim=1)
         return idx
 
@@ -153,17 +159,23 @@ class Bigram2LanguageModel(nn.Module):
             loss = F.cross_entropy(logits.view(b * t, c), targets.view(b * t))
         return logits, loss
 
-    def _sample_next_token(self, idx: torch.Tensor) -> torch.Tensor:
+    def _sample_next_token(
+        self, idx: torch.Tensor, sample_strategy: str = "multinomial"
+    ) -> torch.Tensor:
         logits, _ = self(idx)
         next_token_logits = logits[:, -1, :]
+        if sample_strategy == "argmax":
+            return torch.argmax(next_token_logits, dim=-1, keepdim=True)
         probs = F.softmax(next_token_logits, dim=-1)
         return torch.multinomial(probs, num_samples=1)
 
     @torch.no_grad()
-    def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
+    def generate(
+        self, idx: torch.Tensor, max_new_tokens: int, sample_strategy: str = "multinomial"
+    ) -> torch.Tensor:
         logger.debug("generate: sampling %d new tokens", max_new_tokens)
         for _ in range(max_new_tokens):
-            next_idx = self._sample_next_token(idx)
+            next_idx = self._sample_next_token(idx, sample_strategy=sample_strategy)
             idx = torch.cat((idx, next_idx), dim=1)
         return idx
 
@@ -243,7 +255,10 @@ def build_training_context(data_path: Path | None) -> TrainingDataContext:
         len(data),
     )
     return TrainingDataContext(
-        text=text, char_to_idx=char_to_idx, idx_to_char=idx_to_char, data=data
+        text=text,
+        char_to_idx=char_to_idx,
+        idx_to_char=idx_to_char,
+        data=data,
     )
 
 
@@ -290,6 +305,11 @@ def configure_logging(debug: bool) -> None:
     logger.debug("configure_logging: debug_enabled=True")
 
 
+def format_hht_sequence(text: str) -> str:
+    tokens = [c for c in text if c in ("H", "T")]
+    return " ".join(tokens)
+
+
 def train(args):
     logger.debug("train: args=%s", args)
     torch.manual_seed(args.seed)
@@ -325,9 +345,17 @@ def train(args):
     # POI inference pass
     prompt = resolve_prompt(args.prompt)
     start = encode(prompt, context.char_to_idx).unsqueeze(0).to(device)
-    out = model.generate(start, max_new_tokens=args.max_new_tokens)[0].cpu()
+    out = model.generate(
+        start,
+        max_new_tokens=args.max_new_tokens,
+        sample_strategy=args.sample_strategy,
+    )[0].cpu()
+    sample = decode(out, context.idx_to_char)
     print("\n--- sample ---")
-    print(decode(out, context.idx_to_char))
+    if is_markov_hht(context.text):
+        print(format_hht_sequence(sample))
+    else:
+        print(sample)
 
     if args.save_model:
         save_model_checkpoint(model, args.save_model)
@@ -360,6 +388,12 @@ def add_generation_args(parser: argparse.ArgumentParser) -> None:
     logger.debug("add_generation_args: registering generation arguments")
     parser.add_argument("--prompt", type=str, default="")
     parser.add_argument("--max-new-tokens", type=int, default=80)
+    parser.add_argument(
+        "--sample-strategy",
+        choices=["multinomial", "argmax"],
+        default="multinomial",
+        help="Generation strategy: probabilistic sampling or deterministic argmax.",
+    )
 
 
 def add_runtime_args(parser: argparse.ArgumentParser) -> None:
