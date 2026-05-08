@@ -1,0 +1,86 @@
+# .gitlab-ci.yml
+# This is an example, not for real use in this project folder
+
+stages
+  - prep
+  - test
+  - package
+  - deploy
+
+lint:
+  stage: prep
+  script:
+    - bundle install
+    - bundle exec rubocop
+
+# Stand up postgres for use by legacy tests
+# Blow through django migrations, junior devs struggle with them,
+#   tests will expose if something is wrong with the schema
+.test:
+  stage: test
+  before_script:
+    - tar -xzf $HOME/data.tgz /mnt/postgres/data
+    - sudo pg_ctl -D /mnt/postgres/data -w start
+    - REQ_HASH=$(sha256sum backend/requirements.txt)
+    - . "$HOME/venv-${REQ_HASH%% *}/bin/activate"
+    - cd backend
+    - python3 manage.py makemigrations --merge
+    - python3 manage.py migrate database || python manage.py showmigrations --plan | tee "migration-plan-${CI_JOB_ID}.txt"
+    - python3 manage.py migrate database --fake
+    - python3 manage.py migrate
+    - python3 manage.py migrate --fake
+  artifacts:
+    when: on_failure
+    paths:
+      - backend/migration-plan-*.txt
+
+pytest:
+  extends: .test
+  script:
+    - REQ_HASH=$(sha256sum backend/requirements.txt)
+    - . "$HOME/venv-${REQ_HASH%% *}/bin/activate"
+    - pytest backend
+
+rspec: 
+  extends: .test
+  script:
+    - bundle install
+    - bundle exec rspec scheduler/spec
+
+# Act like a local dirty build, simplified
+build-fast:
+  stage: package
+  variables:
+    DIST_SRC: "$HOME/$CI_COMMIT_SHA-dist"
+    DIST_DEST: "web/dist"
+  script:
+    - git restore-mtime
+    - echo "Restore npm dist dir"
+    - cp -r "$DIST_SRC" "$DIST_DEST"
+    - echo "Restore venv"
+    - REQ_HASH=$(sha256sum backend/requirements.txt)
+    - . "$HOME/venv-${REQ_HASH%% *}/bin/activate"
+    - make
+
+build-full:
+  stage: package
+  script: 
+    - make
+  only:
+    - main
+
+deploy-testing:
+  stage: deploy
+  dependencies: build-fast
+  variables:
+    DEPLOY_TARGET: testing.local
+  script:
+    - scp release.bin support@$DEPLOY_TARGET:/opt/upgrade-drop/
+    - ssh support@test.local 'timeout 30 bash -c "while ! pgrep -f install.sh; do sleep 5; done"' 
+    - ssh support@test.local 'timeout 30 bash -c "while pgrep -f install.sh; do sleep 5; done"' 
+
+deploy-staging:
+  extends: deploy-testing
+  variables:
+    DEPLOY_TARGET: staging.local
+  dependencies: build-full
