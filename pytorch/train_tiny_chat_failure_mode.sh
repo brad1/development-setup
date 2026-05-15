@@ -5,32 +5,27 @@ if [[ -f "pytorch/.venv/bin/activate" ]]; then
   source "pytorch/.venv/bin/activate"
 fi
 
-DATA_PATH="$(mktemp)"
-trap 'rm -f "$DATA_PATH"' EXIT
-
-printf '%s' 'HHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHTHHT' > "$DATA_PATH"
-
-echo "== bigram: expected to plateau because it only sees one token of context =="
+echo "== pairlinear: expected to plateau because same/different is nonlinear =="
 python3 pytorch/train_tiny_chat.py \
-  --data "$DATA_PATH" \
-  --steps 3000 \
-  --batch-size 32 \
-  --block-size 16 \
+  --task same-different \
+  --steps 1000 \
+  --batch-size 64 \
   --lr 1e-2 \
-  --prompt "HH" \
-  --max-new-tokens 40 \
+  --log-every 250 \
+  --prompt "HT" \
+  --max-new-tokens 12 \
   --sample-strategy argmax \
-  --model bigram
+  --model pairlinear
 
 echo
-echo "== bigram2: expected to improve because it can use a 2-token context =="
+echo "== bigram2: expected to improve because the hidden ReLU layer can learn the interaction =="
 python3 pytorch/train_tiny_chat.py \
-  --data "$DATA_PATH" \
-  --steps 3000 \
-  --batch-size 32 \
-  --block-size 16 \
+  --task same-different \
+  --steps 1000 \
+  --batch-size 64 \
   --lr 1e-2 \
-  --prompt "HH" \
-  --max-new-tokens 40 \
+  --log-every 250 \
+  --prompt "HT" \
+  --max-new-tokens 12 \
   --sample-strategy argmax \
   --model bigram2

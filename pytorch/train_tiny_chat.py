@@ -137,16 +137,68 @@ class BigramLanguageModel(nn.Module):
 
 
 class Bigram2LanguageModel(nn.Module):
-    def __init__(self, vocab_size: int) -> None:
+    def __init__(self, vocab_size: int, embed_dim: int | None = None) -> None:
         super().__init__()
-        self.vocab_size = vocab_size
-        self.table = nn.Embedding(vocab_size * vocab_size, vocab_size)
+        # This model is intentionally not a bigger lookup table. It receives the
+        # previous/current tokens separately, then uses a hidden layer plus ReLU
+        # to learn interactions such as "same token" vs "different token".
+        if embed_dim is None:
+            embed_dim = vocab_size
+        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.hidden = nn.Linear(embed_dim * 2, embed_dim * 2)
+        self.proj = nn.Linear(embed_dim * 2, vocab_size)
 
     def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
         prev_idx = torch.zeros_like(idx)
         prev_idx[:, 1:] = idx[:, :-1]
-        context_idx = prev_idx * self.vocab_size + idx
-        logits = self.table(context_idx)
+        curr_emb = self.embedding(idx)
+        prev_emb = self.embedding(prev_idx)
+        combined = torch.cat((prev_emb, curr_emb), dim=-1)
+        hidden = F.relu(self.hidden(combined))
+        logits = self.proj(hidden)
+        loss = None
+        if targets is not None:
+            b, t, c = logits.shape
+            loss = F.cross_entropy(logits.view(b * t, c), targets.view(b * t))
+        return logits, loss
+
+    def _sample_next_token(
+        self, idx: torch.Tensor, sample_strategy: str = "multinomial"
+    ) -> torch.Tensor:
+        logits, _ = self(idx)
+        next_token_logits = logits[:, -1, :]
+        if sample_strategy == "argmax":
+            return torch.argmax(next_token_logits, dim=-1, keepdim=True)
+        probs = F.softmax(next_token_logits, dim=-1)
+        return torch.multinomial(probs, num_samples=1)
+
+    @torch.no_grad()
+    def generate(
+        self, idx: torch.Tensor, max_new_tokens: int, sample_strategy: str = "multinomial"
+    ) -> torch.Tensor:
+        logger.debug("generate: sampling %d new tokens", max_new_tokens)
+        for _ in range(max_new_tokens):
+            next_idx = self._sample_next_token(idx, sample_strategy=sample_strategy)
+            idx = torch.cat((idx, next_idx), dim=1)
+        return idx
+
+
+class PairLinearLanguageModel(nn.Module):
+    def __init__(self, vocab_size: int, embed_dim: int | None = None) -> None:
+        super().__init__()
+        # Same two-token input as Bigram2LanguageModel, but no hidden nonlinearity.
+        if embed_dim is None:
+            embed_dim = vocab_size
+        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.proj = nn.Linear(embed_dim * 2, vocab_size)
+
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
+        prev_idx = torch.zeros_like(idx)
+        prev_idx[:, 1:] = idx[:, :-1]
+        curr_emb = self.embedding(idx)
+        prev_emb = self.embedding(prev_idx)
+        combined = torch.cat((prev_emb, curr_emb), dim=-1)
+        logits = self.proj(combined)
         loss = None
         if targets is not None:
             b, t, c = logits.shape
@@ -204,6 +256,7 @@ def encode(text: str, char_to_idx: dict[str, int]) -> torch.Tensor:
 def decode(tokens: torch.Tensor, idx_to_char: dict[int, str]) -> str:
     return "".join(idx_to_char[int(i)] for i in tokens)
 
+
 def sample_training_batch(
     data: torch.Tensor, batch_size: int, block_size: int, device: torch.device
 ) -> tuple[torch.Tensor, torch.Tensor]:
@@ -211,6 +264,20 @@ def sample_training_batch(
     ix = torch.randint(len(data) - block_size - 1, (batch_size,))
     x = torch.stack([data[i : i + block_size] for i in ix]).to(device)
     y = torch.stack([data[i + 1 : i + block_size + 1] for i in ix]).to(device)
+    return x, y
+
+
+def sample_same_different_batch(
+    char_to_idx: dict[str, int], batch_size: int, device: torch.device
+) -> tuple[torch.Tensor, torch.Tensor]:
+    h_idx = char_to_idx["H"]
+    t_idx = char_to_idx["T"]
+    coin = torch.tensor([h_idx, t_idx], dtype=torch.long)
+    prev = coin[torch.randint(2, (batch_size,))]
+    curr = coin[torch.randint(2, (batch_size,))]
+    target = torch.where(prev == curr, h_idx, t_idx)
+    x = torch.stack((prev, curr), dim=1).to(device)
+    y = target.to(device)
     return x, y
 
 
@@ -240,6 +307,10 @@ def resolve_device(device_arg: str) -> torch.device:
 def build_training_context(data_path: Path | None) -> TrainingDataContext:
     logger.debug("build_training_context: data_path=%s", data_path)
     text = load_text(data_path)
+    return build_training_context_from_text(text)
+
+
+def build_training_context_from_text(text: str) -> TrainingDataContext:
     char_to_idx, idx_to_char = build_vocab(text)
     data = encode(text, char_to_idx)
     logger.debug(
@@ -269,7 +340,7 @@ def is_markov_hht(text: str) -> bool:
 
 # POI one backprop pass
 def train_step(
-    model: BigramLanguageModel,
+    model: nn.Module,
     optimizer: torch.optim.Optimizer,
     data: torch.Tensor,
     batch_size: int,
@@ -278,6 +349,22 @@ def train_step(
 ) -> float:
     xb, yb = sample_training_batch(data, batch_size, block_size, device)
     _, loss = model(xb, yb)
+    optimizer.zero_grad(set_to_none=True)
+    loss.backward()
+    optimizer.step()
+    return float(loss.item())
+
+
+def train_same_different_step(
+    model: nn.Module,
+    optimizer: torch.optim.Optimizer,
+    char_to_idx: dict[str, int],
+    batch_size: int,
+    device: torch.device,
+) -> float:
+    xb, yb = sample_same_different_batch(char_to_idx, batch_size, device)
+    logits, _ = model(xb)
+    loss = F.cross_entropy(logits[:, -1, :], yb)
     optimizer.zero_grad(set_to_none=True)
     loss.backward()
     optimizer.step()
@@ -308,13 +395,23 @@ def train(args):
     logger.debug("train: args=%s", args)
     torch.manual_seed(args.seed)
     device = resolve_device(args.device)
-    context = build_training_context(args.data)
+    if args.task == "same-different" and args.data is None:
+        context = build_training_context_from_text("HT")
+    else:
+        context = build_training_context(args.data)
 
-    if args.model == "bigram2":
+    if args.model == "pairlinear":
+        model = PairLinearLanguageModel(vocab_size=len(context.char_to_idx)).to(device)
+    elif args.model == "bigram2":
         model = Bigram2LanguageModel(vocab_size=len(context.char_to_idx)).to(device)
     else:
         model = BigramLanguageModel(vocab_size=len(context.char_to_idx)).to(device)
 
+    if args.task == "same-different":
+        print(
+            "\nNOTE: Same/different coin demo. Both pair models see the same two tokens.\n"
+            "The target is H when the two tokens match, T when they differ.\n"
+        )
     if args.model == "bigram" and is_markov_hht(context.text):
         print(
             "\nNOTE: Markov-chain demo detected. The bigram model only sees one token\n"
@@ -324,14 +421,23 @@ def train(args):
 
     logger.debug("train: starting optimization loop for %d steps", args.steps)
     for step in range(args.steps):
-        loss_value = train_step(
-            model,
-            optimizer,
-            context.data,
-            args.batch_size,
-            args.block_size,
-            device,
-        )
+        if args.task == "same-different":
+            loss_value = train_same_different_step(
+                model,
+                optimizer,
+                context.char_to_idx,
+                args.batch_size,
+                device,
+            )
+        else:
+            loss_value = train_step(
+                model,
+                optimizer,
+                context.data,
+                args.batch_size,
+                args.block_size,
+                device,
+            )
         if step % args.log_every == 0 or step == args.steps - 1:
             print(f"step {step:4d} | loss {loss_value:.4f}")
     logger.debug("train: optimization loop complete")
@@ -372,9 +478,15 @@ def add_training_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--log-every", type=int, default=100)
     parser.add_argument(
         "--model",
-        choices=["bigram", "bigram2"],
+        choices=["bigram", "pairlinear", "bigram2"],
         default="bigram",
-        help="Model variant: bigram (default) or bigram2 (2-token context).",
+        help="Model variant: bigram, pairlinear, or bigram2.",
+    )
+    parser.add_argument(
+        "--task",
+        choices=["next-char", "same-different"],
+        default="next-char",
+        help="Training task: normal next-character text or synthetic same/different coin pairs.",
     )
 
 
