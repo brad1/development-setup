@@ -37,6 +37,7 @@ git "#{custom_dir}/themes/powerlevel10k" do
 end
 
 link "#{homedir}/.zshrc" do
+  # Historical example: update this destination if you want to restore the runnable cookbook root.
   to "/opt/chef/cookbooks/development-setup/files/zsh/zshrc"
 end
 

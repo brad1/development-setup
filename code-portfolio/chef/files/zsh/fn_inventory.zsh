@@ -3,6 +3,7 @@
 # sourced safely even if the original function is currently broken.
 shell-zsh-inventory-basic() {
   local devsetup include_dir
+  # Historical example: update this fallback path if you want to restore the runnable cookbook root.
   devsetup="${DEVSETUP:-/opt/chef/cookbooks/development-setup}"
   include_dir="${INCLUDE:-$devsetup/files/zsh}"
 

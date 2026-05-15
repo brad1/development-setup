@@ -4,7 +4,7 @@
 dir='/opt/chef/cookbooks'
 mkdir -p $dir && cd $dir
 git clone git@github.com:brad1/development-setup.git
-sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/development-setup/solo.rb'
+sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/development-setup/code-portfolio/chef/solo.rb'
 ```
 ## Project Index
 
@@ -39,19 +39,8 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 
 ### Chef cookbook
 
-- `attributes/` - default configuration attributes for the cookbook.
-- `files/` - helper scripts, configuration, and notes used by the cookbook.
-  See `files/etc/README.md`, `files/docs/DECISIONS.md`, and `files/zsh/README.md`
-  for focused details.
-- `recipes/` - main Chef recipes to configure different platforms.
-- `templates/` - template files for configuration (e.g. `zshrc.erb`).
-- `tools/` - utility scripts such as Ruby analysis helpers.
-- `node.json` and `node_windows.json` - sample node attribute files.
-- `solo.rb` and `solo_windows.rb` - Chef solo configuration.
-- `run.sh` and `run.cmd` - helper scripts to run the cookbook on Linux or Windows.
-- `metadata.rb` - cookbook metadata.
-- `init.sh` - example bootstrap script.
-- `quick-start.sh` - bootstrap the oh-my-zsh setup from this repository without Chef.
+- `code-portfolio/chef/` - Chef cookbook and zsh setup.
+- `code-portfolio/chef/README.md` - local cookbook guide.
 
 ## Quick start
 
@@ -61,7 +50,7 @@ execute the helper script:
 ```
 git clone git@github.com:brad1/development-setup.git
 cd development-setup
-./quick-start.sh
+./code-portfolio/chef/quick-start.sh
 ```
 
 The script installs oh-my-zsh, pulls the recommended plugins (fzf, autosuggestions,

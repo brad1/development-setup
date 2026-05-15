@@ -1,3 +1,4 @@
+# Historical example: update DEVSETUP here if you want to restore the original runnable cookbook root.
 : ${DEVSETUP:=/opt/chef/cookbooks/development-setup}
 : ${INCLUDE:=$DEVSETUP/files/zsh}
 

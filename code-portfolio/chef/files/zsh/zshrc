@@ -5,6 +5,7 @@ export TERM="xterm-256color" #WARNING! Your terminal appears to support fewer th
 #   - `navi` shows commands from cheat sheets with `navi --query <search>`
 
 
+# Historical example: update DEVSETUP here if you want to restore the original runnable cookbook root.
 : "${DEVSETUP:=/opt/chef/cookbooks/development-setup}"
 : "${INCLUDE:=$DEVSETUP/files/zsh}"
 export DEVSETUP INCLUDE

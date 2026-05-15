@@ -1,5 +1,6 @@
 " optional settings:
 "
+" Historical example: update these paths if you want to restore the runnable cookbook root.
 " source /opt/chef/cookbooks/development-setup/files/vim/rc/experimental
 " source /opt/chef/cookbooks/development-setup/files/vim/rc/rspec
 "

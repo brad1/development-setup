@@ -45,7 +45,7 @@ sync_git_repo "https://github.com/zsh-users/zsh-syntax-highlighting.git" \
 sync_git_repo "https://github.com/romkatv/powerlevel10k.git" \
   "$custom_dir/themes/powerlevel10k"
 
-managed_marker="# Managed by development-setup/quick-start.sh"
+managed_marker="# Managed by development-setup/code-portfolio/chef/quick-start.sh"
 zshrc_path="$HOME/.zshrc"
 if [[ -f "$zshrc_path" || -L "$zshrc_path" ]]; then
   if ! grep -Fq "$managed_marker" "$zshrc_path" 2>/dev/null; then

@@ -7,6 +7,7 @@ export SAVEHIST=100000
 # export EXTERNAL_DRIVE=/run/media/brad/63c96aca-03db-4d1e-9baa-3f950b3d8897/
 
 # path to this repository
+# Historical example: update DEVSETUP here if you want to restore the original runnable cookbook root.
 : ${DEVSETUP:=/opt/chef/cookbooks/development-setup}
 # Alternatively:
 # : ${DEVSETUP:=${${(%):-%x}:a:h:h:h}}

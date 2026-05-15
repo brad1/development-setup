@@ -15,6 +15,7 @@ dir = "#{homedir}/.vim/bundle"
 execute "mkdir -p #{homedir}/.vim/autoload #{dir}"
 
 link "#{homedir}/.vim/autoload/pathogen.vim" do
+  # Historical example: update this destination if you want to restore the runnable cookbook root.
   to "/opt/chef/cookbooks/development-setup/files/vim/pathogen.vim"
 end
 
