@@ -137,22 +137,16 @@ class BigramLanguageModel(nn.Module):
 
 
 class Bigram2LanguageModel(nn.Module):
-    def __init__(self, vocab_size: int, embed_dim: int | None = None) -> None:
+    def __init__(self, vocab_size: int) -> None:
         super().__init__()
-        # NOTE: Chosen as the simplest "extra layer" for a 2-gram context.
-        # Please revisit with a human to confirm this is the right teaching choice.
-        if embed_dim is None:
-            embed_dim = vocab_size
-        self.embedding = nn.Embedding(vocab_size, embed_dim)
-        self.proj = nn.Linear(embed_dim * 2, vocab_size)
+        self.vocab_size = vocab_size
+        self.table = nn.Embedding(vocab_size * vocab_size, vocab_size)
 
     def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
         prev_idx = torch.zeros_like(idx)
         prev_idx[:, 1:] = idx[:, :-1]
-        curr_emb = self.embedding(idx)
-        prev_emb = self.embedding(prev_idx)
-        combined = torch.cat((prev_emb, curr_emb), dim=-1)
-        logits = self.proj(combined)
+        context_idx = prev_idx * self.vocab_size + idx
+        logits = self.table(context_idx)
         loss = None
         if targets is not None:
             b, t, c = logits.shape
