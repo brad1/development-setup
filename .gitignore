@@ -21,3 +21,5 @@ ReactDashboard/dist/
 flaskdashboard/.venv/
 __pycache__
 pytorch/.venv
+
+.codex

@@ -1,0 +1,90 @@
+FROM ubuntu:24.04
+
+# Not maintained
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV NVM_DIR=/usr/local/nvm
+ENV NODE_VERSION=22
+ARG RUBY_VERSION=3.2.4
+ENV RBENV_ROOT=/opt/rbenv
+ENV PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
+
+ENV ANT_HOME=/opt/ant
+ENV VENV_PATH=/opt/venvs/django
+
+ENV PG_BASE_TEMPLATE=/cache/postgres/base-template
+ENV PGDATA=/tmp/pgdata
+ENV PGHOST=/tmp/postgres
+ENV PGPORT=5432
+ENV PGUSER=postgres
+ENV PGDATABASE=testdb
+
+# # # Platform # # #
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      bash \
+      build-essential \
+      ca-certificates \
+      curl \
+      gcc \
+      git \
+      libc6-dev \
+      python3 \
+      python3-pip \
+      python3-venv \
+      ruby \
+      ruby-dev \
+      postgresql \
+      postgresql-client \
+ && rm -rf /var/lib/apt/lists/*
+
+# # # Backend # # #
+
+RUN python3 -m venv "$VENV_PATH" \
+ && "$VENV_PATH/bin/python" -m pip install --upgrade pip setuptools wheel \
+ && "$VENV_PATH/bin/pip" install \
+      pytest \
+      pytest-django \
+      psycopg2-binary \
+      django
+
+RUN curl -fsSL "https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz" -o /tmp/ant.tar.gz \
+ && mkdir -p /opt \
+ && tar -xzf /tmp/ant.tar.gz -C /opt \
+ && ln -s "/opt/apache-ant-$ANT_VERSION" "$ANT_HOME" \
+ && ln -sf "$ANT_HOME/bin/ant" /usr/local/bin/ant \
+ && rm -f /tmp/ant.tar.gz \
+ && ant -version
+
+
+RUN git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT" \
+ && git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build" \
+ && "$RBENV_ROOT/bin/rbenv" init - bash \
+ && "$RBENV_ROOT/bin/rbenv" install "$RUBY_VERSION" \
+ && "$RBENV_ROOT/bin/rbenv" global "$RUBY_VERSION" \
+ && "$RBENV_ROOT/shims/gem" update --system
+
+# rubygem compile
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      ruby-dev \
+      libssl-dev \
+      libyaml-dev \
+      libreadline-dev \
+      zlib1g-dev \
+      libffi-dev \
+      libpq-dev \
+      libxml2-dev \
+      libxslt1-dev \
+      libldap2-dev \
+
+# # # Frontend # # #
+
+RUN mkdir -p "$NVM_DIR" \
+ && curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
+ && . "$NVM_DIR/nvm.sh" \
+ && nvm install "$NODE_VERSION" \
+ && nvm use default
+
+WORKDIR /builds/servers/app
