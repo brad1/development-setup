@@ -1,0 +1,10 @@
+all:
+	flex statemachine.l
+	bison -d statemachine.y -o statemachine.cc
+	gcc -c lex.yy.c -o lex.yy.o
+	g++ -O3 -Wall lex.yy.o statemachine.cc class_file.cc main.cpp -o mt_machine_gen
+
+clean: mt
+	rm -rf statemachine.hh statemachine.cc
+	rm -rf lex.yy.c lex.yy.o
+	rm -rf statemachine

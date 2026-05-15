@@ -1,0 +1,10 @@
+State Machine Parity {
+  Inputs = {true, false};
+  Outputs = {true, false};
+  States = {true, false};
+  Initial = {true};
+  State Transitions { (true, true/true, false), (true, false/true, true),
+    (false, true/false, true), (false, false/false, false)
+   };
+}
+
