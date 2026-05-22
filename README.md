@@ -1,11 +1,3 @@
-# example run
-
-```
-dir='/opt/chef/cookbooks'
-mkdir -p $dir && cd $dir
-git clone git@github.com:brad1/development-setup.git
-sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/development-setup/code-portfolio/chef/solo.rb'
-```
 ## Project Index
 
 ### Dashboard projects
@@ -29,34 +21,20 @@ sudo bash --login -c 'rvm use 2.4.1; chef-solo -c /opt/chef/cookbooks/developmen
 
 ### Standalone demos
 
-- `agent-orchestration/` - minimal OpenAI Agent SDK hello-world outline that reads local filenames, plans a web query, and runs a web-search-enabled agent.
-- `cat-mode/` - Windows "Cat Mode" application design package, including architecture notes, state-machine behavior, and implementation snippets for camera-based cat detection plus temporary keyboard suppression.
+- `agent-orchestration/` - (vibe code) minimal OpenAI Agent SDK hello-world outline that reads local filenames, plans a web query, and runs a web-search-enabled agent.
+- `cat-mode/` - (vibe code) Windows "Cat Mode" application design package, including architecture notes, state-machine behavior, and implementation snippets for camera-based cat detection plus temporary keyboard suppression.
+- `code-portfolio/` - Professional code samples by topic.  Grill me.
 - `cpp/` - standalone C++ examples and modules, including the sample
   `main.cpp` entry point and a local `Makefile`.
 - `gofai/` - tiny shell chatbot demos in `simplebot.sh` and `TLDRbot.sh`, including a more flexible terminal bot with broader natural-language matching and persistent cue mapping.
-- `rust/` - standalone Rust utility and demo code.
+- `rspec/` - Copy of TDD example, uses a simple scheme to benchmark codex instruction following.
+- `rust/` - (vibe code) standalone Rust utility and demo code.
 - `pytorch/` - "Tiny Chat" trains models from simplest possible training data patterns (coin, markov) with the fewest possible layers
 
 ### Chef cookbook
 
 - `code-portfolio/chef/` - Chef cookbook and zsh setup.
 - `code-portfolio/chef/README.md` - local cookbook guide.
-
-## Quick start
-
-To install the zsh configuration without running Chef, clone the repository and
-execute the helper script:
-
-```
-git clone git@github.com:brad1/development-setup.git
-cd development-setup
-./code-portfolio/chef/quick-start.sh
-```
-
-The script installs oh-my-zsh, pulls the recommended plugins (fzf, autosuggestions,
-syntax highlighting, and the powerlevel10k theme), and writes a `.zshrc` that
-sources the configuration in `files/zsh/`. Your previous `.zshrc` is backed up
-with a timestamped suffix if it existed.
 
 ## Dashboard notes
 
