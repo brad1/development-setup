@@ -7,15 +7,9 @@ export SAVEHIST=100000
 # export EXTERNAL_DRIVE=/run/media/brad/63c96aca-03db-4d1e-9baa-3f950b3d8897/
 
 # path to this repository
-# Historical example: update DEVSETUP here if you want to restore the original runnable cookbook root.
-: ${DEVSETUP:=/opt/chef/cookbooks/development-setup}
-# Alternatively:
-# : ${DEVSETUP:=${${(%):-%x}:a:h:h:h}}
-#
-# ${(%):-%x} is a zsh parameter expansion that yields the path of the current sourced file (analogous to a “current script path”).
-# :a turns that path into an absolute path.
-# :h repeatedly takes the directory (head) of the path. With :h:h:h, it goes up three levels.
-#
+# Resolve DEVSETUP from this file when the caller did not provide it.
+# ${(%):-%x} yields the current sourced file, :a makes it absolute, and :h:h:h walks back to the repo root.
+DEVSETUP=${DEVSETUP:-${${(%):-%x}:a:h:h:h}}
 export DEVSETUP
 : ${INCLUDE:=$DEVSETUP/files/zsh}
 export INCLUDE
