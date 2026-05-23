@@ -7,7 +7,7 @@ see pytorch/goals.md
 
 ## Upcoming Tasks
 - see pytorch/goals.md (layers experiment)
-- see rspec/ (codex benchmark tests)
+- see benchmarking/python (codex benchmark tests)
 
 ## Repository Map 
 - `README.md` — See "Project Index" and "Project Map" for more.
