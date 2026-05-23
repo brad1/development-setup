@@ -12,3 +12,7 @@
 - model: gpt-5.4-mini-low
 - results: fails underwater lantern use, even when the audit promptlet provides a hint up front.
 
+## 004_animals_tools.py
+- model: gpt-5.4-mini-low (clear context)
+- results: fails, also cheats by looking at NOTES.md 
+

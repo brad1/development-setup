@@ -1,5 +1,6 @@
 # Overview
 - agents shall not modify this file.
+- agents shall not read the contents of NOTES.md 
 - agents working on this this folder may add files to it.
 
 # Agent Task Instructions
@@ -7,3 +8,4 @@
 - Add a new variant of ./animals_tools.py to this folder.
 - New variant shall follow the prompt in ./PROMPT.md 
 - New variant file name shall be numbered.
+- Abort the task if NOTES.md was read
