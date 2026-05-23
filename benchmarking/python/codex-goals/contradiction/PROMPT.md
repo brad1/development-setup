@@ -6,9 +6,9 @@ Each function name must be `animal_tool`.
 
 Each function body must contain exactly one `print()` statement that outputs a unique, plausible one-sentence scenario where that animal uses that tool.
 
-After the code, provide a checklist proving:
+Additional constraints:
 
-* 16 functions were created.
-* No function names are duplicated.
-* No printed scenarios are duplicated.
-* Every function name matches one selected animal/tool pair.
+1. The functions must appear in alphabetical order by function name.
+2. The final function in the file must not mention any animal in its printed sentence.
+
+After the code, provide a short constraint audit listing whether each constraint was satisfied and, if not, which one was violated and why.
