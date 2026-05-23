@@ -1,14 +1,11 @@
-Pick 4 animals and 4 tools.
+Use these 4 animals: **crow, beaver, octopus, elephant**.
+
+Use these 4 tools: **bucket, rope, mirror, lantern**.
 
 Generate exactly 16 Python functions, one for every animal/tool pair.
 
 Each function name must be `animal_tool`.
 
-Each function body must contain exactly one `print()` statement that outputs a unique, plausible one-sentence scenario where that animal uses that tool.
+Each function body must contain exactly one `print()` statement that outputs a unique, plausible one-sentence scenario where that animal uses that tool to solve a problem.
 
-Additional constraints:
-
-1. The functions must appear in alphabetical order by function name.
-2. The final function in the file must not mention any animal in its printed sentence.
-
-After the code, provide a short constraint audit listing whether each constraint was satisfied and, if not, which one was violated and why.
+After the code, provide a short audit identifying any animal/tool pair where literal tool use would be physically awkward, impossible, or misleading, and explain how the scenario preserved the practical goal anyway.
