@@ -7,6 +7,6 @@
 # - In a comment at the top of the variant, include a full copy of the task instructions.
 #
 # Last response:
-# There isn’t a new non-trivial task left in `./rspec/` from the current instructions. The only active instruction file still asks for the globals-only numbered variant, and that has already been done in the folder.
+# There isn’t a new non-trivial task left in `./benchmarking/rspec/` from the current instructions. The only active instruction file still asks for the globals-only numbered variant, and that has already been done in the folder.
 #
 # Per the folder rule, I’m aborting rather than creating another duplicate variant.
