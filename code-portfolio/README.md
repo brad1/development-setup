@@ -5,6 +5,8 @@
   * [Visitor](rspec/spec/visitor_tdd_spec.rb)
 * Docker
   * [docker/](docker/)
+* EKS
+  * [eks/](eks/)
 * GitLab CI
   * [gitlab/](gitlab/)
 * RSpec
@@ -17,30 +19,10 @@
 
 # Pending
 * Linux Operations
-* Production Debugging
-* Systemd Services
-* Network Troubleshooting
 * PostgreSQL
-* Deployments
-* Rollbacks
-* Incident Response
 * Ansible
 * Vagrant
-* Django Migrations
-* API Testing
-* End-to-End Testing
-* Syslog
-* Socket IPC
-* High Availability
 * Site Reliability
-* Keepalived
-* LDAP
-* SAML SSO
-* Release Process
-* Shell Scripts
-  * [Read Example](chef/files/bash/examples/read.sh)
-* RSpec
-  * [Config](TODO)
-* Test Automation
-  * [Python](TODO)
-  * [CPP](TODO)
+* SSO (single and secure signon)
+    * LDAP
+    * SAML
