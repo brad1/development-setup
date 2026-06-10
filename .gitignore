@@ -23,3 +23,6 @@ __pycache__
 pytorch/.venv
 
 .codex
+
+IncentivesLedger/node_modules/
+IncentivesLedger/dist/
