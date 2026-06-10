@@ -21,6 +21,7 @@
 
 ### Standalone demos
 
+- `IncentivesLedger/` - standalone React/Vite prototype for the fictional Incentives Ledger publication and its 3000 Tyrants roster, dossier navigation, source ledger, methodology, and AI audit log. Run `bash codex/setup.sh` and `bash scripts/ci-test.sh` from the repository root.
 - `agent-orchestration/` - (vibe code) minimal OpenAI Agent SDK hello-world outline that reads local filenames, plans a web query, and runs a web-search-enabled agent.
 - `cat-mode/` - (vibe code) Windows "Cat Mode" application design package, including architecture notes, state-machine behavior, and implementation snippets for camera-based cat detection plus temporary keyboard suppression.
 - `code-portfolio/` - Professional code samples by topic.  Grill me.
@@ -55,7 +56,7 @@ bash codex/setup.sh
 bash scripts/ci-test.sh
 ```
 
-`codex/setup.sh` performs deterministic dependency installation for `ReactDashboard/` and `scripts/ci-test.sh` runs the canonical test/build sequence (`npm test` then `npm run build`). These are the exact same scripts used by GitHub Actions and Codex cloud configuration, so successful local runs should match automation behavior. Codex caching is implicit, time-scoped container reuse, not configurable dependency caching like GitHub Actions. The setup step requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise installation will fail with network errors.
+`codex/setup.sh` performs deterministic dependency installation for `ReactDashboard/` and `IncentivesLedger/`, and `scripts/ci-test.sh` runs each app's canonical test/build sequence (`npm test` then `npm run build`). These are the exact same scripts used by GitHub Actions and Codex cloud configuration, so successful local runs should match automation behavior. Codex caching is implicit, time-scoped container reuse, not configurable dependency caching like GitHub Actions. The setup step requires registry access, so if the npm registry is unreachable because of DNS or proxy restrictions reconcile that first; otherwise installation will fail with network errors.
 
 After the install step succeeds, start the backend from `flaskdashboard/`, then
 run the React dev server from `ReactDashboard/`:
