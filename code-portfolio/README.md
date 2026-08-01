@@ -3,6 +3,8 @@
   * [BST](c/src/bst.c)
   * [Null Object](chef/files/bin/prototypes/sandbox/ruby/custom/null_object.rb)
   * [Visitor](rspec/spec/visitor_tdd_spec.rb)
+* Linux Operations
+  * [Realtime Thread Comparison](c/src/rt_compare.c)
 * Docker
   * [docker/](docker/)
 * EKS
@@ -18,7 +20,6 @@
   * [Ruby](rspec/)
 
 # Pending
-* Linux Operations
 * PostgreSQL
 * Ansible
 * Vagrant
